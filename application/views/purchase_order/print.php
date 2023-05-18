@@ -158,8 +158,6 @@
 				<th class="text-right"><?=sprintf('%.2f',$poData->net_amount)?></th>
 			</tr>
 		</table>
-
-		<!-- Terms & Conditions Table -->
 		<h4>Terms & Conditions :-</h4>
 		<table class="table top-table" style="margin-top:10px;">
 			<?php
