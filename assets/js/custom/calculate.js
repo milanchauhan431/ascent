@@ -29,7 +29,7 @@ $(document).ready(function(){
 function gstin(){
     var gstin = $("#gstin").find(":selected").val();	
 
-    var gst_type= 1;
+    var gst_type= 1; var stateCode = 24;
     if(gstin != ""){
 		if(gstin == "URP"){
 			stateCode = 24;
