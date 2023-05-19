@@ -62,7 +62,11 @@ class MY_Controller extends CI_Controller{
 		$this->load->model('PurchaseOrderModel','purchaseOrder');
 		$this->load->model('PurchaseIndentModel','purchaseIndent');
 
-		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType"]);
+		/* Store Model */
+		$this->load->model('StoreLocationModel','storeLocation');
+		$this->load->model('GateEntryModel','gateEntry');
+
+		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry"]);
 	}
 
 	public function setSessionVariables($modelNames){
