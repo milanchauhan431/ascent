@@ -11,7 +11,7 @@ class ItemCategoryModel extends MasterModel{
         if(empty($data['parent_id'])):
             $data['where']['item_category.final_category'] = 0;
         else:
-            $data['where']['item_category.final_category'] = 1;
+            //$data['where']['item_category.final_category'] = 1;
             $data['where']['item_category.ref_id'] = $data['parent_id'];
         endif;
 
