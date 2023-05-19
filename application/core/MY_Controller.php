@@ -38,6 +38,7 @@ class MY_Controller extends CI_Controller{
 		$this->load->model("TransportModel","transport");
 		$this->load->model("HsnMasterModel","hsnModel");
 		$this->load->model("MaterialGradeModel","materialGrade");
+		$this->load->model("VehicleTypeModel","vehicleType");
 
 		/* HR Models */
 		$this->load->model("hr/DepartmentModel","department");
@@ -61,7 +62,7 @@ class MY_Controller extends CI_Controller{
 		$this->load->model('PurchaseOrderModel','purchaseOrder');
 		$this->load->model('PurchaseIndentModel','purchaseIndent');
 
-		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent"]);
+		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType"]);
 	}
 
 	public function setSessionVariables($modelNames){
