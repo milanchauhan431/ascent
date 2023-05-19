@@ -40,6 +40,12 @@ function getConfigDtHeader($page){
     $data['scrapGroup'][] = ["name"=>"Scrap Group Name"];
     $data['scrapGroup'][] = ["name"=>"Unit Name"];
 
+    /* Vehicle Type header */
+    $data['vehicleType'][] = ["name"=>"Action","style"=>"width:5%;",'textAlign'=>'center'];
+    $data['vehicleType'][] = ["name"=>"#","style"=>"width:5%;",'textAlign'=>'center']; 
+    $data['vehicleType'][] = ["name"=>"Vehicle Type"];
+    $data['vehicleType'][] = ["name"=>"Remark"];
+
     return tableHeader($data[$page]);
 }
 
@@ -104,5 +110,17 @@ function getScrapGroupData($data){
 
 	$action = getActionButton($editButton.$deleteButton);
     return [$action,$data->sr_no,$data->item_name,$data->unit_name];
+}
+
+/* Vehicle Type Data */
+function getVehicleTypeData($data){
+    $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Vehicle Type'}";
+    $editParam = "{'postData':{'id' : ".$data->id."}, 'modal_id' : 'modal-md', 'form_id' : 'editVehicleType', 'title' : 'Update Vehicle Type'}";
+
+    $editButton = '<a class="btn btn-success btn-edit" href="javascript:void(0)" datatip="Edit" flow="down" onclick="edit('.$editParam.');"><i class="ti-pencil-alt" ></i></a>';
+    $deleteButton = '<a class="btn btn-danger btn-delete" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
+	
+	$action = getActionButton($editButton.$deleteButton);
+    return [$action,$data->sr_no,$data->vehicle_type,$data->remark];
 }
 ?>
