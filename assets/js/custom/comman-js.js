@@ -1,28 +1,28 @@
 $(document).ready(function(){
 
-	var lastActivityTime;
+	var lastActivity = 1;
 
 	// Update last activity time on user interaction events
 	$(document).on('mousemove keydown', function() {
-		lastActivityTime = new Date().getTime();
+		lastActivity = 1;
 	});
 
 	// Check last activity time every second
 	setInterval(function() {
-		var currentTime = new Date().getTime();
-		var idleTime = currentTime - lastActivityTime;
+		var idleTime = lastActivity * 1000;
 
 		// Check if idle time exceeds your desired threshold
-		var idleThreshold = 120 * 60 * 1000; // 120 minutes in milliseconds
+		var idleThreshold = 7200 * 1000; // seconds in milliseconds
 
 		if (idleTime > idleThreshold) {
 			// Idle time exceeded threshold, perform actions or redirect user
-			console.log('User is idle');
-			window.location.href = base_url;
+			//console.log('User is idle');
+			window.location.reload();
 			// Perform any necessary actions or redirect the user
 		} else {
 			// User is active, perform any necessary actions
-			console.log('User is active');
+			lastActivity++;
+			//console.log('User is active');
 		}
 	}, 1000); // Check every second (adjust interval as needed)
 
