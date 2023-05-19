@@ -2,8 +2,8 @@ $(document).ready(function(){
 
 	var lastActivity = 1;
 
-	// Update last activity time on user interaction events
-	$(document).on('mousemove keydown', function() {
+	// Update last activity time on user interaction events //mousemove
+	$(document).on('click change keydown', function() {
 		lastActivity = 1;
 	});
 
