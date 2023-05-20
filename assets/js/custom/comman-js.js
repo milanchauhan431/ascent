@@ -466,16 +466,42 @@ function statusTab(tableId,status){
 }
 
 function ssTableInit(){
+	console.log(tableHeaders);
 	var tableOptions = {pageLength: 25,'stateSave':false};
     ssDatatable($('.ssTable'),tableHeaders,tableOptions);
 }
 
 function initTable(postData = {}){
 	$('.ssTable').DataTable().clear().destroy();
-	var tableOptions = {pageLength: 25,'stateSave':false};
-	var tableHeaders = {'theads':'','textAlign':textAlign,'sortable':sortable,'reInit':'1'};
-	var dataSet = postData;
-	ssDatatable($('.ssTable'),tableHeaders,tableOptions,dataSet);
+	var tableId = $('.ssTable').attr('id');
+	var hp_fn_name = $("#"+tableId).data("hp_fn_name") || "";
+	var page = $("#"+tableId).data("page") || "";
+
+	if(hp_fn_name != "" && page != ""){
+		$.ajax({
+			url : base_url + controller + '/getTableHeader',
+			type : 'POST',
+			data : {'hp_fn_name':hp_fn_name,'page':page},
+			dataType: 'json',
+			success: function(response) {
+				var tableOptions = {pageLength: 25,'stateSave':false};
+				var dataSet = postData;
+				var tableHeaders = response.data;
+				tableHeaders.reInit = 1;
+				console.log(tableHeaders);
+				$('.ssTable').html("");
+				ssDatatable($('.ssTable'),tableHeaders,tableOptions,dataSet);
+			},
+			error: function() {
+				console.log('Error occurred while fetching table headers.');
+			}
+		});
+	}else{
+		var tableOptions = {pageLength: 25,'stateSave':false};
+		var tableHeaders = {'theads':'','textAlign':textAlign,'sortable':sortable,'reInit':'1'};
+		var dataSet = postData;
+		ssDatatable($('.ssTable'),tableHeaders,tableOptions,dataSet);
+	}	
 }
 
 function initDataTable(){

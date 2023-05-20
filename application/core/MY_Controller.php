@@ -150,5 +150,18 @@ class MY_Controller extends CI_Controller{
 
 		return false;
 	}
+
+	public function getTableHeader(){
+		$data = $this->input->post();
+
+		$response = call_user_func_array($data['hp_fn_name'],[$data['page']]);
+		
+		$result['theads'] = (isset($response[0])) ? $response[0] : '';
+		$result['textAlign'] = (isset($response[1])) ? $response[1] : '';
+		$result['srnoPosition'] = (isset($response[2])) ? $response[2] : 1;
+		$result['sortable'] = (isset($response[3])) ? $response[3] : '';
+
+		$this->printJson(['status'=>1,'data'=>$result]);
+	}
 }
 ?>
