@@ -873,7 +873,6 @@ function checkPermission(){
 	if(permissionRemove == "1"){ $('.permission-remove').show(); }else{ $('.permission-remove').hide(); }
 }
 
-
 function toFixTableHeader(){
     var scroll = $(window).scrollTop();
     $('.ssTable body').css("visibility", "hidden");
