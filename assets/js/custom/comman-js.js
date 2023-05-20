@@ -459,14 +459,15 @@ function reInitMultiSelect(){
 	$('.scrollable').perfectScrollbar({wheelPropagation: !0});
 }
 
-function statusTab(tableId,status){
+function statusTab(tableId,status,hp_fn_name="",page=""){
     $("#"+tableId).attr("data-url",'/getDTRows/'+status);
+    $("#"+tableId).attr("data-hp_fn_name",hp_fn_name);
+    $("#"+tableId).attr("data-page",page);
     ssTable.state.clear();
 	initTable();
 }
 
 function ssTableInit(){
-	console.log(tableHeaders);
 	var tableOptions = {pageLength: 25,'stateSave':false};
     ssDatatable($('.ssTable'),tableHeaders,tableOptions);
 }
