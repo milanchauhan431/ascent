@@ -2,10 +2,10 @@
 class GateEntryModel extends MasterModel{
     private $mir = "mir";
 
-    public function getNextNo(){
+    public function getNextNo($type = 1){
         $queryData['tableName'] = $this->mir;
         $queryData['select'] = "ifnull(MAX(trans_no + 1),1) as next_no";
-        $queryData['where']['trans_type'] = 1;
+        $queryData['where']['trans_type'] = $type;
         $queryData['where']['trans_date >='] = $this->startYearDate;
         $queryData['where']['trans_date <='] = $this->endYearDate;
         return $this->row($queryData)->next_no;
