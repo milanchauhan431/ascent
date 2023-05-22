@@ -60,6 +60,17 @@ function getMasterDtHeader($page){
     $data['raw_material'][] = ["name"=>"GST Per"];
     $data['raw_material'][] = ["name"=>"Remark"];
 
+    /* Consumable Header */
+    $data['consumable'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['consumable'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+    $data['consumable'][] = ["name"=>"CAT Code"];
+    $data['consumable'][] = ["name"=>"Item Name"];
+    $data['consumable'][] = ["name"=>"Category Name"];
+    $data['consumable'][] = ["name"=>"Unit"];
+    $data['consumable'][] = ["name"=>"HSN Code"];
+    $data['consumable'][] = ["name"=>"GST Per"];
+    $data['consumable'][] = ["name"=>"Remark"];
+
     return tableHeader($data[$page]);
 }
 
