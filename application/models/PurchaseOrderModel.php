@@ -197,5 +197,19 @@ class PurchaseOrderModel extends MasterModel{
             return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
         }
     }
+
+    public function getItemWisePoList($data){
+        $queryData['tableName'] = $this->transChild;
+        $queryData['select'] = "trans_main.id as po_id,trans_main.trans_number,trans_child.id as po_trans_id,trans_child.qty,trans_child.dispatch_qty as received_qty,(trans_child.qty - trans_child.dispatch_qty) as pending_qty";
+
+        $queryData['leftJoin']['trans_main'] = "trans_main.id = trans_child.trans_main_id";
+
+        $queryData['where']['trans_child.entry_type'] = 21;
+
+        $queryData['where']['trans_child.item_id'] = $data['item_id'];
+        $queryData['where']['(trans_child.qty - trans_child.dispatch_qty) >'] = 0;
+
+        return $this->rows($queryData);
+    }
 }
 ?>
