@@ -540,5 +540,44 @@ function getPrefix($prefix,$explodeBy = '/'){return explode($explodeBy,$prefix);
 /** GET NO WITH FORMATED PREFIX **/
 function getPrefixNumber($prefix,$no,$explodeBy = '/'){ $prfx = explode($explodeBy,$prefix);return $prefix.$explodeBy.$no; }
 
+/* Get Party List Options */
+function getPartyListOption($partyList,$partyId = 0){
+	$options = '';
+	foreach($partyList as $row):
+		$selected = (!empty($partyId) && $partyId == $row->id)?"selected":"";
+		$options .= '<option value="'.$row->id.'" '.$selected.'>'.$row->party_name.'</option>';
+	endforeach;
 
+	return $options;
+}
+
+function getItemListOption($itemList,$itemId = 0){
+	$options = '';
+	foreach($itemList as $row):
+		$selected = (!empty($itemId) && $itemId == $row->id)?"selected":"";
+		$options .= '<option value="'.$row->id.'" '.$selected.'>'.$row->item_name.'</option>';
+	endforeach;
+
+	return $options;
+}
+
+/* Get Location List Options */
+function getLocationListOption($locationList,$locationId = 0){
+	$groupedStores = array_reduce($locationList, function($store, $location) {
+		$store[$location->store_name][] = $location;
+		return $store;
+	}, []);
+	
+	$options = '';
+	foreach ($groupedStores as $store => $location):
+		$options .= '<optgroup label="' . $store . '">';
+		foreach ($location as $row):
+			$selected = (!empty($locationId) && $locationId == $row->id)?"selected":"";
+			$options .= '<option value="' . $row->id . '" '.$selected.'>' . $row->location . '</option>';
+		endforeach;
+		$options .= '</optgroup>';
+	endforeach;
+
+	return $options;
+}
 ?>
