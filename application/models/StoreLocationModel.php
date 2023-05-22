@@ -35,11 +35,17 @@ class StoreLocationModel extends MasterModel{
         $queryData = array();
         $queryData['tableName'] = $this->locationMaster;
 
+        if(isset($data['store_type']))
+            $queryData['where_in']['store_type'] = $data['store_type'];
+
         if(isset($data['final_location']))
             $queryData['where']['final_location'] = $data['final_location'];
 
         if(!empty($data['ref_id']))
             $queryData['where']['ref_id'] = $data['ref_id'];
+
+        $queryData['order_by']['store_name'] = "ASC";
+        $queryData['order_by']['location'] = "ASC";
 
         return $this->rows($queryData);
     }
