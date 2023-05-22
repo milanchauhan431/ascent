@@ -1,31 +1,50 @@
 $(document).ready(function(){
 
-	var lastActivity = 1;
+	var lastActivityTime = new Date();;
 
 	// Update last activity time on user interaction events //mousemove
 	$(document).on('click change keydown', function() {
-		lastActivity = 1;
-	});
+		var idleTime = 7200; //Session Time
+		var currentDateTime = new Date();
 
-	// Check last activity time every second
-	setInterval(function() {
-		var idleTime = lastActivity * 1000;
+		// Calculate the time difference in milliseconds
+		var idleThreshold = currentDateTime - lastActivityTime;
 
-		// Check if idle time exceeds your desired threshold
-		var idleThreshold = 7200 * 1000; // seconds in milliseconds
+		// Convert the time difference to seconds
+        var secondsDifference = Math.floor(idleThreshold / 1000);
 
-		if (idleTime > idleThreshold) {
+		if (secondsDifference > idleTime) {
 			// Idle time exceeded threshold, perform actions or redirect user
 			//console.log('User is idle');
 			window.location.reload();
 			// Perform any necessary actions or redirect the user
 		} else {
 			// User is active, perform any necessary actions
-			lastActivity++;
-			//console.log('User is active');
+			lastActivityTime = new Date();
+		}		
+	});
+
+	// Check last activity time every second
+	setInterval(function() {
+		var idleTime = 7200; //Session Time
+		var currentDateTime = new Date();
+
+		// Calculate the time difference in milliseconds
+		var idleThreshold = currentDateTime - lastActivityTime;
+
+		// Convert the time difference to seconds
+        var secondsDifference = Math.floor(idleThreshold / 1000);
+
+		if (secondsDifference > idleTime) {
+			// Idle time exceeded threshold, perform actions or redirect user
+			//console.log('User is idle');
+			window.location.reload();
+			// Perform any necessary actions or redirect the user
+		} else {
+			// User is active, perform any necessary actions
+			console.log('User is active, Seconds : '+ secondsDifference);
 		}
 	}, 1000); // Check every second (adjust interval as needed)
-
     
     /* document.addEventListener('contextmenu', function(e) {e.preventDefault();});
 	document.onkeydown = function(e) {
@@ -461,13 +480,20 @@ function reInitMultiSelect(){
 
 function statusTab(tableId,status,hp_fn_name="",page=""){
     $("#"+tableId).attr("data-url",'/getDTRows/'+status);
-    $("#"+tableId).attr("data-hp_fn_name",hp_fn_name);
-    $("#"+tableId).attr("data-page",page);
+
+	$("#"+tableId).data("hp_fn_name","");
+    $("#"+tableId).data("page","");
+    $("#"+tableId).data("hp_fn_name",hp_fn_name);
+    $("#"+tableId).data("page",page);
+
     ssTable.state.clear();
 	initTable();
 }
 
 function ssTableInit(){
+	var tableId = $('.ssTable').attr('id');
+	$("#"+tableId).data("hp_fn_name","");
+    $("#"+tableId).data("page","");
 	var tableOptions = {pageLength: 25,'stateSave':false};
     ssDatatable($('.ssTable'),tableHeaders,tableOptions);
 }
@@ -475,6 +501,7 @@ function ssTableInit(){
 function initTable(postData = {}){
 	$('.ssTable').DataTable().clear().destroy();
 	var tableId = $('.ssTable').attr('id');
+	
 	var hp_fn_name = $("#"+tableId).data("hp_fn_name") || "";
 	var page = $("#"+tableId).data("page") || "";
 
@@ -489,7 +516,7 @@ function initTable(postData = {}){
 				var dataSet = postData;
 				var tableHeaders = response.data;
 				tableHeaders.reInit = 1;
-				console.log(tableHeaders);
+				
 				$('.ssTable').html("");
 				ssDatatable($('.ssTable'),tableHeaders,tableOptions,dataSet);
 			},
