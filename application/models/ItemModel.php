@@ -50,8 +50,9 @@ class ItemModel extends MasterModel{
 
     public function getItemList($data=array()){
         $queryData['tableName'] = $this->itemMaster;
-        $queryData['select'] = "item_master.*,unit_master.unit_name";
+        $queryData['select'] = "item_master.*,unit_master.unit_name,item_category.category_name,item_category.batch_stock as stock_type";
 
+        $queryData['leftJoin']['item_category'] = "item_category.id  = item_master.category_id";
         $queryData['leftJoin']['unit_master'] = "item_master.unit_id = unit_master.id";
         
         if(!empty($data['item_type'])):
@@ -63,9 +64,10 @@ class ItemModel extends MasterModel{
 
     public function getItem($data){
         $queryData['tableName'] = $this->itemMaster;
-        $queryData['select'] = "item_master.*,unit_master.unit_name";
+        $queryData['select'] = "item_master.*,unit_master.unit_name,item_category.category_name,item_category.batch_stock as stock_type";
 
         $queryData['leftJoin']['unit_master'] = "item_master.unit_id = unit_master.id";
+        $queryData['leftJoin']['item_category'] = "item_category.id  = item_master.category_id";
         
         if(!empty($data['id'])):
             $queryData['where']['item_master.id'] = $data['id'];
