@@ -816,6 +816,15 @@ class MasterModel extends CI_Model{
 					endforeach;
 				endif;            
 			endif;
+
+            if(isset($data['update'])):
+				if(!empty($data['update'])):
+					foreach($data['update'] as $key=>$value):
+						$this->db->set($key, $value, FALSE);
+					endforeach;
+				endif;            
+			endif;
+            
             $this->db->update($data['tableName']);
             return ['status'=>1,'message'=>"Record updated Successfully.",'qry'=>$this->db->last_query()];
         endif;
