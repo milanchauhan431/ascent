@@ -56,12 +56,7 @@
 										</div>
                                         <select name="party_id" id="party_id" class="form-control single-select partyDetails partyOptions req" data-res_function="resPartyDetail">
 											<option value="">Select Party</option>
-											<?php
-												foreach($partyList as $row):
-													$selected = (!empty($dataRow->party_id) && $dataRow->party_id == $row->id)?"selected":"";
-													echo "<option value='".$row->id."' ".$selected.">".$row->party_name."</option>";
-												endforeach;
-											?>
+											<?=getPartyListOption($partyList,((!empty($dataRow->party_id))?$dataRow->party_id:0))?>
 										</select>
 
                                     </div>
@@ -393,11 +388,7 @@
 								<label for="item_id">Product Name</label>
                                 <select name="item_id" id="item_id" class="form-control single-select itemDetails itemOptions" data-res_function="resItemDetail">
                                     <option value="">Select Product Name</option>
-                                    <?php
-                                        foreach($itemList as $row):
-                                            echo '<option value="'.$row->id.'">'.$row->item_name.'</option>';
-                                        endforeach;
-                                    ?>
+                                    <?=getItemListOption($itemList)?>
                                 </select>
                             </div>
                             <div class="col-md-4 form-group">
