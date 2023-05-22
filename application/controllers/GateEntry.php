@@ -34,7 +34,7 @@ class GateEntry extends MY_Controller{
         $this->data['partyList'] = $this->party->getPartyList(['party_category'=>[1,2,3]]);
         $this->data['itemList'] = $this->item->getItemList(['item_type'=>[2,3]]);
         $this->data['trans_no'] = $this->gateEntry->getNextNo();
-        $this->data['trans_prefix'] = "GE/".n2y(date("Y"));
+        $this->data['trans_prefix'] = "GE/".n2y(getFyDate("Y"));
         $this->data['trans_number'] = $this->data['trans_prefix'].sprintf("%04d",$this->data['trans_no']);
         $this->load->view($this->form,$this->data);
     }
@@ -71,12 +71,14 @@ class GateEntry extends MY_Controller{
             $this->printJson(['status'=>0,'message'=>$errorMessage]);
         else:
             if(empty($data['id'])):
-                $data['trans_prefix'] = "GE/".n2y(date("Y"));
+                $data['trans_prefix'] = "GE/".n2y(getFyDate("Y"));;
                 $data['trans_no'] = $this->gateEntry->getNextNo();
                 $data['trans_number'] = $data['trans_prefix'].sprintf("%04d",$data['trans_no']);
             endif;
             $data['driver_name'] = ucwords($data['driver_name']);
             $data['vehicle_no'] = strtoupper($data['vehicle_no']);
+            $data['inv_date'] = (!empty($data['inv_date']))?$data['inv_date']:null;
+            $data['doc_date'] = (!empty($data['doc_date']))?$data['doc_date']:null;
             $this->printJson($this->gateEntry->save($data));
         endif;
     }
