@@ -1,3 +1,4 @@
+
 <?php
 class TermsModel extends MasterModel{
     private $terms = "terms";
@@ -42,7 +43,9 @@ class TermsModel extends MasterModel{
         try{
             $this->db->trans_begin();
 
-            $checkData['columnName'] = [];
+            $checkData['columnName'] = ["i_col_1"];
+            $checkData['table_condition']['trans_detail']['where']['i_col_1']['table_name'] = "trans_main";
+            $checkData['table_condition']['trans_detail']['where_in']['i_col_1']['description'] = ["SO TERMS","PO TERMS"];
             $checkData['value'] = $id;
             $checkUsed = $this->checkUsage($checkData);
 
