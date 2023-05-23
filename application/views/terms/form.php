@@ -13,7 +13,7 @@
                 <textarea name="conditions" id="conditions" class="form-control req" rows="2"><?= (!empty($dataRow->conditions)) ? $dataRow->conditions : "" ?></textarea>
             </div>
 
-            <div class="col-md-12 form-group">
+            <div class="col-md-6 form-group">
                 <label for="type">Type</label>
                 <select id="typeSelect" data-input_id="type" class="form-control jp_multiselect req" multiple="multiple">
                     <?php
@@ -30,6 +30,14 @@
                 </select>
                 <input type="hidden" name="type" id="type" value="<?= (!empty($dataRow->type)) ? $dataRow->type : "" ?>" />
                 <div class="error type"></div>
+            </div>
+
+            <div class="col-md-6 form-group">
+                <label for="is_default">Is Default ?</label>
+                <select name="is_default" id="is_default" class="form-control">
+                    <option value="0" <?=(!empty($dataRow->is_default) && $dataRow->is_default == 0)?"selected":""?>>No</option>
+                    <option value="1" <?=(!empty($dataRow->is_default) && $dataRow->is_default == 1)?"selected":""?>>Yes</option>
+                </select>
             </div>
         </div>
     </div>
