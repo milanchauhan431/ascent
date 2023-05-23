@@ -28,8 +28,7 @@ function getStoreDtHeader($page){
     $data['pendingGE'][] = ["name"=> "GE No.", "textAlign" => "center"];
     $data['pendingGE'][] = ["name" => "GE Date", "textAlign" => "center"];
     $data['pendingGE'][] = ["name" => "Party Name"];
-    $data['pendingGE'][] = ["name" => "Item Name"];
-    $data['pendingGE'][] = ["name" => "Qty"];
+    $data['pendingGE'][] = ["name" => "No. of Items"];
     $data['pendingGE'][] = ["name" => "Inv. No."];
     $data['pendingGE'][] = ["name" => "Inv. Date"];
     $data['pendingGE'][] = ['name' => "CH. NO."];
@@ -42,9 +41,7 @@ function getStoreDtHeader($page){
     $data['gateInward'][] = ["name" => "GI Date", "textAlign" => "center"];
     $data['gateInward'][] = ["name" => "Party Name"];
     $data['gateInward'][] = ["name" => "Item Name"];
-    $data['gateInward'][] = ["name" => "Inward Qty"];
-    $data['gateInward'][] = ["name" => "Actual Qty"];
-    $data['gateInward'][] = ["name" => "Weight (Kgs)"];
+    $data['gateInward'][] = ["name" => "Qty"];
     $data['gateInward'][] = ["name" => "PO. NO."];   
 
     return tableHeader($data[$page]);
@@ -101,13 +98,25 @@ function getGateInwardData($data){
 
         $action = getActionButton($createGI);
 
-        return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->item_name,$data->qty,$data->inv_no,$data->inv_date,$data->doc_no,$data->doc_date];
+        return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->no_of_items,$data->inv_no,$data->inv_date,$data->doc_no,$data->doc_date];
     else: // Gate Inward Pending/Completed Data
+
+        $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Gate Inward'}";
+        $editParam = "{'postData':{'id' : ".$data->id."},'modal_id' : 'modal-xl', 'form_id' : 'editGateInward', 'title' : 'Update Gate Inward'}";
+
+        $editButton = "";
+        $deleteButton = "";
+        if($data->trans_status == 0):
+            $editButton = '<a class="btn btn-success btn-edit permission-modify" href="javascript:void(0)" datatip="Edit" flow="down" onclick="edit('.$editParam.');"><i class="ti-pencil-alt" ></i></a>';
+
+            $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
+        endif;
+
 	    $iirPrint = '<a href="'.base_url('gateInward/ir_print/'.$data->id).'" type="button" class="btn btn-primary" datatip="IIR Print" flow="down" target="_blank"><i class="fas fa-print"></i></a>';
 
-	    $action = getActionButton($pallatePrint.$iirPrint.$editButton.$deleteButton);
+	    $action = getActionButton($iirPrint.$editButton.$deleteButton);
 
-        return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->item_name,$data->inward_qty,$data->qty,$data->qty_kg,$data->po_number];
+        return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->item_name,$data->qty,$data->po_number];
     endif;
 }
 

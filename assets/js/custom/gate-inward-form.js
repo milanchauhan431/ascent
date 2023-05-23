@@ -18,7 +18,7 @@ $(document).ready(function(){
         var formData = {};
 
         formData.mir_id = "";
-        formData.mir_trans_id = "";
+        formData.id = "";
 
         formData.location_id = $("#location_id").val();
         formData.location_name = $("#location_id :selected").text();
@@ -26,7 +26,8 @@ $(document).ready(function(){
         formData.item_name = $("#item_idc").val();
         formData.heat_no = $("#heat_no").val();
         formData.mill_heat_no = $("#mill_heat_no").val();
-        formData.batch_qty = $("#qty").val();
+        formData.qty = $("#qty").val();
+        formData.price = $("#price").val();
         formData.po_trans_id = $("#po_trans_id").val();
         formData.po_id = $("#po_id").val();
         formData.item_stock_type = $("#item_stock_type").val();
@@ -39,7 +40,7 @@ $(document).ready(function(){
         /* if(formData.po_trans_id == ""){ 
             $('.po_trans_id').html("PO is required.");
         } */
-        if(formData.batch_qty == "" || parseFloat(formData.batch_qty) == 0){ 
+        if(formData.qty == "" || parseFloat(formData.qty) == 0){ 
             $('.qty').html("Qty is required.");
         }
         if(formData.location_id == ""){ 
@@ -131,8 +132,8 @@ function AddBatchRow(data){
 	cell.html(data.item_name);
 	cell.attr("style","width:5%;");	
 
-    var mirIdInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][mir_id]",value:data.trans_id});
-    var mirTransIdInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][id]",value:data.mir_trans_id});
+    var mirIdInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][mir_id]",value:data.mir_id});
+    var mirTransIdInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][id]",value:data.id});
     var locationIdInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][location_id]",value:data.location_id});
     cell = $(row.insertCell(-1));
 	cell.html(data.location_name);
@@ -155,10 +156,12 @@ function AddBatchRow(data){
 	cell.html(data.mill_heat_no);
     cell.append(millHeatNoInput);
 
-    var batchQtyInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][batch_qty]",value:data.batch_qty});   
+    var batchQtyInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][qty]",value:data.qty});   
+    var priceInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][price]",value:data.price});   
     cell = $(row.insertCell(-1));
-	cell.html(data.batch_qty);
+	cell.html(data.qty);
     cell.append(batchQtyInput);
+    cell.append(priceInput);
 
     //Add Button cell.	
 	var btnRemove = $('<button><i class="ti-trash"></i></button>');

@@ -42,7 +42,7 @@ class GateInward extends MY_Controller{
         $this->data['locationList'] = $this->storeLocation->getStoreLocationList(['store_type'=>'0,15','final_location'=>1]);
         $this->data['materialGradeList'] = $this->materialGrade->getMaterialGrades();
         $this->data['trans_no'] = $this->gateEntry->getNextNo(2);
-        $this->data['trans_prefix'] = "GE/".n2y(getFyDate("Y"));
+        $this->data['trans_prefix'] = "GI/".n2y(getFyDate("Y"));
         $this->data['trans_number'] = $this->data['trans_prefix'].sprintf("%04d",$this->data['trans_no']);
         $this->load->view($this->form,$this->data);
     }
@@ -53,7 +53,7 @@ class GateInward extends MY_Controller{
         $this->data['locationList'] = $this->storeLocation->getStoreLocationList(['store_type'=>'0,15','final_location'=>1]);
         $this->data['materialGradeList'] = $this->materialGrade->getMaterialGrades();
         $this->data['trans_no'] = $this->gateEntry->getNextNo(2);
-        $this->data['trans_prefix'] = "GE/".n2y(getFyDate("Y"));
+        $this->data['trans_prefix'] = "GI/".n2y(getFyDate("Y"));
         $this->data['trans_number'] = $this->data['trans_prefix'].sprintf("%04d",$this->data['trans_no']);
         $this->load->view($this->form,$this->data);
     }
@@ -77,13 +77,95 @@ class GateInward extends MY_Controller{
         if(empty($data['party_id']))
             $errorMessage['party_id'] = "Party Name is required.";
         if(empty($data['batchData']))
-            $errorMessage['batch_details'] = "Batch Details is required.";
+            $errorMessage['batch_details'] = "Item Details is required.";
 
         if(!empty($errorMessage)):
             $this->printJson(['status'=>0,'message'=>$errorMessage]);
         else:
             $this->printJson($this->gateInward->save($data));
         endif;
+    }
+
+    public function edit(){
+        $data = $this->input->post();
+        $gateInward = $this->gateInward->getGateInward($data['id']);
+        $this->data['partyList'] = $this->party->getPartyList();
+        $this->data['itemList'] = $this->item->getItemList();
+        $this->data['locationList'] = $this->storeLocation->getStoreLocationList(['store_type'=>'0,15','final_location'=>1]);
+        $this->data['gateInwardData'] = $gateInward;
+        $this->load->view($this->form,$this->data);
+    }
+
+    public function delete(){
+        $id = $this->input->post('id');
+        if(empty($id)):
+            $this->printJson(['status'=>0,'message'=>'Somthing went wrong...Please try again.']);
+        else:
+            $this->printJson($this->gateInward->delete($id));
+        endif;
+    }
+
+    
+    public function ir_print($id){
+        $irData = $this->gateInward->getGateInward($id);  
+        $countData = count($irData->itemData);
+		$itemList="";$i=1;
+		
+        $logo=base_url('assets/images/logo.png');
+
+        foreach($irData->itemData as $row):
+			$itemList .='<style>.top-table-border th,.top-table-border td{font-size:12px;}</style>
+            <table class="table">
+                <tr>
+                    <td><img src="'.$logo.'" style="max-height:40px;"></td>
+                    <td class="org_title text-right" style="font-size:18px;">IIR Tag</td>
+                </tr>
+            </table>
+            <table class="table top-table-border">
+                <tr> 
+                    <th>GI No</th>
+                    <td>'.$irData->trans_number.'</td>
+                    <th>GI Date</th>
+                    <td>'.date("d-m-Y h:i:s a", strtotime($irData->trans_date)).'</td>
+                </tr>
+                <tr> 
+                    <th>Part Name</th>
+                    <td colspan="3">'.$row->item_name.'</td>
+                </tr>
+                <tr> 
+                    <th>Supplier</th>
+                    <td colspan="3">'.$irData->party_name.'</td>
+                </tr>
+                <tr> 
+                    <th> Batch No</th>
+                    <td>'.$row->batch_no.'  </td>
+                    <th>Batch Qty</th>
+                    <td>'.$row->qty.' </td>
+                </tr>
+                <tr> 
+                    <th>Heat No </th>
+                    <td>'.$row->heat_no.' </td>
+                    <th>Pallate No.</th>
+                    <td>'.$i.'/'.$countData.'</td>
+                </tr>
+                <tr> 
+                    <th>Printed At</th>
+                    <td colspan="3">'.date("d-m-Y h:i:s a").'</td>
+                </tr>
+            </table>'; $i++;
+        endforeach;
+		
+        $pdfData = '<div style="width:100mm;height:25mm;">'.$itemList.'</div>';
+        		
+        $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [100, 58]]);
+		$pdfFileName='IR_PRINT.pdf';
+		$stylesheet = file_get_contents(base_url('assets/css/pdf_style.css'));
+		$mpdf->WriteHTML($stylesheet,1);
+		$mpdf->SetDisplayMode('fullpage');
+		$mpdf->SetProtection(array('print'));
+		$mpdf->AddPage('P','','','','',2,2,2,2,2,2);
+		$mpdf->WriteHTML($pdfData);
+		$mpdf->Output($pdfFileName,'I');
     }
 }
 ?>

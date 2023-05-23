@@ -2,50 +2,12 @@
     <div class="col-md-12">
         <div class="row">
 
-            <?php
-                $batchDiv = "";$serialNoDiv = "";$readonly = "";
-                $qtyClass = "";
-                if(!empty($gateInwardData->id)):                       
-                    if(!empty($gateInwardData->item_stock_type) && $gateInwardData->item_stock_type == 1):
-                        $serialNoDiv = 'style="display:none;"';
-                        $qtyClass = "floatOnly";
-                    elseif(!empty($gateInwardData->item_stock_type) && $gateInwardData->item_stock_type == 2):
-                        $batchDiv = 'style="display:none;"';
-                        $qtyClass = "numericOnly";
-                        $readonly = "readonly";
-                    else:
-                        $batchDiv = 'style="display:none;"';
-                        $serialNoDiv = 'style="display:none;"';
-                        $qtyClass = "floatOnly";
-                    endif;
-                else:
-                    if(!empty($gateEntryData->batch_stock) && $gateEntryData->batch_stock == 1):
-                        $serialNoDiv = 'style="display:none;"';
-                        $qtyClass = "floatOnly";
-                    elseif(!empty($gateEntryData->batch_stock) && $gateEntryData->batch_stock == 2):
-                        $batchDiv = 'style="display:none;"';
-                        $qtyClass = "numericOnly";
-                        $readonly = "readonly";
-                    else:
-                        $batchDiv = 'style="display:none;"';
-                        $serialNoDiv = 'style="display:none;"';
-                        $qtyClass = "floatOnly";
-                    endif;
-                endif;
-            ?>
-
             <input type="hidden" name="id" id="id" value="<?=(!empty($gateInwardData->id))?$gateInwardData->id:""?>">
             <input type="hidden" name="ref_id" id="ref_id" value="<?=(!empty($gateInwardData->ref_id))?$gateInwardData->ref_id:((!empty($gateEntryData->id))?$gateEntryData->id:"")?>">
-            
-            <input type="hidden" name="po_id" id="po_id" value="<?=(!empty($gateInwardData->po_id))?$gateInwardData->po_id:""?>">
-            <input type="hidden" name="item_stock_type" id="item_stock_type" value="<?=(!empty($gateInwardData->item_stock_type))?$gateInwardData->item_stock_type:0?>">
-            <input type="hidden" name="inward_qty" id="inward_qty" value="<?=(!empty($gateInwardData->inward_qty))?$gateInwardData->inward_qty:""?>">
-            <input type="hidden" name="item_type" id="item_type" value="<?=(!empty($gateInwardData->item_type))?$gateInwardData->item_type:((!empty($gateEntryData->item_type))?$gateEntryData->item_type:"")?>">
-
             <input type="hidden" name="trans_prefix" id="trans_prefix" value="<?=(!empty($gateInwardData->trans_prefix))?$gateInwardData->trans_prefix:$trans_prefix?>">
             <input type="hidden" name="trans_no" id="trans_no" value="<?=(!empty($gateInwardData->trans_no))?$gateInwardData->trans_no:$trans_no?>">
 
-            <div class="col-md-2 form-group">
+            <div class="col-md-3 form-group">
                 <label for="trans_no">GI No.</label>
                 <input type="text" name="trans_number" id="trans_number" class="form-control" value="<?=(!empty($gateInwardData->trans_number))?$gateInwardData->trans_number:$trans_number?>" readonly>
             </div>
@@ -55,7 +17,7 @@
                 <input type="datetime-local" name="trans_date" id="trans_date" class="form-control" value="<?=(!empty($gateInwardData->trans_date))?$gateInwardData->trans_date:getFyDate("Y-m-d H:i:s")?>">
             </div>
 
-            <div class="col-md-4 form-group">
+            <div class="col-md-6 form-group">
                 <label for="party_id">Party Name</label>
                 <select name="party_id" id="party_id" class="form-control single-select">
                     <option value="">Select Party Name</option>
@@ -63,30 +25,35 @@
                 </select>                
             </div>
 
-            <div class="col-md-3 form-group">
+            <div class="col-md-4 form-group">
                 <label for="item_id">Item Name</label>
-                <select name="item_id" id="item_id" class="form-control itemDetails single-select" data-res_function="resItemDetail">
+                <select id="item_id" class="form-control itemDetails single-select" data-res_function="resItemDetail">
                     <option value="">Select Item Name</option>
                     <?=getItemListOption($itemList,(!empty($gateInwardData->item_id))?$gateInwardData->item_id:"")?>
                 </select>
+
+                <input type="hidden" id="item_stock_type" value="">
+                <input type="hidden" id="inward_qty" value="">
+                <input type="hidden" id="item_type" value="">
             </div>
 
             <div class="col-md-4 form-group">
                 <label for="po_trans_id">Purchase Order</label>
-                <select name="po_trans_id" id="po_trans_id" class="form-control single-select">
+                <select id="po_trans_id" class="form-control single-select">
                     <option value="">Select Purchase Order</option>
                 </select>
                 <div class="error po_trans_id"></div>
+                <input type="hidden" id="po_id" value="">
             </div>
 
-            <div class="col-md-4 form-group">
+            <div class="col-md-2 form-group">
                 <label for="qty">Qty</label>
-                <input type="text" name="qty" id="qty" class="form-control <?=$qtyClass?> req" value="<?=(!empty($gateInwardData->qty))?$gateInwardData->qty:""?>">
+                <input type="text" id="qty" class="form-control floatOnly req" value="">
             </div>
 
-            <div class="col-md-4 form-group">
+            <div class="col-md-2 form-group">
                 <label for="price">Price</label>
-                <input type="text" name="price" id="price" class="form-control floatVal" value="<?=(!empty($gateInwardData->price))?$gateInwardData->price:""?>">
+                <input type="text" id="price" class="form-control floatVal" value="">
             </div>
 
             <div class="col-md-4 form-group">
@@ -138,7 +105,7 @@
                         <tr>
                             <th>#</th>
                             <th>PO No</th>
-                            <th>Item</th>
+                            <th>Item Name</th>
                             <th>Location</th>
                             <th>Batch NO</th>
                             <th>Heat No</th>
@@ -159,8 +126,8 @@
 </form>
 <script src="<?php echo base_url();?>assets/js/custom/gate-inward-form.js?v=<?=time()?>"></script>
 <?php
-    if(!empty($gateInwardData->batchItems)):
-        foreach($gateInwardData->batchItems as $row):
+    if(!empty($gateInwardData->itemData)):
+        foreach($gateInwardData->itemData as $row):
             echo "<script>AddBatchRow(".json_encode($row).");</script>";
         endforeach;
     endif;

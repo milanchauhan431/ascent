@@ -7,13 +7,22 @@ class GateInwardModel extends masterModel{
 
 
     public function getDTRows($data){
-        $data['tableName'] = $this->mir;
+        if($data['trans_type'] == 1):
+            $data['tableName'] = $this->mir;
 
-        $data['select'] = "mir.id,mir.trans_number,DATE_FORMAT(mir.trans_date,'%d-%m-%Y') as trans_date,mir.qty,party_master.party_name,item_master.item_name,mir.inv_no,ifnull(DATE_FORMAT(mir.inv_date,'%d-%m-%Y'),'') as inv_date,mir.doc_no,ifnull(DATE_FORMAT(mir.doc_date,'%d-%m-%Y'),'') as doc_date,trans_main.trans_number as po_number,mir.qty_kg,mir.inward_qty,mir.trans_status,mir.trans_type";
+            $data['select'] = "mir.id,mir.trans_number,DATE_FORMAT(mir.trans_date,'%d-%m-%Y') as trans_date,mir.qty as no_of_items,party_master.party_name,mir.inv_no,ifnull(DATE_FORMAT(mir.inv_date,'%d-%m-%Y'),'') as inv_date,mir.doc_no,ifnull(DATE_FORMAT(mir.doc_date,'%d-%m-%Y'),'') as doc_date,mir.qty_kg,mir.inward_qty,mir.trans_status,mir.trans_type";
+
+        else:
+            $data['tableName'] = $this->mirTrans;
+
+            $data['select'] = "mir.id,mir.trans_number,DATE_FORMAT(mir.trans_date,'%d-%m-%Y') as trans_date,mir.qty as no_of_items,party_master.party_name,item_master.item_name,mir.inv_no,ifnull(DATE_FORMAT(mir.inv_date,'%d-%m-%Y'),'') as inv_date,mir.doc_no,ifnull(DATE_FORMAT(mir.doc_date,'%d-%m-%Y'),'') as doc_date,trans_main.trans_number as po_number,mir.qty_kg,mir.inward_qty,mir_transaction.trans_status,mir.trans_type,mir_transaction.qty";
+
+            $data['leftJoin']['mir'] = "mir.id = mir_transaction.mir_id";
+            $data['leftJoin']['item_master'] = "item_master.id = mir_transaction.item_id";
+            $data['leftJoin']['trans_main'] = "trans_main.id = mir_transaction.po_id";
+        endif;
 
         $data['leftJoin']['party_master'] = "party_master.id = mir.party_id";
-        $data['leftJoin']['item_master'] = "item_master.id = mir.item_id";
-        $data['leftJoin']['trans_main'] = "trans_main.id = mir.po_id";
 
         $data['where']['mir.trans_status'] = $data['trans_status'];
         $data['where']['mir.trans_type'] = $data['trans_type'];
@@ -26,7 +35,6 @@ class GateInwardModel extends masterModel{
             $data['searchCol'][] = "mir.trans_number";
             $data['searchCol'][] = "DATE_FORMAT(mir.trans_date,'%d-%m-%Y')";
             $data['searchCol'][] = "party_master.party_name";
-            $data['searchCol'][] = "item_master.full_name";
             $data['searchCol'][] = "mir.qty";
             $data['searchCol'][] = "mir.inv_no";
             $data['searchCol'][] = "ifnull(DATE_FORMAT(mir.inv_date,'%d-%m-%Y'),'')";
@@ -38,10 +46,8 @@ class GateInwardModel extends masterModel{
             $data['searchCol'][] = "mir.trans_number";
             $data['searchCol'][] = "DATE_FORMAT(mir.trans_date,'%d-%m-%Y')";
             $data['searchCol'][] = "party_master.party_name";
-            $data['searchCol'][] = "item_master.full_name";
-            $data['searchCol'][] = "mir.inward_qty";
-            $data['searchCol'][] = "mir.qty";
-            $data['searchCol'][] = "mir.qty_kg";
+            $data['searchCol'][] = "item_master.item_name";
+            $data['searchCol'][] = "mir_transaction.qty";
             $data['searchCol'][] = "trans_main.trans_number";
         endif;
 
@@ -58,76 +64,71 @@ class GateInwardModel extends masterModel{
             $this->db->trans_begin();
 
             if(!empty($data['id'])):
-                $this->trash($this->mirTrans,['mir_id',$data['id']]);
-                
                 $gateInwardData = $this->getGateInward($data['id']);
-                $this->store($this->mir,['id'=>$gateInwardData->ref_id,'trans_status'=>0]);
+
+                if(!empty($gateInwardData->ref_id)):
+                    $this->store($this->mir,['id'=>$gateInwardData->ref_id,'trans_status'=>0]);
+                endif;
+
+                foreach($gateInwardData->itemData as $row):
+                    if(!empty($row->po_trans_id)):
+                        $setData = array();
+                        $setData['tableName'] = $this->transChild;
+                        $setData['where']['id'] = $row->po_trans_id;
+                        $setData['set']['dispatch_qty'] = 'dispatch_qty, - '.$row->qty;
+                        $setData['update']['trans_status'] = 0;
+                        $this->setValue($setData);
+                    endif;
+
+                    $this->trash($this->mirTrans,['id',$row->id]);
+                endforeach;
             else:
                 $data['trans_no'] = $this->gateEntry->getNextNo(2);
-                $data['trans_prefix'] = "GE/".n2y(getFyDate("Y"));
+                $data['trans_prefix'] = "GI/".n2y(getFyDate("Y"));
                 $data['trans_number'] = $data['trans_prefix'].sprintf("%04d",$data['trans_no']);
             endif;
 
-            foreach($data['batchData'] as $row):         
-                $itemData = $this->item->getItem($data['item_id']);
+            $itemData = $data['batchData'];unset($data['batchData']);
 
-                $masterData = [
-                    'id' => $row['mir_id'],
-                    'ref_id' => $data['ref_id'],
-                    'trans_type' => 2,
-                    'trans_prefix' => $data['trans_prefix'],
-                    'trans_no' => $data['trans_no'],
-                    'trans_number' => $data['trans_number'],
-                    'trans_date' => $data['trans_date'],
-                    'party_id' => $data['party_id'],
-                    'item_id' => $row['item_id'],
-                    'item_stock_type' => $itemData->stock_type,
-                    'po_id' => $row['po_id'],
-                    'po_trans_id' => $row['po_trans_id'],
-                    'qty' => $row['batch_qty']
-                ];
+            $data['trans_type'] = 2;
+            $result = $this->store($this->mir,$data,'Gate Inward');
 
-                $result = $this->store($this->mir,$masterData,'Gate Inward');
+            foreach($itemData as $row):         
+                $itemData = $this->item->getItem($row['item_id']);
 
-                $batchData = [
-                    'id' => $row['id'],
-                    'mir_id' => $result['id'],
-                    'type' => 1,
-                    'location_id' => $row['location_id'],
-                    'qty' => $row['batch_qty'],
-                    'item_id' => $row['item_id'],
-                    'heat_no' => $row['heat_no'],
-                    'mill_heat_no' => $row['mill_heat_no'],
-                    'is_delete' => 0
-                ];
+                $row['mir_id'] = $result['id'];
+                $row['type'] = 1;
+                $row['is_delete'] = 0;
 
-                if($data['item_stock_type'] == 1):
-                    $nextBatchNo = $this->gateReceipt->getNextBatchOrSerialNo(['trans_id'=>'','item_id'=>$row['item_id'],'heat_no'=>$row['heat_no']]);
+                if($row['item_stock_type'] == 1):
+                    $nextBatchNo = $this->gateReceipt->getNextBatchOrSerialNo(['trans_id'=>$row['id'],'item_id'=>$row['item_id'],'heat_no'=>$row['heat_no']]);
 
-                    $batchData['batch_no'] = $nextBatchNo['batch_no'];                    
-                    $batchData['serial_no'] = $nextBatchNo['serial_no'];
-                elseif($data['item_stock_type'] == 2):
-                    $batchData['batch_no'] = $itemData->item_code.sprintf(n2y(date('Y'))."%03d",$data['trans_no']);
+                    $row['batch_no'] = $nextBatchNo['batch_no'];                    
+                    $row['serial_no'] = $nextBatchNo['serial_no'];
+                elseif($row['item_stock_type'] == 2):
+                    $row['batch_no'] = $itemData->item_code.sprintf(n2y(date('Y'))."%03d",$data['trans_no']);
                 else:
-                    $batchData['batch_no'] = "GB";
-                    $batchData['serial_no'] = 0;
+                    $row['batch_no'] = "GB";
+                    $row['serial_no'] = 0;
                 endif;
 
-                $batch = $this->store($this->mirTrans,$batchData);
+                $this->store($this->mirTrans,$row);
 
                 if(!empty($row['po_trans_id'])):
                     $setData = array();
                     $setData['tableName'] = $this->transChild;
                     $setData['where']['id'] = $row['po_trans_id'];
-                    $setData['set']['dispatch_qty'] = 'dispatch_qty, + '.$row['batch_qty'];
-                    $setData['update']['trans_status'] = "(CASE WHEN (dispatch_qty + ".$row['batch_qty'].") >= qty THEN 1 ELSE 0 END)";
+                    $setData['set']['dispatch_qty'] = 'dispatch_qty, + '.$row['qty'];
+                    $setData['update']['trans_status'] = "(CASE WHEN (dispatch_qty + ".$row['qty'].") >= qty THEN 1 ELSE 0 END)";
                     $this->setValue($setData);
                 endif;
                 
             endforeach;
 
             //Update GI Status
-            $this->store($this->mir,['id'=>$data['ref_id'],'trans_status'=>1]);            
+            if(!empty($data['ref_id'])):
+                $this->store($this->mir,['id'=>$data['ref_id'],'trans_status'=>1]);
+            endif;        
 
             if ($this->db->trans_status() !== FALSE):
                 $this->db->trans_commit();
@@ -201,7 +202,60 @@ class GateInwardModel extends masterModel{
 		return ['status'=>1,'batch_no'=>$code,'serial_no'=>$serial_no];
 	}
 
+    public function getGateInward($id){
+        $queryData['tableName'] = $this->mir;
+        $queryData['select'] = "mir.*,party_master.party_name";
+        $queryData['leftJoin']['party_master'] = "mir.party_id = party_master.id";
+        $queryData['where']['mir.id'] = $id;
+        $result = $this->row($queryData);
 
+        $result->itemData = $this->getGateInwardItems($id);
+        return $result;
+    }
     
+    public function getGateInwardItems($id){
+        $queryData['tableName'] = $this->mirTrans;
+        $queryData['select'] = "mir_transaction.*,item_master.item_name,location_master.location as location_name,trans_main.trans_number as po_no";
+        $queryData['leftJoin']['item_master'] = "item_master.id = mir_transaction.item_id";
+        $queryData['leftJoin']['location_master'] = "location_master.id = mir_transaction.location_id";
+        $queryData['leftJoin']['trans_main'] = "trans_main.id = mir_transaction.po_id";
+        $queryData['where']['mir_transaction.mir_id'] = $id;
+        return $this->rows($queryData);
+    }
+
+    public function delete($id){
+        try{
+            $this->db->trans_begin();
+
+            $gateInwardData = $this->getGateInward($id);
+
+            if(!empty($gateInwardData->ref_id)):
+                $this->store($this->mir,['id'=>$gateInwardData->ref_id,'trans_status'=>0]);
+            endif;
+
+            foreach($gateInwardData->itemData as $row):
+                if(!empty($row->po_trans_id)):
+                    $setData = array();
+                    $setData['tableName'] = $this->transChild;
+                    $setData['where']['id'] = $row->po_trans_id;
+                    $setData['set']['dispatch_qty'] = 'dispatch_qty, - '.$row->qty;
+                    $setData['update']['trans_status'] = 0;
+                    $this->setValue($setData);
+                endif;
+
+                $this->trash($this->mirTrans,['id',$row->id]);
+            endforeach;
+
+            $result = $this->trash($this->mir,['id'=>$id],'Gate Inward');        
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }	
+    }
 }
 ?>
