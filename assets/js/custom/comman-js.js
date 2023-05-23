@@ -42,7 +42,7 @@ $(document).ready(function(){
 			// Perform any necessary actions or redirect the user
 		} else {
 			// User is active, perform any necessary actions
-			console.log('User is active, Seconds : '+ secondsDifference);
+			//console.log('User is active, Seconds : '+ secondsDifference);
 		}
 	}, 1000); // Check every second (adjust interval as needed)
     
