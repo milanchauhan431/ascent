@@ -876,7 +876,7 @@ class MasterModel extends CI_Model{
                 $queryData['where'][$row->COLUMN_NAME] = $postData['value'];
 
                 if(isset($postData['table_condition']) && !empty($postData['table_condition'])):
-                    if(array_key_exists($row->TABLE_NAME, $data['table_condition'])):
+                    if(array_key_exists($row->TABLE_NAME, $postData['table_condition'])):
 
                         if(!empty($postData['table_condition'][$row->TABLE_NAME]['where']) && array_key_exists($row->COLUMN_NAME, $data['table_condition'][$row->TABLE_NAME]['where'])):
                             foreach($postData['table_condition'][$row->TABLE_NAME]['where'][$row->COLUMN_NAME] as $key=>$value):
@@ -884,13 +884,13 @@ class MasterModel extends CI_Model{
                             endforeach;
                         endif;
 
-                        if(!empty($postData['table_condition'][$row->TABLE_NAME]['where_in']) && array_key_exists($row->COLUMN_NAME, $data['table_condition'][$row->TABLE_NAME]['where_in'])):
+                        if(!empty($postData['table_condition'][$row->TABLE_NAME]['where_in']) && array_key_exists($row->COLUMN_NAME, $postData['table_condition'][$row->TABLE_NAME]['where_in'])):
                             foreach($postData['table_condition'][$row->TABLE_NAME]['where_in'][$row->COLUMN_NAME] as $key=>$value):
                                 $queryData['where_in'][$key] = $value;
                             endforeach;
                         endif;
 
-                        if(!empty($postData['table_condition'][$row->TABLE_NAME]['where_not_in']) && array_key_exists($row->COLUMN_NAME, $data['table_condition'][$row->TABLE_NAME]['where_not_in'])):
+                        if(!empty($postData['table_condition'][$row->TABLE_NAME]['where_not_in']) && array_key_exists($row->COLUMN_NAME, $postData['table_condition'][$row->TABLE_NAME]['where_not_in'])):
                             foreach($postData['table_condition'][$row->TABLE_NAME]['where_not_in'][$row->COLUMN_NAME] as $key=>$value):
                                 $queryData['where_not_in'][$key] = $value;
                             endforeach;
