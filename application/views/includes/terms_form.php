@@ -21,13 +21,19 @@
                                 $termaData = $termsConditions;
                                 $i = 1;$j = 0;
                                 foreach ($termsList as $row) :
-                                    $checked = "";
-                                    $disabled = "disabled";
-                                    if (in_array($row->id, array_column($termaData, 'term_id'))) :
-                                        $checked = "checked";
-                                        $disabled = "";
-                                        $row->conditions = $termaData[$j]->condition;
-                                        $j++;
+                                    $checked = ($row->is_default == 1 && empty($termaData))?"checked":"";
+                                    $disabled = ($row->is_default != 1 && empty($termaData))?"disabled":"";
+                                    
+                                    if(!empty($termaData)):
+                                        if(in_array($row->id, array_column($termaData, 'term_id'))) :
+                                            $checked = "checked";
+                                            $disabled = "";
+                                            $row->conditions = $termaData[$j]->condition;
+                                            $j++;
+                                        else:
+                                            $checked = "";
+                                            $disabled = "disabled";
+                                        endif;
                                     endif;
                             ?>
                                     <tr>
