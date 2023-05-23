@@ -41,7 +41,7 @@
 <script>
 $(document).ready(function(){
     initBulkCreateButton();
-    $(document).on('click','.nav-tab',function(){
+    $(document).on('click','.nav-tab, .nav-tab-refresh',function(){
         initBulkCreateButton();
     });
         
@@ -55,21 +55,19 @@ $(document).ready(function(){
                 $("input[name='ref_id[]']").prop('checked', false);
             }
         } else {
-            if ($("input[name='ref_id[]']").not(':checked').length != $("input[name='ref_id[]']").length) {
-                $(".bulkPO").show();
-                $("#masterSelect").prop('checked', false);
-            }else{
-                $("#masterSelect").prop('checked', true);
-                $(".bulkPO").show();
-            }
+            var checkboxLength = $("input[name='ref_id[]']").length;
+            var checkedLength = $("input[name='ref_id[]']:checked").length;
 
-            if ($("input[name='ref_id[]']:checked").length == $("input[name='ref_id[]']").length) {
-                $("#masterSelect").prop('checked', true);
-                $(".bulkPO").show();
-            }
-            else{
+            if(checkedLength == 0){
                 $("#masterSelect").prop('checked', false);
                 $(".bulkPO").hide();
+            }else{
+                $(".bulkPO").show();
+                if(checkedLength == checkboxLength){
+                    $("#masterSelect").prop('checked', true);
+                }else{
+                    $("#masterSelect").prop('checked', false);
+                }
             }
         }
     });
