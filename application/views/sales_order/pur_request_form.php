@@ -38,6 +38,14 @@
                             <?php
                                 $i=1;
                                 foreach($dataRow as $row):
+                                    $requestQty = 0;
+                                    if(!empty($row->stock_qty)):
+                                        if($row->stock_qty < $row->reqired_qty):
+                                            $requestQty = abs($row->stock_qty - $row->reqired_qty) - $row->req_qty;
+                                        endif;
+                                    else:
+                                        $requestQty = $row->reqired_qty - $row->req_qty;
+                                    endif;
                             ?>
                                 <tr>
                                     <td><?=$i?></td>
@@ -50,7 +58,7 @@
                                     <td><?=floatVal($row->req_qty)?></td>
                                     <td>
                                         <input type="hidden" name="itemData[<?=$i?>][bom_id]" value="<?=$row->id?>">
-                                        <input type="text" name="itemData[<?=$i?>][req_qty]" class="form-control floatOnly" value="">
+                                        <input type="text" name="itemData[<?=$i?>][req_qty]" class="form-control floatOnly" value="<?=$requestQty?>">
                                     </td>
                                     <td>
                                         <input type="text" name="itemData[<?=$i?>][remark]" class="form-control" value="">
