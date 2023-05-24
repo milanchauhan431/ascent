@@ -759,15 +759,15 @@ function trash(data){
 						data: send_data,
 						type: "POST",
 						dataType:"json",
-					}).done(function(data){
+					}).done(function(response){
 						if(resFunctionName != ""){
-							window[resFunctionName](data);
+							window[resFunctionName](response);
 						}else{
-							if(data.status==0){
-								toastr.error(data.message, 'Sorry...!', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
+							if(response.status==0){
+								toastr.error(response.message, 'Sorry...!', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
 							}else{
 								initTable();
-								toastr.success(data.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
+								toastr.success(response.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
 							}	
 						}
 					});
