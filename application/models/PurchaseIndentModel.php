@@ -14,12 +14,11 @@ class PurchaseIndentModel extends MasterModel{
 
     public function getDTRows($data){
         $data['tableName'] = $this->purchaseReq;
-        $data['select'] = "purchase_request.*,order_bom.uom,order_bom.make,item_master.item_code,item_master.item_name";
+        $data['select'] = "purchase_request.*,order_bom.uom,order_bom.make,item_master.item_code,item_master.item_name,trans_child.job_number";
 
         $data['leftJoin']['order_bom'] = "purchase_request.bom_id = order_bom.id";
-        $data['leftJoin']['item_master'] = "item_master.id = order_bom.item_id";
-
-        
+        $data['leftJoin']['trans_child'] = "trans_child.id = order_bom.trans_child_id";
+        $data['leftJoin']['item_master'] = "item_master.id = order_bom.item_id";       
 
         if(empty($data['status'])):
             $data['where_in']['purchase_request.order_status'] = [0,1];

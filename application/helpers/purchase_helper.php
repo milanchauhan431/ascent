@@ -20,6 +20,8 @@ function getPurchaseDtHeader($page){
     $data['purchaseIndent'][] = ["name"=>$masterCheckBox,"style"=>"width:10%;","sortable"=>"FALSE","textAlign"=>"center"];
     $data['purchaseIndent'][] = ["name"=>"Indent Date"];
     $data['purchaseIndent'][] = ["name"=>"Indent No"];
+    $data['purchaseIndent'][] = ["name"=>"Job No"];
+    $data['purchaseIndent'][] = ["name"=>"Make"];
     $data['purchaseIndent'][] = ["name"=>"Item Name"];
     $data['purchaseIndent'][] = ["name"=>"UOM"];   
     $data['purchaseIndent'][] = ["name"=>"Req. Qty"];    
@@ -46,20 +48,22 @@ function getPurchaseOrderData($data){
 function getPurchaseIndentData($data){
     $approveReq=""; $closeReq="";
 
+    $closeParam = "{'postData':{'id':".$data->id.",'order_status':3},'message':'Are you sure want to Close this Request?','fnsave':'changeRequestStatus'}";
+    $closeReq = '<a href="javascript:void(0)" class="btn btn-dark closePreq permission-modify" onclick="confirmStore('.$closeParam.');" data-msg="Close" datatip="Close Purchase Request" flow="down" ><i class="ti-close"></i></a>';
+
     $selectBox ="";
     if($data->order_status ==0):
         $approveParam = "{'postData':{'id':".$data->id.",'order_status':1},'message':'Are you sure want to Approve this Request?','fnsave':'changeRequestStatus'}";
         $approveReq = '<a href="javascript:void(0)" class="btn btn-facebook permission-modify" onclick="confirmStore('.$approveParam.');" data-msg="Approve" datatip="Approve Purchase Request" flow="down" ><i class="fa fa-check"></i></a>';
-
-        $closeParam = "{'postData':{'id':".$data->id.",'order_status':3},'message':'Are you sure want to Close this Request?','fnsave':'changeRequestStatus'}";
-        $closeReq = '<a href="javascript:void(0)" class="btn btn-dark closePreq permission-modify" onclick="confirmStore('.$closeParam.');" data-msg="Close" datatip="Close Purchase Request" flow="down" ><i class="ti-close"></i></a>';
     elseif($data->order_status == 1):
         $selectBox = '<input type="checkbox" name="ref_id[]" id="ref_id_'.$data->sr_no.'" class="filled-in chk-col-success BulkRequest" value="'.$data->id.'"><label for="ref_id_'.$data->sr_no.'"></label>';
+    else:
+        $closeReq="";
     endif;
 
     $action = getActionButton($approveReq.$closeReq);
 
-    return [$action,$data->sr_no,$selectBox,(!empty($data->req_date))?date("d-m-Y",strtotime($data->req_date)):"",sprintf("IND%03d",$data->req_no),$data->item_name,$data->uom,$data->req_qty,$data->remark,$data->order_status_label];
+    return [$action,$data->sr_no,$selectBox,(!empty($data->req_date))?date("d-m-Y",strtotime($data->req_date)):"",sprintf("IND%03d",$data->req_no),$data->job_number,$data->make,$data->item_name,$data->uom,$data->req_qty,$data->remark,$data->order_status_label];
    
 }
 
