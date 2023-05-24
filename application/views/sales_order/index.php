@@ -12,7 +12,10 @@
                                         <button onclick="statusTab('salesOrderTable',0);" id="pending_so" class="nav-tab btn waves-effect waves-light btn-outline-danger active" style="outline:0px" data-toggle="tab" aria-expanded="false">Pending</button> 
                                     </li>
                                     <li class="nav-item"> 
-                                        <button onclick="statusTab('salesOrderTable',1);" id="complete_so" class="nav-tab btn waves-effect waves-light btn-outline-success" style="outline:0px" data-toggle="tab" aria-expanded="false">Completed</button> 
+                                        <button onclick="statusTab('salesOrderTable',1);" id="bom_so" class="nav-tab btn waves-effect waves-light btn-outline-warning" style="outline:0px" data-toggle="tab" aria-expanded="false">Bom Generated</button> 
+                                    </li>
+                                    <li class="nav-item"> 
+                                        <button onclick="statusTab('salesOrderTable',2);" id="complete_so" class="nav-tab btn waves-effect waves-light btn-outline-success" style="outline:0px" data-toggle="tab" aria-expanded="false">Completed</button> 
                                     </li>
                                 </ul>
                             </div>

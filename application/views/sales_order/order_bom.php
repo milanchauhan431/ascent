@@ -27,16 +27,18 @@
         <div class="table-responsive">
             <table id="salesOrderBomItems" class="table table-bordered">
                 <thead class="thead-info">
-                    <th>#</th>
-                    <th>Material Description</th>
-                    <th>Make</th>
-                    <th>Cat. No.</th>
-                    <th>UOM</th>
-                    <th>Total Qty.</th>
-                    <th>OTHER MRP</th>
-                    <th>OTHER AMOUNT</th>
-                    <th>DISC (IN %)</th>
-                    <th>FINAL OTHER AMOUNT</th>
+                    <tr>
+                        <th>#</th>
+                        <th>Material Description</th>
+                        <th>Make</th>
+                        <th>Cat. No.</th>
+                        <th>UOM</th>
+                        <th>Total Qty.</th>
+                        <th>OTHER MRP</th>
+                        <th>OTHER AMOUNT</th>
+                        <th>DISC (IN %)</th>
+                        <th>FINAL OTHER AMOUNT</th>
+                    </tr>                    
                 </thead>
                 <tbody>
                     <tr id="noData">

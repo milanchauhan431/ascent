@@ -3,6 +3,7 @@ class SalesOrders extends MY_Controller{
     private $indexPage = "sales_order/index";
     private $form = "sales_order/form";
     private $orderBom = "sales_order/order_bom";
+    private $viewBom = "sales_order/view_bom";
     private $requestFrom = "sales_order/pur_request_form";
 
     public function __construct(){
@@ -98,6 +99,55 @@ class SalesOrders extends MY_Controller{
             $this->printJson(['status'=>0,'message'=>$errorMessage]);
         else:
             $this->printJson($this->salesOrder->saveOrderBom($data));
+        endif;
+    }
+
+    public function viewOrderBom(){
+        $data = $this->input->post();
+        $this->data['postData'] = (object) $data;
+        $this->load->view($this->viewBom,$this->data);
+    }
+
+    public function getOrderBomHtml(){
+        $data = $this->input->post();
+        $dataRow = $this->salesOrder->getOrderBomItems($data);
+        $i=1;$tbodyData = "";
+        if(!empty($dataRow)):
+            foreach($dataRow as $row):
+                $deleteButton = "";
+
+                if($row->req_qty <= 0 || $row->trans_status > 0):
+                    $deleteParam = "{'postData':{'id' : ".$row->id."},'message' : 'Bom Item','res_function':'resDeleteBomItem','fndelete':'removeBomItem'}";
+                    $deleteButton = '<a class="btn btn-outline-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="left"><i class="ti-trash"></i></a>';
+                endif;
+
+                $tbodyData .=  '<tr>
+                    <td>'.$i++.'</td>
+                    <td>'.$row->material_description.'</td>
+                    <td>'.$row->make.'</td>
+                    <td>'.$row->item_code.'</td>
+                    <td>'.$row->uom.'</td>
+                    <td>'.$row->qty.'</td>
+                    <td>'.$row->price.'</td>
+                    <td>'.$row->amount.'</td>
+                    <td>'.$row->disc_per.'</td>
+                    <td>'.$row->net_amount.'</td>
+                    <td>'.$deleteButton.'</td>
+                </tr>';
+            endforeach;
+        else:
+            $tbodyData.= '<tr><td colspan="11" class="text-center">No data available in table</td></tr>';
+        endif;
+
+        $this->printJson(['status'=>1,"tbodyData"=>$tbodyData]);
+    }
+
+    public function removeBomItem(){
+        $id = $this->input->post('id');
+        if(empty($id)):
+            $this->printJson(['status'=>0,'message'=>'Somthing went wrong...Please try again.']);
+        else:
+            $this->printJson($this->salesOrder->removeBomItem($id));
         endif;
     }
 

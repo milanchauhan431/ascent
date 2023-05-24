@@ -9,17 +9,30 @@ class SalesOrderModel extends MasterModel{
 
     public function getDTRows($data){
         $data['tableName'] = $this->transChild;
-        $data['select'] = "trans_child.id as trans_child_id,trans_child.item_name,trans_child.qty,trans_child.dispatch_qty,(trans_child.qty - trans_child.dispatch_qty) as pending_qty,trans_main.id,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_name,trans_main.sales_type";
+        $data['select'] = "trans_child.id as trans_child_id,trans_child.item_name,trans_child.qty,trans_child.dispatch_qty,(trans_child.qty - trans_child.dispatch_qty) as pending_qty,trans_child.job_number,trans_main.id,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_name,trans_main.sales_type,COUNT(order_bom.id) as bom_items";
 
         $data['leftJoin']['trans_main'] = "trans_main.id = trans_child.trans_main_id";
+        $data['leftJoin']['order_bom'] = "order_bom.trans_child_id = trans_child.id";
 
         $data['where']['trans_child.entry_type'] = $data['entry_type'];
-        $data['where']['trans_child.trans_status'] = $data['status'];
+
+        if($data['status'] == 0):
+            $data['where']['trans_child.trans_status'] = 0;
+            $data['having'][] = 'COUNT(order_bom.id) <= 0';
+        elseif($data['status'] == 1):
+            $data['where']['trans_child.trans_status'] = 0;
+            $data['having'][] = 'COUNT(order_bom.id) > 0';
+        else:
+            $data['where']['trans_child.trans_status'] = 1;
+        endif;
+        
         $data['where']['trans_main.trans_date >='] = $this->startYearDate;
         $data['where']['trans_main.trans_date <='] = $this->endYearDate;
 
         $data['order_by']['trans_main.trans_date'] = "DESC";
         $data['order_by']['trans_main.id'] = "DESC";
+
+        $data['group_by'][] = "trans_child.id";
 
         $data['searchCol'][] = "";
         $data['searchCol'][] = "";
@@ -35,6 +48,16 @@ class SalesOrderModel extends MasterModel{
         if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}
         
         return $this->pagingRows($data);
+    }
+
+    public function getNextJobNo(){
+        $queryData['tableName'] = $this->transChild;
+        $queryData['select'] = "MAX(job_no) as job_no";
+        $queryData['where']['entry_type'] = 20;
+        $result =  $this->row($queryData)->job_no;
+
+        $nextChar = (!empty($result) && $result != 'Z')? ++$result : 'A';        
+        return $nextChar;
     }
 
     public function save($data){
@@ -80,10 +103,18 @@ class SalesOrderModel extends MasterModel{
                 endforeach;
             endif;
 
+            $partyData = $this->party->getParty(['id'=>$data['party_id']]);
+            $jobPrefix = "AE-".$data['order_type']."-".$partyData->party_code."-";
+
+            $i=1;
             foreach($itemData as $row):
                 $row['entry_type'] = $data['entry_type'];
                 $row['trans_main_id'] = $result['id'];
                 $row['is_delete'] = 0;
+                if(empty($row['id'])):
+                    $row['job_no'] = $this->getNextJobNo();
+                    $row['job_number'] = $jobPrefix.$i++.$row['job_no'];
+                endif;
                 $this->store($this->transChild,$row);
             endforeach;
             
@@ -185,7 +216,7 @@ class SalesOrderModel extends MasterModel{
 
     public function getOrderBomItems($data){
         $queryData['tableName'] = $this->orderBom;
-        $queryData['select'] = "order_bom.*,item_master.item_name,(trans_child.qty * order_bom.qty) as reqired_qty,ifnull(SUM(stock_transaction.qty),0) as stock_qty";
+        $queryData['select'] = "order_bom.*,item_master.item_name,(trans_child.qty * order_bom.qty) as reqired_qty,ifnull(SUM(stock_transaction.qty * stock_transaction.p_or_m),0) as stock_qty,trans_child.trans_status";
 
         $queryData['leftJoin']['trans_child'] = "order_bom.trans_child_id = trans_child.id";
         $queryData['leftJoin']['item_master'] = "order_bom.item_id = item_master.id";
@@ -195,6 +226,22 @@ class SalesOrderModel extends MasterModel{
 
         $queryData['group_by'][] = "order_bom.id";
         return $this->rows($queryData);
+    }
+
+    public function removeBomItem($id){
+        try{
+            $this->db->trans_begin();
+
+            $result = $this->trash($this->orderBom,['id'=>$id],'Bom Item');
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
     }
 
     public function savePurchaseRequest($data){

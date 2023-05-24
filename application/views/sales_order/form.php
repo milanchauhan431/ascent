@@ -75,6 +75,15 @@
                                             ?>
                                         </select>
                                     </div>
+                                    
+                                    <div class="col-md-3 form-group">
+                                        <label for="order_type">Production Type</label>
+                                        <select name="order_type" id="order_type" class="form-control single-select">
+                                            <option value="">Select Type</option>
+                                            <option value="P" <?=(!empty($dataRow->order_type) && $dataRow->order_type == "P")?"selected":""?>>Panel</option>
+                                            <option value="F" <?=(!empty($dataRow->order_type) && $dataRow->order_type == "F")?"selected":""?>>Fabrication</option>
+                                        </select>
+                                    </div>
 
                                     <div class="col-md-3 form-group">
                                         <label for="doc_no">Cust. PO. No.</label>
