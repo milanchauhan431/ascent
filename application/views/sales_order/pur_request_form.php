@@ -46,6 +46,8 @@
                                     else:
                                         $requestQty = $row->reqired_qty - $row->req_qty;
                                     endif;
+
+                                    $requestQty = ($requestQty > 0)?$requestQty:0;
                             ?>
                                 <tr>
                                     <td><?=$i?></td>
