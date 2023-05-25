@@ -77,13 +77,13 @@ $(document).ready(function(){
 	// Focus QR Code input
 	$( "#qrCodeModal" ).on('shown.bs.modal', function(){$('.decodeData').html('');$('#decodeQr').val('');$('#decodeQr').focus();});	
 	/**** Start row-column highlight of datatable (ssTable) ***/
-	$('.ssTable tbody').on( 'mouseenter', 'td', function () {
+	/* $('.ssTable tbody').on( 'mouseenter', 'td', function () {
 		if(ssTable.cells().nodes().length > 0){
 			var colIdx = ssTable.cell(this).index().column;
 			$( ssTable.cells().nodes() ).removeClass( 'highlight' );
 			$( ssTable.column( colIdx ).nodes() ).addClass( 'highlight' );
 		}
-	});
+	}); */
 	/**** End row-column highlight of datatable (ssTable) ***/
 	
 	/*** Keep Selected Tab after page loading ***/
