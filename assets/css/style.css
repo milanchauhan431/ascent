@@ -14798,3 +14798,7 @@ File: scss
 .selectedTableRow {
   background-color: #f0f6fb;
 }
+
+.table tbody tr:hover{
+  background-color: #f0f6fb;
+}
