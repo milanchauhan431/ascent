@@ -51,7 +51,7 @@ $(document).keydown(function(e) {
 	if(e.altKey && e.which === 65){
 		//Open modal or page for new entry 
 		$(".addNew").trigger("click");
-		$(".btn-add").trigger("click");
+		$(".btn-add-new").trigger("click");
 	}
 
 	// Check if the Alt key and C key are pressed
