@@ -107,7 +107,7 @@ $(document).ready(function(){
 });
 
 function initBulkCreateButton() {
-    var bulkPOBtn = '<button class="btn btn-outline-primary bulkPO" tabindex="0" aria-controls="purchaseRequestTable" type="button"><span>Bulk PO</span></button>';
+    var bulkPOBtn = '<button class="btn btn-outline-primary bulkPO" tabindex="0" aria-controls="purchaseRequestTable" type="button"><span>Generate PO</span></button>';
     $("#purchaseRequestTable_wrapper .dt-buttons").append(bulkPOBtn);
     $(".bulkPO").hide();
 }
