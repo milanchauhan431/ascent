@@ -1,3 +1,65 @@
+var selectedRow = null;	
+
+// Handle initial row selection on click
+$(document).on("click",".table tbody tr",function(){
+	$(".table tbody tr").removeClass('selectedTableRow');
+	$(this).addClass('selectedTableRow');
+	selectedRow = $(this);
+});
+
+/* Table tr selected and up down selected row using up and down key */
+$(document).keydown(function(e) {
+	//Table row up down using Up arrow key and Down arrow key
+	if (e.keyCode === 38) { // Up arrow key
+		if (selectedRow && selectedRow.prev().length > 0) {
+			selectedRow.removeClass('selectedTableRow');
+			selectedRow = selectedRow.prev();
+			selectedRow.addClass('selectedTableRow');
+		}
+	} else if (e.keyCode === 40) { // Down arrow key
+		if (selectedRow && selectedRow.next().length > 0) {
+			selectedRow.removeClass('selectedTableRow');
+			selectedRow = selectedRow.next();
+			selectedRow.addClass('selectedTableRow');
+		}
+	}
+
+	//Table scrolling when up down row
+	if(selectedRow != null){
+		$ ('.key-scroll .dataTables_scrollBody').scrollTop(selectedRow.position().top);
+	}		
+	
+	//on press space bar to show/hide action Buttons
+	if (e.which == 32) { // Check if the key pressed is the spacebar (key code 32)
+		//e.preventDefault(); // Prevent the default action of the spacebar (scrolling down the page)
+		if($('.selectedTableRow .actionButtons .mainButton').hasClass("showAction") == false){
+			$('.selectedTableRow .actionButtons .mainButton').addClass('open showAction'); // Trigger the click event on your button 
+			$('.selectedTableRow .actionButtons .btnDiv').attr('style','z-index:9;');
+			$('.selectedTableRow .actionButtons .mainButton i').removeClass('fa fa-cog');
+			$('.selectedTableRow .actionButtons .mainButton i').addClass('fa fa-times');
+			$('.selectedTableRow .actionButtons .btnDiv a:first').focus();
+		}else{
+			$('.selectedTableRow .actionButtons .mainButton ').removeClass('open showAction'); // Trigger the click event on your button 
+			$('.selectedTableRow .actionButtons .btnDiv').attr('style','z-index:-1;');
+			$('.selectedTableRow .actionButtons .mainButton i').removeClass('fa fa-times');
+			$('.selectedTableRow .actionButtons .mainButton i').addClass('fa fa-cog');
+			$('.selectedTableRow').focus();
+		}		  
+   	}
+
+	// Check if the Alt key and A key are pressed
+	if(e.altKey && e.which === 65){
+		//Open modal or page for new entry
+		$(".addNew").trigger("click");
+	}
+
+	// Check if the Alt key and C key are pressed
+	if (e.altKey && e.which === 67) {
+		// Find the last opened modal and close it
+		$('.modal').modal('hide');
+	}
+});
+
 // Datatable : Get Serverside Data
 function ssDatatable(ele,tableHeaders,tableOptions,dataSet={}){	
 	var textAlign ={}; //var srnoPosition = 1;
@@ -51,8 +113,15 @@ function ssDatatable(ele,tableHeaders,tableOptions,dataSet={}){
 						],
 		dom: "<'row'<'col-sm-7'B><'col-sm-5'f>>" +"<'row'<'col-sm-12't>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>",
 		buttons: [ 'pageLength', 'excel', {className:'nav-tab-refresh',text: 'Refresh',action: function(){initTable();} }],
-		"fnInitComplete":function(){$('.dataTables_scrollBody').perfectScrollbar();},
-		"fnDrawCallback": function( oSettings ) {$('.dataTables_scrollBody').perfectScrollbar('destroy').perfectScrollbar();$(".bt-switch").bootstrapSwitch();}
+		"fnInitComplete":function(){
+			$('.dataTables_scrollBody').perfectScrollbar();
+			$('#' + tableId +' tbody tr:first').trigger('click');
+		},
+		"fnDrawCallback": function( oSettings ) {
+			$('.dataTables_scrollBody').perfectScrollbar('destroy').perfectScrollbar();
+			$(".bt-switch").bootstrapSwitch();
+			checkPermission();
+		}
 	};
 	
 	// Append Search Inputs
@@ -88,6 +157,7 @@ function ssDatatable(ele,tableHeaders,tableOptions,dataSet={}){
 	$('#' + tableId +'_filter label').attr("id","search-form");	
 	$('#' + tableId +'_filter .form-control-sm').css("width","97%");
 	$('#' + tableId +'_filter .form-control-sm').attr("placeholder","Search.....");	
+	$(".dataTables_scroll").addClass("key-scroll");
 	
 	/*setTimeout(function(){
     	$('#' + tableId +' tbody tr').each( (tr_idx,tr) => {
@@ -108,41 +178,6 @@ function ssDatatable(ele,tableHeaders,tableOptions,dataSet={}){
 	} );
 	
 	// if(tableId){initSpeechRecognitation();}
-}
-
-function jpDataTable_old(tableId){
-	var jpDataTable = $('.jpDataTable').DataTable( {
-		"paging": true,
-		responsive: true,
-		"scrollY": '52vh',
-		"scrollX": true,
-		deferRender: true,
-		scroller: true,
-		destroy: true,
-		// 'stateSave':false,
-		"autoWidth" : false,
-		pageLength: 50,
-		language: { search: "" },
-		lengthMenu: [
-			[ 10, 20, 25, 50, 75, 100, 250,500 ],
-			[ '10 rows', '20 rows', '25 rows', '50 rows', '75 rows', '100 rows','250 rows','500 rows' ]
-		],
-		order:[],
-		orderCellsTop: true,
-		dom: "<'row'<'col-sm-7'B><'col-sm-5'f>>" +"<'row'<'col-sm-12't>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-		buttons: [ 'pageLength','copy', 'excel']
-	});
-	jpDataTable.buttons().container().appendTo( '#' + tableId +'_wrapper toolbar' );
-	$('.dataTables_filter').css("text-align","left");
-	$('#' + tableId +'_filter label').css("display","block");
-	$('.btn-group>.btn:first-child').css("border-top-right-radius","0");
-	$('.btn-group>.btn:first-child').css("border-bottom-right-radius","0");
-	$('#' + tableId +'_filter label').attr("id","search-form");	
-	$('#' + tableId +'_filter .form-control-sm').css("width","97%");
-	$('#' + tableId +'_filter .form-control-sm').attr("placeholder","Search.....");	
-	
-	setTimeout(function(){ jpDataTable.columns.adjust().draw();}, 300);
-	return jpDataTable;
 }
 
 function jpDataTable(tableId,state=false){
