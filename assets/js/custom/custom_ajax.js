@@ -1,64 +1,68 @@
-var selectedRow = null;	
+$(document).ready(function(){
+	var selectedRow = null;	
 
-// Handle initial row selection on click
-$(document).on("click",".table tbody tr",function(){
-	$(".table tbody tr").removeClass('selectedTableRow');
-	$(this).addClass('selectedTableRow');
-	selectedRow = $(this);
-});
+	// Handle initial row selection on click
+	$(document).on("click",".table tbody tr",function(){
+		$(".table tbody tr").removeClass('selectedTableRow');
+		$(this).addClass('selectedTableRow');
+		selectedRow = $(this);
+	});
 
-/* Table tr selected and up down selected row using up and down key */
-$(document).keydown(function(e) {
-	//Table row up down using Up arrow key and Down arrow key
-	if (e.keyCode === 38) { // Up arrow key
-		if (selectedRow && selectedRow.prev().length > 0) {
-			selectedRow.removeClass('selectedTableRow');
-			selectedRow = selectedRow.prev();
-			selectedRow.addClass('selectedTableRow');
+	/* Table tr selected and up down selected row using up and down key */
+	$(document).keydown(function(e) {
+		//Table row up down using Up arrow key and Down arrow key
+		if (e.keyCode === 38) { // Up arrow key
+			if (selectedRow && selectedRow.prev().length > 0) {
+				selectedRow.removeClass('selectedTableRow');
+				selectedRow = selectedRow.prev();
+				selectedRow.addClass('selectedTableRow');
+			}
+		} else if (e.keyCode === 40) { // Down arrow key
+			if (selectedRow && selectedRow.next().length > 0) {
+				selectedRow.removeClass('selectedTableRow');
+				selectedRow = selectedRow.next();
+				selectedRow.addClass('selectedTableRow');
+			}
 		}
-	} else if (e.keyCode === 40) { // Down arrow key
-		if (selectedRow && selectedRow.next().length > 0) {
-			selectedRow.removeClass('selectedTableRow');
-			selectedRow = selectedRow.next();
-			selectedRow.addClass('selectedTableRow');
+
+		//Table scrolling when up down row
+		if(selectedRow != null){
+			$ ('.key-scroll .dataTables_scrollBody').scrollTop(selectedRow.position().top);
+		}		
+		
+		//on press space bar to show/hide action Buttons
+		if (e.which == 32) { // Check if the key pressed is the spacebar (key code 32)
+			//e.preventDefault(); // Prevent the default action of the spacebar (scrolling down the page)
+			if($('.selectedTableRow .actionButtons .mainButton').hasClass("showAction") == false){
+				$('.selectedTableRow .actionButtons .mainButton').addClass('open showAction'); // Trigger the click event on your button 
+				$('.selectedTableRow .actionButtons .btnDiv').attr('style','z-index:9;');
+				$('.selectedTableRow .actionButtons .mainButton i').removeClass('fa fa-cog');
+				$('.selectedTableRow .actionButtons .mainButton i').addClass('fa fa-times');
+				$('.selectedTableRow .actionButtons .btnDiv a:first').focus();
+			}else{
+				$('.selectedTableRow .actionButtons .mainButton ').removeClass('open showAction'); // Trigger the click event on your button 
+				$('.selectedTableRow .actionButtons .btnDiv').attr('style','z-index:-1;');
+				$('.selectedTableRow .actionButtons .mainButton i').removeClass('fa fa-times');
+				$('.selectedTableRow .actionButtons .mainButton i').addClass('fa fa-cog');
+				$('.selectedTableRow').focus();
+			}		  
 		}
-	}
 
-	//Table scrolling when up down row
-	if(selectedRow != null){
-		$ ('.key-scroll .dataTables_scrollBody').scrollTop(selectedRow.position().top);
-	}		
-	
-	//on press space bar to show/hide action Buttons
-	if (e.which == 32) { // Check if the key pressed is the spacebar (key code 32)
-		//e.preventDefault(); // Prevent the default action of the spacebar (scrolling down the page)
-		if($('.selectedTableRow .actionButtons .mainButton').hasClass("showAction") == false){
-			$('.selectedTableRow .actionButtons .mainButton').addClass('open showAction'); // Trigger the click event on your button 
-			$('.selectedTableRow .actionButtons .btnDiv').attr('style','z-index:9;');
-			$('.selectedTableRow .actionButtons .mainButton i').removeClass('fa fa-cog');
-			$('.selectedTableRow .actionButtons .mainButton i').addClass('fa fa-times');
-			$('.selectedTableRow .actionButtons .btnDiv a:first').focus();
-		}else{
-			$('.selectedTableRow .actionButtons .mainButton ').removeClass('open showAction'); // Trigger the click event on your button 
-			$('.selectedTableRow .actionButtons .btnDiv').attr('style','z-index:-1;');
-			$('.selectedTableRow .actionButtons .mainButton i').removeClass('fa fa-times');
-			$('.selectedTableRow .actionButtons .mainButton i').addClass('fa fa-cog');
-			$('.selectedTableRow').focus();
-		}		  
-   	}
+		// Check if the Alt key and A key are pressed
+		console.log(e.key);
+		if(e.altKey && e.which === 65 || e.altKey && e.which == "a"){
+			//Open modal or page for new entry 
+			$(".card-header .addNew").trigger("click");
+			$(".card-header .btn-add-new").trigger("click");console.log("click")
+		}
 
-	// Check if the Alt key and A key are pressed
-	if(e.altKey && e.which === 65){
-		//Open modal or page for new entry 
-		$(".addNew").trigger("click");
-		$(".btn-add-new").trigger("click");
-	}
-
-	// Check if the Alt key and C key are pressed
-	if (e.altKey && e.which === 67) {
-		// Find the last opened modal and close it
-		$('.modal').modal('hide');
-	}
+		// Check if the Alt key and C key are pressed
+		if (e.altKey && e.which === 67) {
+			// Find the last opened modal and close it
+			$('.modal').modal('hide');
+			$('.btn-close').trigger("click");
+		}
+	});
 });
 
 // Datatable : Get Serverside Data

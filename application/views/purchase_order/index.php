@@ -20,7 +20,7 @@
                                 <h4 class="card-title">Purchase Orders</h4>
                             </div>
                             <div class="col-md-4">
-                                <a href="<?=base_url($headData->controller."/addOrder")?>" class="btn waves-effect waves-light btn-outline-primary float-right permission-write btn-add-new"><i class="fa fa-plus"></i> Add Order</a>
+                                <a href="javascript:void(0)" onclick="window.location.href='<?=base_url($headData->controller.'/addOrder')?>'" class="btn waves-effect waves-light btn-outline-primary float-right permission-write btn-add-new"><i class="fa fa-plus"></i> Add Order</a>
                             </div>                             
                         </div>                                         
                     </div>
