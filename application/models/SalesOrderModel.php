@@ -79,7 +79,7 @@ class SalesOrderModel extends MasterModel{
 
             $transExp = getExpArrayMap($data['expenseData']);
 			$expAmount = $transExp['exp_amount'];
-            $termsData = $data['termsData'];
+            $termsData = (!empty($data['termsData']))?$data['termsData']:array();
 
             unset($transExp['exp_amount'],$data['itemData'],$data['expenseData'],$data['termsData']);		
 
