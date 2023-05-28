@@ -14792,9 +14792,12 @@ File: scss
  ============================================================== */
 @media (max-width: 991.98px) {
   .do-block {
-    display: block !important; } }
+    display: block !important; } 
+}
 
+/* Milan Chauhan */
 
+/* Grid Table Row Start */
 .selectedTableRow {
   background-color: #f0f6fb;
 }
@@ -14802,3 +14805,38 @@ File: scss
 .table tbody tr:hover{
   background-color: #f0f6fb;
 }
+/* Grid Table Row End */
+
+/* File Uploading Button Start */
+.upload-container {
+  position: relative;
+  display: inline-block;
+  margin-top: 7px;
+}
+
+.upload-button {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.file-upload {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+/* File Uploading Button End */
+
+.hidden{
+  display : none !important;
+}
+
+.item-attechment{
+  width:60px;
+  height:60px;
+  border-radius:0.5rem;
+}
+/* Milan Chauhan */
