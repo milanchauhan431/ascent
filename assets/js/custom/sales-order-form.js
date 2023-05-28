@@ -12,8 +12,8 @@ $(document).ready(function(){
 		if(party_id){
 			setPlaceHolder();
 			$("#itemModel").modal();
-			$(".btn-close").show();
-			$(".btn-save").show();		
+			$("#itemModel .btn-close").show();
+			$("#itemModel .btn-save").show();		
 		}else{ 
             $(".party_id").html("Party name is required."); $(".modal").modal('hide'); 
         }
@@ -263,8 +263,8 @@ function AddRow(data) {
 function Edit(data, button) {
 	var row_index = $(button).closest("tr").index();
 	$("#itemModel").modal();
-	$(".btn-close").hide();
-	$(".btn-save").hide();
+	$("#itemModel .btn-close").hide();
+	$("#itemModel .btn-save").hide();
 	$.each(data, function (key, value) {
 		$("#itemForm #" + key).val(value);
 	});
