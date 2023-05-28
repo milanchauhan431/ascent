@@ -193,11 +193,11 @@ class SalesOrderModel extends MasterModel{
         }
     }
 
-    public function saveOrderBom($data){
+    public function saveOrderBom($postData){
         try{
             $this->db->trans_begin();
             
-            foreach($data['itemData'] as $row):
+            foreach($postData as $row):
                 $row['id'] = "";
                 $this->store($this->orderBom,$row);
             endforeach;
