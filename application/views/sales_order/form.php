@@ -1,5 +1,4 @@
 <?php $this->load->view('includes/header'); ?>
-
 <div class="page-wrapper">
     <div class="container-fluid bg-container">
         <div class="row">
@@ -126,12 +125,13 @@
                                                         <th class="amountCol">Amount</th>
                                                         <th class="netAmtCol">Amount</th>
                                                         <th>Remark</th>
+                                                        <th class="text-center">Attachment</th>
                                                         <th class="text-center" style="width:10%;">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="tempItem" class="temp_item">
                                                     <tr id="noData">
-                                                        <td colspan="14" class="text-center">No data available in table</td>
+                                                        <td colspan="15" class="text-center">No data available in table</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -458,6 +458,7 @@
 
 <?php $this->load->view('includes/footer'); ?>
 <script src="<?php echo base_url(); ?>assets/js/custom/sales-order-form.js?v=<?= time() ?>"></script>
+<script src="<?php echo base_url(); ?>assets/js/custom/row-attachment.js?v=<?= time() ?>"></script>
 <script src="<?php echo base_url(); ?>assets/js/custom/calculate.js?v=<?= time() ?>"></script>
 
 <?php
@@ -465,6 +466,7 @@ if(!empty($dataRow->itemList)):
     foreach($dataRow->itemList as $row):
         $row->row_index = "";
         $row->gst_per = floatVal($row->gst_per);
+        $row->attachment = (!empty($row->attachment) || $row->attachment != NULL)?$row->attachment:"";
         echo '<script>AddRow('.json_encode($row).');</script>';
     endforeach;
 endif;

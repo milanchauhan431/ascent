@@ -57,6 +57,47 @@ class SalesOrders extends MY_Controller{
         if(!empty($errorMessage)):
             $this->printJson(['status'=>0,'message'=>$errorMessage]);
         else:
+            $this->load->library('upload');
+            $filePath = realpath(APPPATH . '../assets/uploads/sales_order');
+
+            $itemData = array();
+            foreach($data['itemData'] as $key => $row):
+                if(isset($_FILES['itemData']['name'][$key]['attachment']) && !empty($_FILES['itemData']['name'][$key]['attachment'])):
+                    $_FILES['userfile']['name']     = $_FILES['itemData']['name'][$key]['attachment'];
+                    $_FILES['userfile']['type']     = $_FILES['itemData']['type'][$key]['attachment'];
+                    $_FILES['userfile']['tmp_name'] = $_FILES['itemData']['tmp_name'][$key]['attachment'];
+                    $_FILES['userfile']['error']    = $_FILES['itemData']['error'][$key]['attachment'];
+                    $_FILES['userfile']['size']     = $_FILES['itemData']['size'][$key]['attachment'];
+
+                    $config = ['file_name' => time()."_soi_".$_FILES['userfile']['name'],'allowed_types' => '*','max_size' => 10240,'overwrite' => FALSE, 'upload_path'	=>$filePath];
+
+                    $this->upload->initialize($config);
+                    if(!$this->upload->do_upload()):
+                        $errorMessage['ba_file_'.$key] = $this->upload->display_errors();
+                        $this->printJson(["status"=>0,"message"=>$errorMessage]);
+                    else:
+                        $uploadData = $this->upload->data();
+                        $row['attachment'] = $uploadData['file_name'];
+                    endif;
+                endif;
+
+                if(!empty($row['id']) && $row['attachment_status'] == 2):
+                    $soItem = $this->salesOrder->getSalesOrderItem(['id'=>$row['id']]);
+                    if(!empty($soItem->attachment)):
+                        if(file_exists($filePath."/".$soItem->attachment)):
+                            unlink($filePath."/".$soItem->attachment);
+                        endif;
+                    endif;
+
+                    $row['attachment'] = "";
+                endif;
+
+                unset($row['attachment_status']);
+
+                $itemData[] = $row;
+            endforeach;
+            $data['itemData'] = $itemData;
+
             $this->printJson($this->salesOrder->save($data));
         endif;
     }
@@ -107,7 +148,7 @@ class SalesOrders extends MY_Controller{
                     $postData[$key] = $row;
                 endif;
             endforeach;
-            
+
             $this->printJson($this->salesOrder->saveOrderBom($postData));
         endif;
     }

@@ -227,6 +227,12 @@ function AddRow(data) {
 	cell.html(data.item_remark);
 	cell.append(itemRemarkInput);
 
+	cell = $(row.insertCell(-1));
+	var filePostData = {"index":countRow,"inputName":"itemData["+countRow+"][attachment]","inputStatus":"itemData["+countRow+"][attachment_status]","file":((data.attachment != "")?base_url+"assets/uploads/sales_order/"+data.attachment:""),"fileName":((data.attachment != "")?data.attachment:"")};
+	cell.html(attachmentInput(filePostData));
+	cell.append('<div class="error ba_file_'+countRow+'"></div>');
+	cell.addClass("text-center");
+
     //Add Button cell.
 	cell = $(row.insertCell(-1));
 	var btnRemove = $('<button><i class="ti-trash"></i></button>');
@@ -284,7 +290,7 @@ function Remove(button) {
 	});
 	var countTR = $('#'+tableId+' tbody tr:last').index() + 1;
 	if (countTR == 0) {
-		$("#tempItem").html('<tr id="noData"><td colspan="14" align="center">No data available in table</td></tr>');
+		$("#tempItem").html('<tr id="noData"><td colspan="15" align="center">No data available in table</td></tr>');
 	}
 
 	claculateColumn();

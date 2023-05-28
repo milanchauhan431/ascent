@@ -174,6 +174,14 @@ class SalesOrderModel extends MasterModel{
         return $result;
     }
 
+    public function getSalesOrderItem($data){
+        $queryData = array();
+        $queryData['tableName'] = $this->transChild;
+        $queryData['where']['id'] = $data['id'];
+        $result = $this->row($queryData);
+        return $result;
+    }
+
     public function delete($id){
         try{
             $this->db->trans_begin();
