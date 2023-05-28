@@ -894,10 +894,43 @@ function checkPermission(){
 	$('.permission-write').show();
 	$('.permission-modify').show();
 	$('.permission-remove').show();
-	if(permissionRead == "1"){ $('.permission-read').show(); }else{ $('.permission-read').hide(); }
-	if(permissionWrite == "1"){ $('.permission-write').show(); }else{ $('.permission-write').hide(); }
-	if(permissionModify == "1"){ $('.permission-modify').show(); }else{ $('.permission-modify').hide(); }
-	if(permissionRemove == "1"){ $('.permission-remove').show(); }else{ $('.permission-remove').hide(); }
+
+	//view permission
+	if(permissionRead == "1"){ 
+		$('.permission-read').prop('disabled', false);
+		$('.permission-read').show(); 
+	}else{ 
+		$('.permission-read').prop('disabled', true);
+		$('.permission-read').hide(); 
+		window.location.href = base_url + 'error_403';
+	}
+
+	//write permission
+	if(permissionWrite == "1"){ 
+		$('.permission-write').prop('disabled', false);
+		$('.permission-write').show(); 
+	}else{ 
+		$('.permission-write').prop('disabled', true);
+		$('.permission-write').hide(); 
+	}
+
+	//update permission
+	if(permissionModify == "1"){ 
+		$('.permission-modify').prop('disabled', false);
+		$('.permission-modify').show(); 
+	}else{ 
+		$('.permission-modify').prop('disabled', true);
+		$('.permission-modify').hide(); 
+	}
+
+	//delete permission
+	if(permissionRemove == "1"){ 
+		$('.permission-remove').prop('disabled', false);
+		$('.permission-remove').show(); 
+	}else{ 
+		$('.permission-remove').prop('disabled', true);
+		$('.permission-remove').hide(); 
+	}
 }
 
 function toFixTableHeader(){
