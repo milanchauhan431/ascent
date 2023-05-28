@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Access Denied</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta charset="UTF-8">
-<link rel="stylesheet" href="style.css">
-<link href="<?=base_url();?>assets/css/style.css" rel="stylesheet">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title>Access Denied</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?=base_url();?>assets/images/favicon.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="<?=base_url();?>assets/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 
 <body>
