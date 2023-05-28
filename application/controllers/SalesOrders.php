@@ -98,7 +98,17 @@ class SalesOrders extends MY_Controller{
         if(!empty($errorMessage)):
             $this->printJson(['status'=>0,'message'=>$errorMessage]);
         else:
-            $this->printJson($this->salesOrder->saveOrderBom($data));
+            $postData = array();
+            foreach($data['itemData'] as $row):
+                $key = $row['item_id'].$row['make'];
+                if(array_key_exists($key,$postData)):
+                    $postData[$key]['qty'] += $row['qty'];
+                else:
+                    $postData[$key] = $row;
+                endif;
+            endforeach;
+            
+            $this->printJson($this->salesOrder->saveOrderBom($postData));
         endif;
     }
 
@@ -123,7 +133,7 @@ class SalesOrders extends MY_Controller{
 
                 $tbodyData .=  '<tr>
                     <td>'.$i++.'</td>
-                    <td>'.$row->material_description.'</td>
+                    <td>'.$row->item_name.'</td>
                     <td>'.$row->make.'</td>
                     <td>'.$row->item_code.'</td>
                     <td>'.$row->uom.'</td>
