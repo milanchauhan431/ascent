@@ -49,7 +49,6 @@ $(document).ready(function(){
 		}
 
 		// Check if the Alt key and A key are pressed
-		console.log(e.key);
 		if(e.altKey && e.which === 65 || e.altKey && e.which == "a"){
 			//Open modal or page for new entry 
 			$(".card-header .addNew").trigger("click");
@@ -59,8 +58,7 @@ $(document).ready(function(){
 		// Check if the Alt key and C key are pressed
 		if (e.altKey && e.which === 67) {
 			// Find the last opened modal and close it
-			$('.modal').modal('hide');
-			$('.btn-close').trigger("click");
+			$('.modal-footer .btn-close, .card-footer .btn-close').trigger("click");
 		}
 	});
 });
