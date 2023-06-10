@@ -60,6 +60,16 @@ $(document).ready(function(){
 			// Find the last opened modal and close it
 			$('.modal-footer .btn-close, .card-footer .btn-close').trigger("click");
 		}
+		
+		// GO TO Datatable pagination next page using (ALT + N)
+		if(e.altKey && e.which === 78){
+			$(".dataTables_paginate .pagination .next").trigger("click");
+		}
+
+		// GO TO Datatable pagination previous page using (ALT + P)
+		if(e.altKey && e.which === 80){
+			$(".dataTables_paginate .pagination .previous").trigger("click");
+		}
 	});
 });
 
@@ -124,6 +134,7 @@ function ssDatatable(ele,tableHeaders,tableOptions,dataSet={}){
 			$('.dataTables_scrollBody').perfectScrollbar('destroy').perfectScrollbar();
 			$(".bt-switch").bootstrapSwitch();
 			checkPermission();
+			$('#' + tableId +' tbody tr:first').trigger('click');
 		}
 	};
 	
