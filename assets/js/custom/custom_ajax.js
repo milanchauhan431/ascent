@@ -52,7 +52,7 @@ $(document).ready(function(){
 		if(e.altKey && e.which === 65 || e.altKey && e.which == "a"){
 			//Open modal or page for new entry 
 			$(".card-header .addNew").trigger("click");
-			$(".card-header .btn-add-new").trigger("click");console.log("click")
+			$(".card-header .btn-add-new").trigger("click");
 		}
 
 		// Check if the Alt key and C key are pressed
