@@ -36,7 +36,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn waves-effect waves-light btn-outline-secondary btn-close" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                <button type="button" class="btn waves-effect waves-light btn-outline-secondary btn-close  press-close-btn" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                 <button type="button" class="btn waves-effect waves-light btn-outline-success btn-save" onclick="changePsw('changePSW');"><i class="fa fa-check"></i> Save</button>
             </div>
         </div>

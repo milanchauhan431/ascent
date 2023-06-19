@@ -10,7 +10,7 @@
                                 <h4 class="card-title"><?=$this->itemTypes[$item_type]?></h4>
                             </div>
                             <div class="col-md-6">
-                                <button type="button" class="btn waves-effect waves-light btn-outline-primary float-right addNew permission-write" data-button="both" data-modal_id="modal-xl" data-function="addItem" data-form_title="Add <?=$this->itemTypes[$item_type]?>" data-postdata='{"item_type" : <?=$item_type?> }' ><i class="fa fa-plus"></i> Add <?=$this->itemTypes[$item_type]?></button>                                
+                                <button type="button" class="btn waves-effect waves-light btn-outline-primary float-right addNew permission-write press-add-btn" data-button="both" data-modal_id="modal-xl" data-function="addItem" data-form_title="Add <?=$this->itemTypes[$item_type]?>" data-postdata='{"item_type" : <?=$item_type?> }' ><i class="fa fa-plus"></i> Add <?=$this->itemTypes[$item_type]?></button>                                
                             </div>
                         </div>
                     </div>

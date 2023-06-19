@@ -9,7 +9,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn waves-effect waves-light btn-outline-secondary btn-close save-form" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                <button type="button" class="btn waves-effect waves-light btn-outline-secondary btn-close press-close-btn save-form" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                 <button type="button" class="btn waves-effect waves-light btn-outline-success btn-save save-form"><i class="fa fa-check"></i> Save</button>
             </div>
         </div>
@@ -26,7 +26,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn waves-effect waves-light btn-outline-secondary btn-close save-form" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                <button type="button" class="btn waves-effect waves-light btn-outline-secondary btn-close press-close-btn save-form" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                 <button type="button" class="btn waves-effect waves-light btn-outline-success btn-save save-form"><i class="fa fa-check"></i> Save</button>
             </div>
         </div>
@@ -43,7 +43,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn waves-effect waves-light btn-outline-secondary btn-close save-form" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                <button type="button" class="btn waves-effect waves-light btn-outline-secondary btn-close press-close-btn save-form" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                 <button type="button" class="btn waves-effect waves-light btn-outline-success btn-save save-form"><i class="fa fa-check"></i> Save</button>
             </div>
         </div>

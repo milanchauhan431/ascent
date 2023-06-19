@@ -20,7 +20,7 @@
                                 <h4 class="card-title text-center">Employee</h4>
                             </div>
                             <div class="col-md-4">
-                                <button type="button" class="btn waves-effect waves-light btn-outline-primary float-right addNew permission-write" data-button="both" data-modal_id="modal-xl" data-function="addEmployee" data-form_title="Add Employee"><i class="fa fa-plus"></i> Add Employee</button>
+                                <button type="button" class="btn waves-effect waves-light btn-outline-primary float-right addNew press-add-btn permission-write" data-button="both" data-modal_id="modal-xl" data-function="addEmployee" data-form_title="Add Employee"><i class="fa fa-plus"></i> Add Employee</button>
                             </div>                             
                         </div>                                         
                     </div>

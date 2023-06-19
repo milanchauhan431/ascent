@@ -10,7 +10,7 @@
                                 <h4 class="card-title">Material Grade</h4>
                             </div>
                             <div class="col-md-6">
-                                <button type="button" class="btn waves-effect waves-light btn-outline-primary float-right addNew permission-write" data-button="both" data-modal_id="modal-md" data-function="addMaterialGrade" data-form_title="Add Material Grade"><i class="fa fa-plus"></i> Add Material Grade</button>
+                                <button type="button" class="btn waves-effect waves-light btn-outline-primary float-right addNew press-add-btn permission-write" data-button="both" data-modal_id="modal-md" data-function="addMaterialGrade" data-form_title="Add Material Grade"><i class="fa fa-plus"></i> Add Material Grade</button>
                             </div>                             
                         </div>                                         
                     </div>

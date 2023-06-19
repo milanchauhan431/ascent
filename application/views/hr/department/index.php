@@ -10,7 +10,7 @@
                                 <h4 class="card-title">Departments</h4>
                             </div>
                             <div class="col-md-6">
-                                <button type="button" class="btn waves-effect waves-light btn-outline-primary float-right addNew permission-write" data-button="both" data-modal_id="modal-md" data-function="addDepartment" data-form_title="Add Department"><i class="fa fa-plus"></i> Add Department</button>
+                                <button type="button" class="btn waves-effect waves-light btn-outline-primary float-right addNew press-add-btn permission-write" data-button="both" data-modal_id="modal-md" data-function="addDepartment" data-form_title="Add Department"><i class="fa fa-plus"></i> Add Department</button>
                             </div>                             
                         </div>                                         
                     </div>

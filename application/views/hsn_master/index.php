@@ -10,7 +10,7 @@
                                 <h4 class="card-title">HSN Master</h4>
                             </div>
                             <div class="col-md-6">
-                                <button type="button" class="btn waves-effect waves-light btn-outline-primary permission-write float-right addNew" data-button="both" data-modal_id="modal-md" data-function="addHSN" data-form_title="Add HSN"><i class="fa fa-plus"></i> Add HSN</button>
+                                <button type="button" class="btn waves-effect waves-light btn-outline-primary permission-write float-right addNew press-add-btn" data-button="both" data-modal_id="modal-md" data-function="addHSN" data-form_title="Add HSN"><i class="fa fa-plus"></i> Add HSN</button>
                             </div>                             
                         </div>                                         
                     </div>

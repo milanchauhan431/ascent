@@ -363,7 +363,7 @@
                     <div class="card-footer">
                         <div class="col-md-12">
                             <button type="button" class="btn waves-effect waves-light btn-outline-success float-right save-form" onclick="customStore({'formId':'saveSalesOrder'});" ><i class="fa fa-check"></i> Save</button>
-                            <a href="javascript:void(0)" onclick="window.location.href='<?=base_url($headData->controller)?>'" class="btn waves-effect waves-light btn-outline-secondary float-right btn-close save-form" style="margin-right:10px;"><i class="fa fa-times"></i> Cancel</a>
+                            <a href="javascript:void(0)" onclick="window.location.href='<?=base_url($headData->controller)?>'" class="btn waves-effect waves-light btn-outline-secondary float-right btn-close press-close-btn save-form" style="margin-right:10px;"><i class="fa fa-times"></i> Cancel</a>
                         </div>
                     </div>
                 </div>
