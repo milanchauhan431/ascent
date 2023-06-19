@@ -30,9 +30,10 @@ $(document).ready(function(){
 			$ ('.key-scroll .dataTables_scrollBody').scrollTop(selectedRow.position().top);
 		}		
 		
-		//on press space bar to show/hide action Buttons
-		if (e.altKey && e.which == 32) { // Check if the key pressed is the spacebar (key code 32)
+		//on press atl + O bar to show/hide action Buttons
+		if (e.altKey && e.keyCode === 79) { // Check if the key pressed is the spacebar (key code 32)
 			//e.preventDefault(); // Prevent the default action of the spacebar (scrolling down the page)
+			console.log('click');
 			if($('.selectedTableRow .actionButtons .mainButton').hasClass("showAction") == false){
 				$('.selectedTableRow .actionButtons .mainButton').addClass('open showAction'); // Trigger the click event on your button 
 				$('.selectedTableRow .actionButtons .btnDiv').attr('style','z-index:9;');
