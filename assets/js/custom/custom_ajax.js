@@ -31,7 +31,7 @@ $(document).ready(function(){
 		}		
 		
 		//on press space bar to show/hide action Buttons
-		if (e.which == 32) { // Check if the key pressed is the spacebar (key code 32)
+		if (e.altKey && e.which == 32) { // Check if the key pressed is the spacebar (key code 32)
 			//e.preventDefault(); // Prevent the default action of the spacebar (scrolling down the page)
 			if($('.selectedTableRow .actionButtons .mainButton').hasClass("showAction") == false){
 				$('.selectedTableRow .actionButtons .mainButton').addClass('open showAction'); // Trigger the click event on your button 
@@ -51,14 +51,13 @@ $(document).ready(function(){
 		// Check if the Alt key and A key are pressed
 		if(e.altKey && e.which === 65 || e.altKey && e.which == "a"){
 			//Open modal or page for new entry 
-			$(".card-header .addNew").trigger("click");
-			$(".card-header .btn-add-new").trigger("click");
+			$(".card-header .press-add-btn").trigger("click");
 		}
 
 		// Check if the Alt key and C key are pressed
 		if (e.altKey && e.which === 67) {
 			// Find the last opened modal and close it
-			$('.modal-footer .btn-close, .card-footer .btn-close').trigger("click");
+			$('.modal-footer .press-close-btn, .card-footer .press-close-btn').trigger("click");
 		}
 		
 		// GO TO Datatable pagination next page using (ALT + N)
