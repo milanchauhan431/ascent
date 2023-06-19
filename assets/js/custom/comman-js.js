@@ -154,12 +154,14 @@ $(document).ready(function(){
         });
     });	
 
-	$(document).on('change','#country_id',function(){
+	$(document).on('change','.country_list',function(){
 		var id = $(this).val();
+		var state_id = $(this).data('state_id');
+		var city_id = $("#"+state_id).data('city_id');
 		if(id == ""){
-			$("#state_id").html('<option value="">Select State</option>');
-			$("#city_id").html('<option value="">Select City</option>');
-			$(".single-select").comboSelect();
+			$("#"+state_id).html('<option value="">Select State</option>');
+			$("#"+city_id).html('<option value="">Select City</option>');
+			$("#"+state_id+",#"+city_id).comboSelect();
 		}else{
 			$.ajax({
 				url: base_url + 'parties/getStatesOptions',
@@ -167,26 +169,20 @@ $(document).ready(function(){
 				data:{country_id:id},
 				dataType:'json',
 				success:function(data){
-					if(data.status==0)
-					{
-						swal("Sorry...!", data.message, "error");
-					}
-					else
-					{
-						$("#state_id").html(data.result);
-						$(".single-select").comboSelect();
-						$("#state_id").focus();
-					}
+					$("#"+state_id).html(data.result);
+					$("#"+state_id).comboSelect();
+					$("#"+state_id).focus();
 				}
 			});
 		}
 	});
 
-	$(document).on('change',"#state_id",function(){
+	$(document).on('change',".state_list",function(){
 		var id = $(this).val();
+		var city_id = $(this).data('city_id');
 		if(id == ""){
-			$("#city_id").html('<option value="">Select City</option>');
-			$(".single-select").comboSelect();
+			$("#"+city_id).html('<option value="">Select City</option>');
+			$("#"+city_id).comboSelect();
 		}else{
 			$.ajax({
 				url: base_url + 'parties/getCitiesOptions',
@@ -194,16 +190,9 @@ $(document).ready(function(){
 				data:{state_id:id},
 				dataType:'json',
 				success:function(data){
-					if(data.status==0)
-					{
-						swal("Sorry...!", data.message, "error");
-					}
-					else
-					{
-						$("#city_id").html(data.result);
-						$(".single-select").comboSelect();
-						$("#city_id").focus();
-					}
+					$("#"+city_id).html(data.result);
+					$("#"+city_id).comboSelect();
+					$("#"+city_id).focus();
 				}
 			});
 		}
@@ -347,6 +336,7 @@ $(document).ready(function(){
 });
 
 $(window).on('pageshow', function() {
+	$('form').off();
 	checkPermission();setMinMaxDate();
 });
 
