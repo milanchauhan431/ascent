@@ -555,7 +555,8 @@ function getItemListOption($itemList,$itemId = 0){
 	$options = '';
 	foreach($itemList as $row):
 		$selected = (!empty($itemId) && $itemId == $row->id)?"selected":"";
-		$options .= '<option value="'.$row->id.'" '.$selected.'>'.$row->item_name.'</option>';
+		$itemName = (!empty($row->item_code))?"[ ".$row->item_code." ] ".$row->item_name : $row->item_name;
+		$options .= '<option value="'.$row->id.'" '.$selected.'>'.$itemName.'</option>';
 	endforeach;
 
 	return $options;
