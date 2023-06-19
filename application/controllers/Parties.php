@@ -38,8 +38,31 @@ class Parties extends MY_Controller{
         $this->data['party_category'] = $data['party_category'];
         $this->data['currencyData'] = $this->party->getCurrencyList();
         $this->data['countryData'] = $this->party->getCountries();
+        $this->data['party_code'] = $this->getPartyCode($data['party_category']);
         $this->data['salesExecutives'] = $this->employee->getEmployeeList();
         $this->load->view($this->form, $this->data);
+    }
+
+    /* Auto Generate Party Code */
+    public function getPartyCode($party_category=""){
+        $partyCategory = (!empty($party_category))?$party_category:$this->input->post('party_category');
+        $code = $this->party->getPartyCode($partyCategory);
+        $prefix = "AE";
+        if($partyCategory == 1):
+            $prefix = "AEC";
+        elseif($partyCategory == 2):
+            $prefix = "AES";
+        elseif($partyCategory == 3):
+            $prefix = "AEV";
+        endif;
+
+        $party_code = $prefix.sprintf("%03d",$code);
+
+        if(!empty($party_category)):
+            return $party_code;
+        else:
+            $this->printJson(['status'=>1,'party_code'=>$party_code]);
+        endif;
     }
 
     public function getStatesOptions($postData=array()){
@@ -83,30 +106,36 @@ class Parties extends MY_Controller{
         $errorMessage = array();
         if (empty($data['party_name']))
             $errorMessage['party_name'] = "Company name is required.";
+
         if (empty($data['party_category']))
             $errorMessage['party_category'] = "Party Category is required.";
-        if (empty($data['contact_person']))
+
+        /* if (empty($data['contact_person']))
             $errorMessage['contact_person'] = "Contact Person is required.";
+
         if (empty($data['party_mobile']))
-            $errorMessage['party_mobile'] = "Contact No. is required.";
-        if (empty($data['country_id']))
-            $errorMessage['country_id'] = 'Country is required.';
+            $errorMessage['party_mobile'] = "Contact No. is required."; */
+       
         if (empty($data['supplied_types']))
             $errorMessage['supplied_types'] = 'Supplied Types are required.';
-        if ($data['country_id'] == 101) {
-            if (empty($data['gstin']) && $data['party_type'] != 3)
-                $errorMessage['gstin'] = 'Gstin is required.';
-        }
-        if (empty($data['state_id']))  {
+
+        if (empty($data['gstin']) && in_array($data['registration_type'],[1,2]))
+            $errorMessage['gstin'] = 'Gstin is required.';
+
+        if (empty($data['country_id']))
+            $errorMessage['country_id'] = 'Country is required.';
+
+        if (empty($data['state_id']))
             $errorMessage['state_id'] = 'State is required.';
-        }
-        if (empty($data['city_id'])) {
+
+        if (empty($data['city_id']))
             $errorMessage['city_id'] = 'City is required.';
-        }
-        if (empty($data['party_address'])  && $data['party_type'] != 3)
+
+        if (empty($data['party_address']))
             $errorMessage['party_address'] = "Address is required.";
-        if (empty($data['party_pincode'])  && $data['party_type'] != 3)
-            $errorMessage['party_pincode'] = "Address Pincode is required.";
+
+        if (empty($data['party_pincode']))
+            $errorMessage['party_pincode'] = "Pincode is required.";
 
         if (!empty($errorMessage)) :
             $this->printJson(['status' => 0, 'message' => $errorMessage]);
@@ -119,8 +148,13 @@ class Parties extends MY_Controller{
     public function edit(){
         $data = $this->input->post();
         $result = $this->party->getParty($data);
+        
         $result->stateOption = $this->getStatesOptions(['country_id'=>$result->country_id, 'state_id'=>$result->state_id]);
         $result->cityOptions = $this->getCitiesOptions(['state_id'=>$result->state_id, 'city_id'=>$result->city_id]);
+        
+        $result->deliveryStateOption = $this->getStatesOptions(['country_id'=>$result->delivery_country_id, 'state_id'=>$result->delivery_state_id]);
+        $result->deliveryCityOptions = $this->getCitiesOptions(['state_id'=>$result->delivery_state_id, 'city_id'=>$result->delivery_city_id]);
+        
         $this->data['dataRow'] = $result;
         $this->data['currencyData'] = $this->party->getCurrencyList();
         $this->data['countryData'] = $this->party->getCountries();

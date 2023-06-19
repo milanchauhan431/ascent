@@ -6,6 +6,14 @@ class PartyModel extends MasterModel{
 	private $cities = "cities";
     private $transDetails = "trans_details";
 
+    public function getPartyCode($category=1){
+        $queryData['tableName'] = $this->partyMaster;
+        $queryData['select'] = "ifnull((MAX(CAST(party_code AS UNSIGNED)) + 1),1) as code";
+        $queryData['where']['party_category'] = $category;
+        $result = $this->row($queryData)->code;
+        return $result;
+    }
+
     public function getDTRows($data){
         $data['tableName'] = $this->partyMaster;
         $data['where']['party_category'] = $data['party_category'];
@@ -39,6 +47,7 @@ class PartyModel extends MasterModel{
     public function getPartyList($data=array()){
         $queryData = array();
         $queryData['tableName']  = $this->partyMaster;
+        
         if(!empty($data['party_category'])):
             $queryData['where_in']['party_category'] = $data['party_category'];
         endif;
