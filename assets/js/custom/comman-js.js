@@ -368,8 +368,9 @@ function getItemList(postData){
 		var itemList = response.data.itemList;
 		var html = '<option value="">Select Item Name</option>';
 		if(!$.isEmptyObject(itemList)){
-			$.each(itemList,function(index,row){  
-				html += '<option value="'+row.id+'">'+row.item_name+'</option>';
+			$.each(itemList,function(index,row){
+				var itemFullName = (row.item_code != "")?"[ "+row.item_code+" ] "+row.item_name:row.item_name  
+				html += '<option value="'+row.id+'">'+itemFullName+'</option>';
 			});
 			$(".itemOptions").html(html);
 		}

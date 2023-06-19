@@ -5,7 +5,7 @@
             <input type="hidden" name="item_type" id="item_type" value="<?=(!empty($dataRow->item_type))?$dataRow->item_type:$item_type?>">
 
             <div class="col-md-2 form-group">
-                <label for="item_code">CAT Code</label>
+                <label for="item_code">CAT No.</label>
                 <input type="text" name="item_code" class="form-control" value="<?= (!empty($dataRow->item_code)) ? $dataRow->item_code : ""; ?>" />
             </div>
 
@@ -15,10 +15,7 @@
                 <input type="hidden" name="full_name" class="form-control " value="" />
             </div>
 
-            <div class="<?=(!empty($dataRow->item_type) && $dataRow->item_type == 1 || !empty($item_type) && $item_type == 1)?"col-md-3":"col-md-2"?> form-group">
-                <label for="part_no">Part No.</label>
-                <input type="text" name="part_no" class="form-control req" value="<?=htmlentities((!empty($dataRow->part_no)) ? $dataRow->part_no : "")?>" />
-            </div>
+            
 
             <div class="<?=(!empty($dataRow->item_type) && $dataRow->item_type == 1 || !empty($item_type) && $item_type == 1)?"col-md-3":"col-md-2"?> form-group">
                 <label for="unit_id">Unit</label>
@@ -31,6 +28,11 @@
                     endforeach;
                     ?>
                 </select>
+            </div>
+
+            <div class="<?=(!empty($dataRow->item_type) && $dataRow->item_type == 1 || !empty($item_type) && $item_type == 1)?"col-md-3":"col-md-2"?> form-group">
+                <label for="defualt_disc">Defual Disc. (%)</label>
+                <input type="text" name="defualt_disc" class="form-control floatOnly req" value="<?=(!empty($dataRow->defualt_disc)) ? $dataRow->defualt_disc : ""?>" />
             </div>
 
             <div class="<?=(!empty($dataRow->item_type) && $dataRow->item_type == 1 || !empty($item_type) && $item_type == 1)?"hidden":""?> col-md-2 form-group">
@@ -48,15 +50,6 @@
                             echo '<option value="' . $row->id . '" ' . $selected . '>' . $row->category_name . '</option>';
                         endforeach;
                     ?>
-                </select>
-            </div>
-
-            <div class="col-md-3 form-group">
-                <label for="fg_id">Product Type</label>
-                <select name="fg_id" id="fg_id" class="form-control single-select">
-                    <option value="">Select Type</option>
-                    <option value="1" <?=(!empty($dataRow->fg_id) && $dataRow->fg_id == 1)?"selected":""?>>Semi Finish</option>
-                    <option value="2" <?=(!empty($dataRow->fg_id) && $dataRow->fg_id == 2)?"selected":""?>>Finish</option>
                 </select>
             </div>
 
@@ -83,23 +76,8 @@
             </div>
 
             <div class="col-md-3 form-group">
-                <label for="drawing_no">Drawing No</label>
-                <input type="text" name="drawing_no" class="form-control" value="<?= (!empty($dataRow->drawing_no)) ? $dataRow->drawing_no : "" ?>" />
-            </div>
-
-            <div class="col-md-3 form-group">
-                <label for="rev_no">Revision No</label>
-                <input type="text" name="rev_no" class="form-control" value="<?= (!empty($dataRow->rev_no)) ? $dataRow->rev_no : "" ?>" />
-            </div>
-
-            <div class="col-md-3 form-group">
-                <label for="install_year">Revision Date</label>
-                <input type="date" name="install_year" class="form-control" value="<?= (!empty($dataRow->install_year)) ? $dataRow->install_year : "" ?>" />
-            </div>
-
-            <div class="col-md-3 form-group">
-                <label for="eco_no">ECO No.</label>
-                <input type="text" name="eco_no" class="form-control floatOnly" value="<?= (!empty($dataRow->eco_no)) ? $dataRow->eco_no : "" ?>" />
+                <label for="make_brand">Make</label>
+                <input type="text" name="make_brand" class="form-control" value="<?= (!empty($dataRow->make_brand)) ? $dataRow->make_brand : "" ?>" />
             </div>
 
             <div class="col-md-3 form-group">

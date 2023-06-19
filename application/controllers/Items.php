@@ -34,7 +34,7 @@ class Items extends MY_Controller{
         $data = $this->input->post();
         $this->data['item_type'] = $data['item_type'];
         $this->data['unitData'] = $this->item->itemUnits();
-        $this->data['categoryList'] = $this->itemCategory->getCategoryList(['category_type'=>$data['item_type']]);
+        $this->data['categoryList'] = $this->itemCategory->getCategoryList(['category_type'=>$data['item_type'],'final_category'=>1]);
         $this->data['hsnData'] = $this->hsnModel->getHSNList();
         $this->load->view($this->form,$this->data);
     }
@@ -43,6 +43,8 @@ class Items extends MY_Controller{
         $data = $this->input->post();
         $errorMessage = array();
         
+        if(empty($data['item_code']))
+            $errorMessage['item_code'] = "CAT No. is required.";
         if(empty($data['item_name']))
             $errorMessage['item_name'] = "Item Name is required.";
         if(empty($data['unit_id']))
@@ -70,7 +72,7 @@ class Items extends MY_Controller{
         $data = $this->input->post();
         $this->data['dataRow'] = $itemDetail = $this->item->getItem($data);
         $this->data['unitData'] = $this->item->itemUnits();
-        $this->data['categoryList'] = $this->itemCategory->getCategoryList(['category_type'=>$itemDetail->item_type]);
+        $this->data['categoryList'] = $this->itemCategory->getCategoryList(['category_type'=>$itemDetail->item_type,'final_category'=>1]);
         $this->data['hsnData'] = $this->hsnModel->getHSNList();
         $this->load->view($this->form,$this->data);
     }

@@ -66,6 +66,7 @@
 </form>
 <script type="text/javascript">
 $(document).ready(function(){
+    $("#ref_id").trigger('change');
     var ctype = $('#category_type').val();
     if(ctype == 6 || ctype == 7){$('.toolType').show();$('.returnable').hide();}
 	else{$('.returnable').show();$('.toolType').hide();}

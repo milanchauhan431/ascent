@@ -88,9 +88,14 @@ class ItemModel extends MasterModel{
         try{
             $this->db->trans_begin();
 
+            if($this->checkDuplicate(['item_code'=>$data['item_code'],'id'=>$data['id']]) > 0):
+                $errorMessage['item_code'] = "CAT No. is duplicate.";
+                return ['status'=>0,'message'=>$errorMessage];
+            endif;
+
             if($this->checkDuplicate($data) > 0):
                 $errorMessage['item_name'] = "Name is duplicate.";
-                $result = ['status'=>0,'message'=>$errorMessage];
+                return ['status'=>0,'message'=>$errorMessage];
             endif;
             
             $result = $this->store($this->itemMaster,$data,"Item");            
@@ -107,8 +112,9 @@ class ItemModel extends MasterModel{
 
     public function checkDuplicate($data){
         $queryData['tableName'] = $this->itemMaster;
-        $queryData['where']['item_name'] = $data['item_name'];
 
+        if(!empty($data['item_name']))
+            $queryData['where']['item_name'] = $data['item_name'];
         if(!empty($data['item_type']))
             $queryData['where']['item_type'] = $data['item_type'];
         if(!empty($data['item_code']))
