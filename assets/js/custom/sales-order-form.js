@@ -282,7 +282,7 @@ function AddRow(data) {
 function Edit(data, button) {
 	var row_index = $(button).closest("tr").index();
 	$("#itemModel").modal();
-	$("#itemModel .btn-close").hide();
+	//$("#itemModel .btn-close").hide();
 	$("#itemModel .btn-save").hide();
 	$.each(data, function (key, value) {
 		$("#itemForm #" + key).val(value);

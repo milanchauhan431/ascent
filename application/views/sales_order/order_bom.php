@@ -15,6 +15,9 @@
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary" id="readButton" type="button">Read Excel</button>
                     </div>
+                    <!-- <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" id="clearData" type="button">Reset</button>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -38,11 +41,12 @@
                         <th>OTHER AMOUNT</th>
                         <th>DISC (IN %)</th>
                         <th>FINAL OTHER AMOUNT</th>
+                        <th>Action</th>
                     </tr>                    
                 </thead>
                 <tbody>
                     <tr id="noData">
-                        <td colspan="10" class="text-center">No data available in table</td>
+                        <td colspan="11" class="text-center">No data available in table</td>
                     </tr>
                 </tbody>
             </table>
@@ -52,7 +56,10 @@
 
 <script src="<?php echo base_url(); ?>assets/js/xlsx.full.min.js?v=<?=time()?>"></script>
 <script>
+var clickedTr = 0;
+
 $(document).ready(function() {
+    
     $(document).on('change','#excelFile',function() {
         var fileName = $('#excelFile').val().split('\\').pop() || "Choose file";
         $(".custom-file-label").html(fileName);
@@ -107,6 +114,22 @@ $(document).ready(function() {
 
         reader.readAsArrayBuffer(file);      
     });
+
+    $(document).on('click','.addNew',function(){ 
+        clickedTr = $(this).data('row_id'); 
+        var formData = $("#add-item-"+clickedTr).data('form_data');  
+        
+        setTimeout(function(){
+            console.log(formData[3]);
+            $("#addItem input[name='item_code']").val(formData[3]);
+            $("#addItem input[name='item_name']").val(formData[1]);
+            $("#addItem input[name='make_brand']").val(formData[2]);
+        },2000);
+    });
+
+    $(document).on('click','.btn-close',function(){
+        $('#modal-xxl').attr('style','overflow: auto;');
+    });
 });
 
 function AddRow(data){
@@ -118,18 +141,23 @@ function AddRow(data){
     //Get the reference of the Table's TBODY element.
 	var tBody = $("#" + tblName + " > TBODY")[0];
 
+    
+
     var ind = -1 ;
 	row = tBody.insertRow(ind);
     $(row).attr('style',((data[10] == "")?"background:#f7b4b4;":"background:#8ce1d3;"));
     $(row).attr('class',((data[10] == "")?"none":"success"));
+    
 
     var disable = ((data[10] == "")?true:false);
-
+    
     //Add index cell
 	var countRow = ($('#' + tblName + ' tbody tr:last').index() + 1);
 	var cell = $(row.insertCell(-1));
 	cell.html(countRow);
 	cell.attr("style", "width:5%;");
+
+    $(row).attr('id',countRow);
 
     var transMainIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][trans_main_id]",  value: $("#trans_main_id").val(), disabled:disable });
     var transChildInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][trans_child_id]",  value: $("#trans_child_id").val(), disabled:disable });
@@ -181,11 +209,57 @@ function AddRow(data){
     cell = $(row.insertCell(-1));
     cell.html(data[9]);
     cell.append(netAmtInput);
+
+    var addNewItem = $('<button><i class="fa fa-plus"></i></button>');
+	addNewItem.attr("type", "button");
+	addNewItem.attr("id", "add-item-"+countRow);
+	//addNewItem.attr("onclick", "Edit(" + JSON.stringify(data) + ",this);");
+	addNewItem.attr("class", "btn waves-effect waves-light btn-outline-primary float-right addNew permission-write press-add-btn");
+	addNewItem.attr("data-button", "both");
+	addNewItem.attr("data-row_id", countRow);
+	addNewItem.attr("data-modal_id", "modal-xl");
+	addNewItem.attr("data-controller", "items");
+	addNewItem.attr("data-function", "addItem");
+	addNewItem.attr("data-res_function", "resBomItem");
+	addNewItem.attr("data-js_store_fn", "customStore");
+	addNewItem.attr("data-form_title", "Add Raw Material");
+	addNewItem.attr("data-postdata", '{"item_type" : 3 }');
+	addNewItem.attr("data-form_data", JSON.stringify(data));
+
+    cell = $(row.insertCell(-1));
+    cell.append(((data[10] == "")?addNewItem:""));
+}
+
+function resBomItem(data,formId){
+    if(data.status==1){
+        $('#'+formId)[0].reset();$("#modal-xl").modal('hide');
+        $('#salesOrderBomItems tbody #'+clickedTr).attr('style',"background:#8ce1d3;");
+        $('#salesOrderBomItems tbody #'+clickedTr).removeClass('none');
+        $('#salesOrderBomItems tbody #'+clickedTr).addClass('success');
+        $('#salesOrderBomItems tbody #'+clickedTr+' input').prop('disabled',false);
+        $("#add-item-"+clickedTr).hide();  
+
+        clickedTr = 0;
+
+        /* $("#modal-xxl .scrollable").perfectScrollbar({suppressScrollX: true});
+        $('#modal-xxl .modal-body').scrollTop(0); */
+
+        $('#modal-xxl').attr('style','overflow: auto;');
+        $('#modal-xxl').perfectScrollbar('destroy').perfectScrollbar({suppressScrollX: true});
+
+        toastr.success(data.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
+    }else{
+        if(typeof data.message === "object"){
+            $(".error").html("");
+            $.each( data.message, function( key, value ) {$("."+key).html(value);});
+        }else{
+            toastr.error(data.message, 'Error', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
+        }			
+    }
 }
 
 function resSaveOrderBom(data,formId){
     if(data.status==1){
-        console.log("ok");
         $("#salesOrderBomItems tr.success").remove();
         
         toastr.success(data.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });

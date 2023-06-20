@@ -124,6 +124,7 @@ $(document).ready(function(){
             data: postData
         }).done(function(response){
             $("#"+modalId).modal({show:true});
+            $("#"+modalId).css({'z-index':9999});
 			$("#"+modalId+' .modal-title').html(title);
 			$("#"+modalId+' .modal-body').html("");
             $("#"+modalId+' .modal-body').html(response);
