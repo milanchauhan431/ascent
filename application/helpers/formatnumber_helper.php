@@ -562,6 +562,26 @@ function getItemListOption($itemList,$itemId = 0){
 	return $options;
 }
 
+function getItemUnitListOption($unitList,$unit_id = 0){
+	$options = '';
+	foreach($unitList as $row):
+		$selected = (!empty($unit_id) && $unit_id == $row->id)?"selected":"";
+		$options .= '<option value="'.$row->id.'" '.$selected.'>'.$row->unit_name.'</option>';
+	endforeach;
+
+	return $options;
+}
+
+function getHsnCodeListOption($hsnCodeList,$hsn = ""){
+	$options = '';
+	foreach($hsnCodeList as $row):
+		$selected = (!empty($hsn) && $hsn == $row->hsn)?"selected":"";
+		$options .= '<option value="'.$row->hsn.'" data-gst_per="'.floatVal($row->gst_per).'" '.$selected.'>'.$row->hsn.'</option>';
+	endforeach;
+
+	return $options;
+}
+
 /* Get Location List Options */
 function getLocationListOption($locationList,$locationId = 0){
 	$groupedStores = array_reduce($locationList, function($store, $location) {
