@@ -124,11 +124,7 @@ $(document).ready(function() {
             $("#addItem input[name='item_code']").val(formData[3]);
             $("#addItem input[name='item_name']").val(formData[1]);
             $("#addItem input[name='make_brand']").val(formData[2]);
-        },2000);
-    });
-
-    $(document).on('click','.btn-close',function(){
-        $('#modal-xxl').attr('style','overflow: auto;');
+        },1000);
     });
 });
 
