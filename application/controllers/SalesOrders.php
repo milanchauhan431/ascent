@@ -38,6 +38,7 @@ class SalesOrders extends MY_Controller{
         $this->data['trans_number'] = $this->data['trans_prefix'].$this->data['trans_no'];
         $this->data['partyList'] = $this->party->getPartyList(['party_category'=>1]);
         $this->data['itemList'] = $this->item->getItemList(['item_type'=>1]);
+        $this->data['unitList'] = $this->item->itemUnits();
         $this->data['hsnList'] = $this->hsnModel->getHSNList();
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(2);
         $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(2);
@@ -51,13 +52,15 @@ class SalesOrders extends MY_Controller{
 
         if(empty($data['party_id']))
             $errorMessage['party_id'] = "Party Name is required.";
+        if(empty($data['order_type']))
+            $errorMessage['order_type'] = "Production Type is required.";
         if(empty($data['itemData']))
             $errorMessage['itemData'] = "Item Details is required.";
         
         if(!empty($errorMessage)):
             $this->printJson(['status'=>0,'message'=>$errorMessage]);
         else:
-            $this->load->library('upload');
+            /* $this->load->library('upload');
             $filePath = realpath(APPPATH . '../assets/uploads/sales_order');
 
             $itemData = array();
@@ -96,7 +99,7 @@ class SalesOrders extends MY_Controller{
 
                 $itemData[] = $row;
             endforeach;
-            $data['itemData'] = $itemData;
+            $data['itemData'] = $itemData; */
 
             $this->printJson($this->salesOrder->save($data));
         endif;
@@ -107,6 +110,7 @@ class SalesOrders extends MY_Controller{
         $this->data['gstinList'] = $this->party->getPartyGSTDetail(['party_id' => $dataRow->party_id]);
         $this->data['partyList'] = $this->party->getPartyList(['party_category' => 1]);
         $this->data['itemList'] = $this->item->getItemList(['item_type'=>1]);
+        $this->data['unitList'] = $this->item->itemUnits();
         $this->data['hsnList'] = $this->hsnModel->getHSNList();
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(2);
         $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(2);

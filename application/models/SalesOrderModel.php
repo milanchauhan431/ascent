@@ -73,17 +73,25 @@ class SalesOrderModel extends MasterModel{
                 $this->trash($this->transChild,['trans_main_id'=>$data['id']]);
                 $this->trash($this->transExpense,['trans_main_id'=>$data['id']]);
                 $this->remove($this->transDetails,['main_ref_id'=>$data['id'],'table_name'=>$this->transMain,'description'=>"SO TERMS"]);
+                $this->remove($this->transDetails,['main_ref_id'=>$data['id'],'table_name'=>$this->transMain,'description'=>"MASTER DETAILS"]);
             endif;
             
+            $masterDetails = $data['masterDetails'];
             $itemData = $data['itemData'];
 
             $transExp = getExpArrayMap($data['expenseData']);
 			$expAmount = $transExp['exp_amount'];
             $termsData = (!empty($data['termsData']))?$data['termsData']:array();
 
-            unset($transExp['exp_amount'],$data['itemData'],$data['expenseData'],$data['termsData']);		
+            unset($transExp['exp_amount'],$data['itemData'],$data['expenseData'],$data['termsData'],$data['masterDetails']);		
 
             $result = $this->store($this->transMain,$data,'Sales Order');
+
+            $masterDetails['id'] = "";
+            $masterDetails['main_ref_id'] = $result['id'];
+            $masterDetails['table_name'] = $this->transMain;
+            $masterDetails['description'] = "MASTER DETAILS";
+            $this->store($this->transDetails,$masterDetails);
 
             $expenseData = array();
             if($expAmount <> 0):				
@@ -143,7 +151,9 @@ class SalesOrderModel extends MasterModel{
     public function getSalesOrder($data){
         $queryData = array();
         $queryData['tableName'] = $this->transMain;
-        $queryData['where']['id'] = $data['id'];
+        $queryData['select'] = "trans_main.*,trans_details.t_col_1 as contact_person,trans_details.t_col_2 as contact_no,trans_details.t_col_3 as ship_address";
+        $queryData['leftJoin']['trans_details'] = "trans_main.id = trans_details.main_ref_id AND trans_details.description = 'MASTER DETAILS' AND trans_details.table_name = '".$this->transMain."'";
+        $queryData['where']['trans_main.id'] = $data['id'];
         $result = $this->row($queryData);
 
         if($data['itemList'] == 1):
@@ -188,7 +198,8 @@ class SalesOrderModel extends MasterModel{
 
             $this->trash($this->transChild,['trans_main_id'=>$id]);
             $this->trash($this->transExpense,['trans_main_id'=>$id]);
-            $this->remove($this->transDetails,['main_ref_id'=>$data['id'],'table_name'=>$this->transMain,'description'=>"SO TERMS"]);
+            $this->remove($this->transDetails,['main_ref_id'=>$id,'table_name'=>$this->transMain,'description'=>"SO TERMS"]);
+            $this->remove($this->transDetails,['main_ref_id'=>$id,'table_name'=>$this->transMain,'description'=>"MASTER DETAILS"]);
             $result = $this->trash($this->transMain,['id'=>$id],'Sales Order');
 
             if ($this->db->trans_status() !== FALSE):

@@ -1,4 +1,6 @@
 $(document).ready(function(){
+	$(".ledgerColumn").hide();
+	$(".summary_desc").attr('style','width: 60%;');
 
     $(document).on('click', '.add-item', function () {
 		$('#itemForm')[0].reset();
@@ -28,8 +30,11 @@ $(document).ready(function(){
 		});
         $("#itemForm .error").html();
 
-        if (formData.item_id == "") {
+        /* if (formData.item_id == "") {
 			$(".item_id").html("Item Name is required.");
+		} */
+		if (formData.item_name == "") {
+			$(".item_name").html("Item Name is required.");
 		}
         if (formData.qty == "" || parseFloat(formData.qty) == 0) {
             $(".qty").html("Qty is required.");
@@ -38,10 +43,10 @@ $(document).ready(function(){
             $(".price").html("Price is required.");
         }
 
-        var item_ids = $(".item_id").map(function () { return $(this).val(); }).get();
+        /* var item_ids = $(".item_id").map(function () { return $(this).val(); }).get();
         if ($.inArray(formData.item_id, item_ids) >= 0 && formData.row_index == "") {
             $(".item_name").html("Item already added.");
-        }
+        } */
 
         var errorCount = $('#itemForm .error:not(:empty)').length;
 
@@ -104,6 +109,14 @@ $(document).ready(function(){
         $('#itemForm .single-select').comboSelect();
 	});   
 
+	$(document).on('change','#unit_id',function(){
+		$("#unit_name").val($("#unit_idc").val());
+	});
+
+	$(document).on('change','#hsn_code',function(){
+		$("#gst_per").val(($("#hsn_code :selected").data('gst_per') || 0));
+		$("#gst_per").comboSelect();
+	});
 });
 
 function AddRow(data) {
@@ -227,11 +240,11 @@ function AddRow(data) {
 	cell.html(data.item_remark);
 	cell.append(itemRemarkInput);
 
-	cell = $(row.insertCell(-1));
+	/* cell = $(row.insertCell(-1));
 	var filePostData = {"index":countRow,"inputName":"itemData["+countRow+"][attachment]","inputStatus":"itemData["+countRow+"][attachment_status]","file":((data.attachment != "")?base_url+"assets/uploads/sales_order/"+data.attachment:""),"fileName":((data.attachment != "")?data.attachment:"")};
 	cell.html(attachmentInput(filePostData));
 	cell.append('<div class="error ba_file_'+countRow+'"></div>');
-	cell.addClass("text-center");
+	cell.addClass("text-center"); */
 
     //Add Button cell.
 	cell = $(row.insertCell(-1));
@@ -301,10 +314,16 @@ function resPartyDetail(response = ""){
     if(response != ""){
         var partyDetail = response.data.partyDetail;
         $("#party_name").val(partyDetail.party_name);
+        $("#master_t_col_1").val(partyDetail.delivery_contact_person);
+        $("#master_t_col_2").val(partyDetail.delivery_contact_no);
+        $("#master_t_col_3").val(partyDetail.delivery_address);
 
-        var gstDetails = response.data.gstDetails;
+        var gstDetails = response.data.gstDetails; var i = 1;
         $.each(gstDetails,function(index,row){  
-            html += '<option value="'+row.gstin+'">'+row.gstin+'</option>';
+			if(row.gstin !=""){
+				html += '<option value="'+row.gstin+'" '+((i==1)?"selected":"")+'>'+row.gstin+'</option>';
+				i++;
+			}            
         });        
     }else{
         $("#party_name").val("");

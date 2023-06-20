@@ -48,12 +48,12 @@
 												<div class="dropdown-menu dropdown-menu-left user-dd animated flipInY" x-placement="start-left">
 													<div class="d-flex no-block align-items-center p-10 bg-primary text-white">ACTION</div>
 													
-													<a class="dropdown-item addNew" href="javascript:void(0)" data-button="both" data-modal_id="modal-xl" data-function="addParty" data-controller="parties" data-postdata='{"party_category" : 1 }' data-res_function="resPartyMaster" data-form_title="Add Customer">+ Customer</a>
+													<a class="dropdown-item addNew" href="javascript:void(0)" data-button="both" data-modal_id="modal-xl" data-function="addParty" data-controller="parties" data-postdata='{"party_category" : 1 }' data-res_function="resPartyMaster" data-js_store_fn="customStore" data-form_title="Add Customer">+ Customer</a>
 													
 												</div>
 											</span>
 										</div>
-                                        <select name="party_id" id="party_id" class="form-control single-select partyDetails partyOptions req" data-res_function="resPartyDetail">
+                                        <select name="party_id" id="party_id" class="form-control single-select partyDetails partyOptions req" data-res_function="resPartyDetail" data-party_category="1">
 											<option value="">Select Party</option>
 											<?=getPartyListOption($partyList,((!empty($dataRow->party_id))?$dataRow->party_id:0))?>
 										</select>
@@ -75,25 +75,40 @@
                                         </select>
                                     </div>
                                     
-                                    <div class="col-md-3 form-group">
+                                    <div class="col-md-2 form-group">
                                         <label for="order_type">Production Type</label>
-                                        <select name="order_type" id="order_type" class="form-control single-select">
+                                        <select name="order_type" id="order_type" class="form-control single-select req">
                                             <option value="">Select Type</option>
                                             <option value="P" <?=(!empty($dataRow->order_type) && $dataRow->order_type == "P")?"selected":""?>>Panel</option>
                                             <option value="F" <?=(!empty($dataRow->order_type) && $dataRow->order_type == "F")?"selected":""?>>Fabrication</option>
+                                            <option value="S" <?=(!empty($dataRow->order_type) && $dataRow->order_type == "S")?"selected":""?>>Service</option>
                                         </select>
                                     </div>
 
-                                    <div class="col-md-3 form-group">
+                                    <div class="col-md-2 form-group">
                                         <label for="doc_no">Cust. PO. No.</label>
                                         <input type="text" name="doc_no" id="doc_no" class="form-control" value="<?=(!empty($dataRow->doc_no))?$dataRow->doc_no:""?>">
                                     </div>
 
-                                    <div class="col-md-3 form-group">
+                                    <div class="col-md-2 form-group">
                                         <label for="doc_date">Cust. PO. Date</label>
-                                        <input type="date" name="doc_date" id="doc_date" class="form-control" value="<?=(!empty($dataRow->doc_date))?$dataRow->doc_date:""?>">
+                                        <input type="date" name="doc_date" id="doc_date" class="form-control" value="<?=(!empty($dataRow->doc_date))?$dataRow->doc_date:getFyDate()?>">
+                                    </div>
+                                    
+                                    <div class="col-md-3 form-group">
+                                        <label for="master_t_col_1">Contact Person</label>
+                                        <input type="text" name="masterDetails[t_col_1]" id="master_t_col_1" class="form-control" value="<?=(!empty($dataRow->contact_person))?$dataRow->contact_person:""?>">
                                     </div>
 
+                                    <div class="col-md-3 form-group">
+                                        <label for="master_t_col_2">Contact No.</label>
+                                        <input type="text" name="masterDetails[t_col_2]" id="master_t_col_2" class="form-control numericOnly" value="<?=(!empty($dataRow->contact_no))?$dataRow->contact_no:""?>">
+                                    </div>
+
+                                    <div class="col-md-12 form-group">
+                                        <label for="master_t_col_3">Ship To</label>
+                                        <input type="text" name="masterDetails[t_col_3]" id="master_t_col_3" class="form-control" value="<?=(!empty($dataRow->ship_address))?$dataRow->ship_address:""?>">
+                                    </div>
                                 </div>
 
                                 <hr>
@@ -125,7 +140,7 @@
                                                         <th class="amountCol">Amount</th>
                                                         <th class="netAmtCol">Amount</th>
                                                         <th>Remark</th>
-                                                        <th class="text-center">Attachment</th>
+                                                        <!-- <th class="text-center">Attachment</th> -->
                                                         <th class="text-center" style="width:10%;">Action</th>
                                                     </tr>
                                                 </thead>
@@ -141,207 +156,7 @@
                                 
                                 <hr>
 
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="table-responsive">
-                                            <table id="summaryTable" class="table">
-                                                <thead class="table-info">
-                                                    <tr>
-                                                        <th style="width: 60%;">Descrtiption</th>
-                                                        <!-- <th style="width: 30%;">Ledger</th> -->
-                                                        <th style="width: 10%;">Percentage</th>
-                                                        <th style="width: 10%;">Amount</th>
-                                                        <th style="width: 20%;">Net Amount</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Sub Total</td>
-                                                        <!-- <td></td> -->
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td>
-                                                            <input type="hidden" name="total_amount" id="total_amount" class="form-control" value="0" />
-                                                            <input type="text" name="taxable_amount" id="taxable_amount" class="form-control summaryAmount" value="0" readonly />
-                                                        </td>
-                                                    </tr>
-                                                    <?php
-                                                    $beforExp = "";
-                                                    $afterExp = "";
-                                                    $tax = "";
-                                                    $invExpenseData = (!empty($dataRow->expenseData)) ? $dataRow->expenseData : array();
-
-                                                    foreach ($expenseList as $row) :
-
-                                                        $expPer = 0;
-                                                        $expAmt = 0;
-                                                        $perFiledName = $row->map_code . "_per";
-                                                        $amtFiledName = $row->map_code . "_amount";
-                                                        if (!empty($invExpenseData) && $row->map_code != "roff") :
-                                                            $expPer = $invExpenseData->{$perFiledName};
-                                                            $expAmt = $invExpenseData->{$amtFiledName};
-                                                        endif;
-
-                                                        $options = '';
-                                                        /* $options = '<select class="form-control single-select" name="expenseData[' . $row->map_code . '_acc_id]" id="' . $row->map_code . '_acc_id">';
-
-                                                        foreach ($ledgerList as $ledgerRow) :
-                                                            if ($ledgerRow->group_code != "DT") :
-                                                                $filedName = $row->map_code . "_acc_id";
-                                                                if (!empty($invExpenseData->{$filedName})) :
-                                                                    if ($row->map_code != "roff") :
-                                                                        $selected = ($ledgerRow->id == $invExpenseData->{$filedName}) ? "selected" : (($ledgerRow->id == $row->acc_id) ? 'selected' : '');
-                                                                    else :
-                                                                        $selected = ($ledgerRow->id == $dataRow->round_off_acc_id) ? "selected" : (($ledgerRow->id == $row->acc_id) ? 'selected' : '');
-                                                                    endif;
-                                                                else :
-                                                                    $selected = ($ledgerRow->id == $row->acc_id) ? 'selected' : '';
-                                                                endif;
-
-                                                                $options .= '<option value="' . $ledgerRow->id . '" ' . $selected . '>' . $ledgerRow->party_name . '</option>';
-                                                            endif;
-                                                        endforeach;
-                                                        $options .= '</select>'; */
-
-                                                        if ($row->position == 1) :
-                                                            $beforExp .= '<tr>
-                                                                <td>' . $row->exp_name . '</td>
-                                                                <!--<td>' . $options . '</td>-->
-                                                                <td>';
-
-                                                            $readonly = "";
-                                                            $perBoxType = "text";
-                                                            $calculateSummaryPer = "calculateSummary";
-                                                            $calculateSummaryAmt = "calculateSummary";
-                                                            if ($row->calc_type != 1) :
-                                                                $perBoxType = "text";
-                                                                $readonly = "readonly";
-                                                                $calculateSummaryPer = "calculateSummary";
-                                                                $calculateSummaryAmt = "";
-                                                            else :
-                                                                $perBoxType = "hidden";
-                                                                $readonly = "";
-                                                                $calculateSummaryPer = "";
-                                                                $calculateSummaryAmt = "calculateSummary";
-                                                            endif;
-
-
-
-                                                            $beforExp .= "<input type='" . $perBoxType . "' name='expenseData[" . $row->map_code . "_per]' id='" . $row->map_code . "_per' data-row='" . json_encode($row) . "' value='" . $expPer . "' class='form-control " . $calculateSummaryPer . " floatOnly'> ";
-
-                                                            $beforExp .= "</td>
-                                                            <td><input type='text' id='" . $row->map_code . "_amt' class='form-control floatOnly " . $calculateSummaryAmt . "' data-sm_type='exp' data-row='" . json_encode($row) . "' value='" . $expAmt . "' " . $readonly . "></td>
-                                                            <td><input type='text' name='expenseData[" . $row->map_code . "_amount]' id='" . $row->map_code . "_amount'  value='0' class='form-control summaryAmount' readonly /> <input type='hidden' id='other_" . $row->map_code . "_amount' class='otherGstAmount' value='0'> </td>
-                                                            </tr>";
-
-                                                        else :
-
-                                                            $afterExp .= '<tr>
-                                                                <td>' . $row->exp_name . '</td>
-                                                                <!--<td>' . $options . '</td>--><td>';
-
-                                                            $readonly = "";
-                                                            $perBoxType = "text";
-                                                            $calculateSummaryPer = "calculateSummary";
-                                                            $calculateSummaryAmt = "calculateSummary";
-                                                            if ($row->map_code != "roff" && $row->calc_type != 1) :
-                                                                $perBoxType = "text";
-                                                                $readonly = "readonly";
-                                                                $calculateSummaryPer = "calculateSummary";
-                                                                $calculateSummaryAmt = "";
-                                                            else :
-                                                                $perBoxType = "hidden";
-                                                                $readonly = "";
-                                                                $calculateSummaryPer = "";
-                                                                $calculateSummaryAmt = "calculateSummary";
-                                                            endif;
-
-                                                            $afterExp .= "<input type='" . $perBoxType . "' name='expenseData[" . $row->map_code . "_per]' id='" . $row->map_code . "_per' data-row='" . json_encode($row) . "' value='" . $expPer . "' class='form-control  floatOnly " . $calculateSummaryPer . "'> ";
-
-                                                            $readonly = ($row->map_code == "roff") ? "readonly" : $readonly;
-                                                            $amtType = ($row->map_code == "roff") ? "hidden" : "text";
-                                                            $afterExp .= "</td>
-                                                            <td><input type='" . $amtType . "' id='" . $row->map_code . "_amt' class='form-control " . $calculateSummaryAmt . "  floatOnly ' data-sm_type='exp' data-row='" . json_encode($row) . "' value='" . $expAmt . "' " . $readonly . "></td>
-                                                            <td><input type='text' name='expenseData[" . $row->map_code . "_amount]' id='" . $row->map_code . "_amount' value='0' class='form-control floatOnly " . (($row->map_code == "roff") ? "" : "summaryAmount") . "' readonly /> </td>
-                                                            </tr>";
-                                                        endif;
-                                                    endforeach;
-
-                                                    foreach ($taxList as $taxRow) :
-                                                        $options = '';
-                                                        /* $options = '<select class="form-control single-select" name="' . $taxRow->map_code . '_acc_id" id="' . $taxRow->map_code . '_acc_id">';
-
-                                                        foreach ($ledgerList as $ledgerRow) :
-                                                            if ($ledgerRow->group_code == "DT") :
-                                                                $filedName = $taxRow->map_code . "_acc_id";
-                                                                if (!empty($dataRow->{$filedName})) :
-                                                                    $selected = ($ledgerRow->id == $dataRow->{$filedName}) ? "selected" : (($ledgerRow->id == $taxRow->acc_id) ? 'selected' : '');
-                                                                else :
-                                                                    $selected = ($ledgerRow->id == $taxRow->acc_id) ? 'selected' : '';
-                                                                endif;
-
-                                                                $options .= '<option value="' . $ledgerRow->id . '" ' . $selected . '>' . $ledgerRow->party_name . '</option>';
-                                                            endif;
-                                                        endforeach;
-                                                        $options .= '</select>'; */
-
-                                                        $taxClass = "";
-                                                        $perBoxType = "text";
-                                                        $calculateSummary = "calculateSummary";
-                                                        $taxPer = 0;
-                                                        $taxAmt = 0;
-                                                        if (!empty($dataRow->id)) :
-                                                            $taxPer = $dataRow->{$taxRow->map_code . '_per'};
-                                                            $taxAmt = $dataRow->{$taxRow->map_code . '_amount'};
-                                                        endif;
-                                                        if ($taxRow->map_code == "cgst") :
-                                                            $taxClass = "cgstCol";
-                                                            $perBoxType = "hidden";
-                                                            $calculateSummary = "";
-                                                        elseif ($taxRow->map_code == "sgst") :
-                                                            $taxClass = "sgstCol";
-                                                            $perBoxType = "hidden";
-                                                            $calculateSummary = "";
-                                                        elseif ($taxRow->map_code == "igst") :
-                                                            $taxClass = "igstCol";
-                                                            $perBoxType = "hidden";
-                                                            $calculateSummary = "";
-                                                        endif;
-
-                                                        $tax .= '<tr class="' . $taxClass . '">
-                                                            <td>' . $taxRow->name . '</td>
-                                                            <!--<td>' . $options . '</td>-->
-                                                            <td>';
-
-                                                        $tax .= "<input type='" . $perBoxType . "' name='" . $taxRow->map_code . "_per' id='" . $taxRow->map_code . "_per' data-row='" . json_encode($taxRow) . "' value='" . $taxPer . "' class='form-control floatOnly " . $calculateSummary . "'> ";
-
-                                                        $tax .= "</td>
-                                                            <td><input type='" . $perBoxType . "' id='" . $taxRow->map_code . "_amt' class='form-control floatOnly' data-sm_type='tax'data-row='" . json_encode($taxRow) . "' value='" . $taxAmt . "' readonly ></td>
-                                                            <td><input type='text' name='" . $taxRow->map_code . "_amount' id='" . $taxRow->map_code . "_amount'  value='0' class='form-control floatOnly summaryAmount' readonly /> </td>
-                                                        </tr>";
-                                                    endforeach;
-
-                                                    echo $beforExp;
-                                                    echo $tax;
-                                                    echo $afterExp;
-                                                    ?>
-
-                                                </tbody>
-                                                <tfoot class="table-info">
-                                                    <tr>
-                                                        <th>Net. Amount</th>
-                                                        <!-- <th></th> -->
-                                                        <th></th>
-                                                        <th></th>
-                                                        <td>
-                                                            <input type="text" name="net_amount" id="net_amount" class="form-control floatOnly" value="0" readonly />
-                                                        </td>
-                                                    </tr>
-                                                </tfoot>
-                                            </table>									
-                                        </div>
-                                    </div>
-                                </div>
+                                <?php $this->load->view('includes/tax_summary',['expenseList'=>$expenseList,'taxList'=>$taxList,'ledgerList'=>array(),'dataRow'=>((!empty($dataRow))?$dataRow:array())])?>
 
                                 <hr>
 
@@ -373,7 +188,7 @@
 </div>
 
 <div class="modal fade" id="itemModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-md" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content animated slideDown">
             <div class="modal-header" style="display:block;"><h4 class="modal-title">Add or Update Item</h4></div>
             <div class="modal-body">
@@ -388,17 +203,18 @@
                                 
 								<input type="hidden" name="row_index" id="row_index" value="">
 								<input type="hidden" name="item_code" id="item_code" value="" />
-                                <input type="hidden" name="item_name" id="item_name" value="" />
-                                <input type="hidden" name="item_type" id="item_type" value="" />
+                                <input type="hidden" name="item_id" id="item_id" value="0" />
+                                <input type="hidden" name="item_type" id="item_type" value="1" />
                             </div>
                             
 
                             <div class="col-md-12 form-group">
 								<label for="item_id">Product Name</label>
-                                <select name="item_id" id="item_id" class="form-control single-select itemDetails itemOptions" data-res_function="resItemDetail">
+                                <input type="text" name="item_name" id="item_name" class="form-control" value="" />
+                                <!-- <select name="item_id" id="item_id" class="form-control single-select itemDetails itemOptions" data-res_function="resItemDetail">
                                     <option value="">Select Product Name</option>
-                                    <?=getItemListOption($itemList)?>
-                                </select>
+                                    <?php//getItemListOption($itemList)?>
+                                </select> -->
                             </div>
                             <div class="col-md-4 form-group">
                                 <label for="qty">Quantity</label>
@@ -413,19 +229,18 @@
                                 <input type="text" name="price" id="price" class="form-control floatOnly req" value="0" />
                             </div>
                             <div class="col-md-4 form-group">
-                                <label for="unit_id">Unit</label>                                
-                                <input type="text" name="unit_name" id="unit_name" class="form-control" value="" readonly />
-                                <input type="hidden" name="unit_id" id="unit_id" value="" >
+                                <label for="unit_id">Unit</label>        
+                                <select name="unit_id" id="unit_id" class="form-control single-select">
+                                    <option value="">Select Unit</option>
+                                    <?=getItemUnitListOption($unitList)?>
+                                </select> 
+                                <input type="hidden" name="unit_name" id="unit_name" class="form-control" value="" />                       
                             </div>
 							<div class="col-md-4 form-group">
                                 <label for="hsn_code">HSN Code</label>
                                 <select name="hsn_code" id="hsn_code" class="form-control single-select">
                                     <option value="">Select HSN Code</option>
-                                    <?php
-                                        foreach($hsnList as $row):
-                                            echo '<option value="'.$row->hsn.'">'.$row->hsn.'</option>';
-                                        endforeach;
-                                    ?>
+                                    <?=getHsnCodeListOption($hsnList)?>
                                 </select>
                             </div>
                             <div class="col-md-4 form-group">
@@ -466,7 +281,7 @@ if(!empty($dataRow->itemList)):
     foreach($dataRow->itemList as $row):
         $row->row_index = "";
         $row->gst_per = floatVal($row->gst_per);
-        $row->attachment = (!empty($row->attachment) || $row->attachment != NULL)?$row->attachment:"";
+        //$row->attachment = (!empty($row->attachment) || $row->attachment != NULL)?$row->attachment:"";
         echo '<script>AddRow('.json_encode($row).');</script>';
     endforeach;
 endif;
