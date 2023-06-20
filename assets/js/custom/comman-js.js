@@ -112,7 +112,7 @@ $(document).ready(function(){
 		var resFunction = $(this).data('res_function') || "";
 		var jsStoreFn = $(this).data('js_store_fn') || 'store';
 
-		var fnJson = "{'formId':'"+formId+"','fnsave':'"+fnsave+"'}";
+		var fnJson = "{'formId':'"+formId+"','controller':'"+controllerName+"','fnsave':'"+fnsave+"'}";
 
 		if(typeof postData === "string"){
 			postData = JSON.parse(postData);
@@ -1041,4 +1041,25 @@ function inrFormat(no){
         var res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree + afterPoint;
     	return res;
     }else{return no;}        
+}
+
+function resPartyMaster(response,formId){
+	if(response.status==1){
+        $('#'+formId)[0].reset();$(".modal").modal('hide');
+        toastr.success(response.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
+
+		getPartyList({"party_category":$("#party_id").data('party_category')});
+		setTimeout(function(){
+			$("#party_id").val(response.id);
+			$("#party_id").comboSelect();
+			$(".partyDetails").trigger('change');
+		},1000);
+    }else{
+        if(typeof response.message === "object"){
+            $(".error").html("");
+            $.each( response.message, function( key, value ) {$("."+key).html(value);});
+        }else{
+            toastr.error(response.message, 'Error', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
+        }			
+    }	
 }
