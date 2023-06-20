@@ -170,7 +170,7 @@ function AddRow(data){
     cell.append(makeInput);
 
     var itemCodeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_code]",  value: data[3], disabled:disable });
-    var itemIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_id]",  value: data[10], disabled:disable });
+    var itemIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_id]",id:'item_id_'+countRow,  value: data[10], disabled:disable });
     cell = $(row.insertCell(-1));
     cell.html(data[3]);
     cell.append(itemCodeInput);
@@ -224,6 +224,7 @@ function AddRow(data){
 
     cell = $(row.insertCell(-1));
     cell.append(((data[10] == "")?addNewItem:""));
+    cell.attr('id','cell-'+countRow)
 }
 
 function resBomItem(data,formId){
@@ -233,15 +234,11 @@ function resBomItem(data,formId){
         $('#salesOrderBomItems tbody #'+clickedTr).removeClass('none');
         $('#salesOrderBomItems tbody #'+clickedTr).addClass('success');
         $('#salesOrderBomItems tbody #'+clickedTr+' input').prop('disabled',false);
-        $("#add-item-"+clickedTr).hide();  
-
+        $("#cell-"+clickedTr).html("");  
+        $("#salesOrderBomItems tbody #item_id_"+clickedTr).val(data.id);
         clickedTr = 0;
 
-        /* $("#modal-xxl .scrollable").perfectScrollbar({suppressScrollX: true});
-        $('#modal-xxl .modal-body').scrollTop(0); */
-
-        $('#modal-xxl').attr('style','overflow: auto;');
-        $('#modal-xxl').perfectScrollbar('destroy').perfectScrollbar({suppressScrollX: true});
+        $(".modal").css({'overflow':'auto'});
 
         toastr.success(data.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
     }else{

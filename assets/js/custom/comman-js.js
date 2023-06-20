@@ -124,7 +124,7 @@ $(document).ready(function(){
             data: postData
         }).done(function(response){
             $("#"+modalId).modal({show:true});
-            $("#"+modalId).css({'z-index':9999});
+            $("#"+modalId).css({'z-index':9999,'overflow':'auto'});
 			$("#"+modalId+' .modal-title').html(title);
 			$("#"+modalId+' .modal-body').html("");
             $("#"+modalId+' .modal-body').html(response);
@@ -333,6 +333,10 @@ $(document).ready(function(){
 		}else{
 			window[resFunctionName]();
 		}
+	});
+
+	$(document).on('click','.btn-close',function(){
+		$(".modal").css({'overflow':'auto'});
 	});
 });
 
