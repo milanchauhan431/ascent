@@ -73,7 +73,7 @@ class SalesOrderModel extends MasterModel{
                 $this->trash($this->transChild,['trans_main_id'=>$data['id']]);
                 $this->trash($this->transExpense,['trans_main_id'=>$data['id']]);
                 $this->remove($this->transDetails,['main_ref_id'=>$data['id'],'table_name'=>$this->transMain,'description'=>"SO TERMS"]);
-                $this->remove($this->transDetails,['main_ref_id'=>$data['id'],'table_name'=>$this->transMain,'description'=>"MASTER DETAILS"]);
+                $this->remove($this->transDetails,['main_ref_id'=>$data['id'],'table_name'=>$this->transMain,'description'=>"SO MASTER DETAILS"]);
             endif;
             
             $masterDetails = $data['masterDetails'];
@@ -90,7 +90,7 @@ class SalesOrderModel extends MasterModel{
             $masterDetails['id'] = "";
             $masterDetails['main_ref_id'] = $result['id'];
             $masterDetails['table_name'] = $this->transMain;
-            $masterDetails['description'] = "MASTER DETAILS";
+            $masterDetails['description'] = "SO MASTER DETAILS";
             $this->store($this->transDetails,$masterDetails);
 
             $expenseData = array();
@@ -152,7 +152,7 @@ class SalesOrderModel extends MasterModel{
         $queryData = array();
         $queryData['tableName'] = $this->transMain;
         $queryData['select'] = "trans_main.*,trans_details.t_col_1 as contact_person,trans_details.t_col_2 as contact_no,trans_details.t_col_3 as ship_address";
-        $queryData['leftJoin']['trans_details'] = "trans_main.id = trans_details.main_ref_id AND trans_details.description = 'MASTER DETAILS' AND trans_details.table_name = '".$this->transMain."'";
+        $queryData['leftJoin']['trans_details'] = "trans_main.id = trans_details.main_ref_id AND trans_details.description = 'SO MASTER DETAILS' AND trans_details.table_name = '".$this->transMain."'";
         $queryData['where']['trans_main.id'] = $data['id'];
         $result = $this->row($queryData);
 
@@ -199,7 +199,7 @@ class SalesOrderModel extends MasterModel{
             $this->trash($this->transChild,['trans_main_id'=>$id]);
             $this->trash($this->transExpense,['trans_main_id'=>$id]);
             $this->remove($this->transDetails,['main_ref_id'=>$id,'table_name'=>$this->transMain,'description'=>"SO TERMS"]);
-            $this->remove($this->transDetails,['main_ref_id'=>$id,'table_name'=>$this->transMain,'description'=>"MASTER DETAILS"]);
+            $this->remove($this->transDetails,['main_ref_id'=>$id,'table_name'=>$this->transMain,'description'=>"SO MASTER DETAILS"]);
             $result = $this->trash($this->transMain,['id'=>$id],'Sales Order');
 
             if ($this->db->trans_status() !== FALSE):
