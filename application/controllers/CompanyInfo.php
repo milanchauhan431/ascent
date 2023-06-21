@@ -10,6 +10,7 @@ class CompanyInfo extends MY_Controller{
 	
 	public function index(){
         $this->data['dataRow'] = $this->masterModel->getCompanyInfo();
+        $this->data['countryData'] = $this->party->getCountries();
         $this->load->view($this->indexPage,$this->data);
     }
 
@@ -19,18 +20,25 @@ class CompanyInfo extends MY_Controller{
     
         if(empty($data['company_name']))
             $errorMessage['company_name'] = "Company Name is required.";
+
         if(empty($data['company_email']))
             $errorMessage['company_email'] = "Company Email is required.";
+
         if(empty($data['company_contact']))
             $errorMessage['company_contact'] = "Contact No. is required.";
-        if(empty($data['company_city']))
-            $errorMessage['company_city'] = "City Name is required.";
-        if(empty($data['company_state']))
-            $errorMessage['company_state'] = "State Name is required.";
-        if(empty($data['company_country']))
-            $errorMessage['company_country'] = "Country Name is required.";
+
+        if(empty($data['company_city_id']))
+            $errorMessage['company_city_id'] = "City Name is required.";
+
+        if(empty($data['company_state_id']))
+            $errorMessage['company_state_id'] = "State Name is required.";
+
+        if(empty($data['company_country_id']))
+            $errorMessage['company_country_id'] = "Country Name is required.";
+
         if(empty($data['company_address']))
             $errorMessage['company_address'] = "Address is required.";
+            
         if(empty($data['company_pincode']))
             $errorMessage['company_pincode'] = "Pincode is required.";
        

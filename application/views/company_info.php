@@ -41,49 +41,92 @@
                                         <label for="company_phone">Company Phone</label>
                                         <input name="company_phone" id="company_phone" class="form-control" value="<?= (!empty($dataRow->company_phone)) ? $dataRow->company_phone : "" ?>">
                                     </div>
-                                    <div class="col-md-4 form-group">
-                                        <label for="company_city">Company City</label>
-                                        <input name="company_city" id="company_city" class="form-control req" value="<?= (!empty($dataRow->company_city)) ? $dataRow->company_city : "" ?>">
+
+                                    <div class="col-md-3 form-group">
+                                        <label for="company_country_id">Company Country</label>
+                                        <select name="company_country_id" id="company_country_id" class="form-control country_list single-select req" tabindex="-1" data-state_id="company_state_id" data-selected_state_id="<?=(!empty($dataRow->company_state_id))?$dataRow->company_state_id:""?>">
+                                            <option value="">Select Country</option>
+                                            <?php foreach($countryData as $row):
+                                                $selected = (!empty($dataRow->company_country_id) && $dataRow->company_country_id == $row->id)?"selected":"";
+                                            ?>
+                                                <option value="<?=$row->id?>" <?=$selected?>><?=$row->name?></option>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </div>
 
-                                    <div class="col-md-4 form-group">
-                                        <label for="company_state">Company State</label>
-                                        <input name="company_state" id="company_state" class="form-control req" value="<?= (!empty($dataRow->company_state)) ? $dataRow->company_state : "" ?>">
+                                    <div class="col-md-3 form-group">
+                                        <label for="company_state_id">Company State</label>
+                                        <select name="company_state_id" id="company_state_id" class="form-control state_list single-select req" data-city_id="company_city_id" data-selected_city_id="<?=(!empty($dataRow->company_city_id))?$dataRow->company_city_id:""?>" tabindex="-1">
+                                            <option value="">Select State</option>
+                                        </select>
                                     </div>
 
-                                    <div class="col-md-4 form-group">
-                                        <label for="company_country">Company Country</label>
-                                        <input name="company_country" id="company_country" class="form-control" value="<?= (!empty($dataRow->company_country)) ? $dataRow->company_country : "" ?>">
+                                    <div class="col-md-3 form-group">
+                                        <label for="company_city_id">Company City</label>
+                                        <select name="company_city_id" id="company_city_id" class="form-control single-select req" tabindex="-1">
+                                            <option value="">Select City</option>
+                                        </select>
                                     </div>
 
-                                    <div class="col-md-6 form-group">
-                                        <label for="company_address">Company Address</label>
-                                        <input name="company_address" id="company_address" class="form-control req" value="<?= (!empty($dataRow->company_address)) ? $dataRow->company_address : "" ?>">
-                                    </div>
-
-                                    <div class="col-md-6 form-group">
+                                    <div class="col-md-3 form-group">
                                         <label for="company_pincode">Company Pincode</label>
                                         <input name="company_pincode" id="company_pincode" class="form-control req" value="<?= (!empty($dataRow->company_pincode)) ? $dataRow->company_pincode : "" ?>">
                                     </div>
 
+                                    <div class="col-md-12 form-group">
+                                        <label for="company_address">Company Address</label>
+                                        <input name="company_address" id="company_address" class="form-control req" value="<?= (!empty($dataRow->company_address)) ? $dataRow->company_address : "" ?>">
+                                    </div>
+
                                     <div class="col-md-3 form-group">
+                                        <label for="delivery_country_id">Delivery Country</label>
+                                        <select name="delivery_country_id" id="delivery_country_id" class="form-control country_list single-select" tabindex="-1" data-state_id="delivery_state_id" data-selected_state_id="<?=(!empty($dataRow->delivery_state_id))?$dataRow->delivery_state_id:""?>">
+                                            <option value="">Select Country</option>
+                                            <?php foreach($countryData as $row):
+                                                $selected = (!empty($dataRow->delivery_country_id) && $dataRow->delivery_country_id == $row->id)?"selected":"";
+                                            ?>
+                                                <option value="<?=$row->id?>" <?=$selected?>><?=$row->name?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3 form-group">
+                                        <label for="delivery_state_id">Delivery State</label>
+                                        <select name="delivery_state_id" id="delivery_state_id" class="form-control state_list single-select" data-city_id="delivery_city_id" data-selected_city_id="<?=(!empty($dataRow->delivery_city_id))?$dataRow->delivery_city_id:""?>" tabindex="-1">
+                                            <option value="">Select State</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3 form-group">
+                                        <label for="delivery_city_id">Delivery City</label>
+                                        <select name="delivery_city_id" id="delivery_city_id" class="form-control single-select" tabindex="-1">
+                                            <option value="">Select City</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3 form-group">
+                                        <label for="delivery_pincode">Delivery Pincode</label>
+                                        <input name="delivery_pincode" id="delivery_pincode" class="form-control" value="<?= (!empty($dataRow->delivery_pincode)) ? $dataRow->delivery_pincode : "" ?>">
+                                    </div>
+
+                                    <div class="col-md-12 form-group">
+                                        <label for="delivery_address">Delivery Address</label>
+                                        <input name="delivery_address" id="delivery_address" class="form-control" value="<?= (!empty($dataRow->delivery_address)) ? $dataRow->delivery_address : "" ?>">
+                                    </div>
+
+                                    <div class="col-md-4 form-group">
                                         <label for="company_reg_no">Registration No.</label>
                                         <input name="company_reg_no" id="company_reg_no" class="form-control" value="<?= (!empty($dataRow->company_reg_no)) ? $dataRow->company_reg_no : "" ?>">
                                     </div>
 
-                                    <div class="col-md-3 form-group">
+                                    <div class="col-md-4 form-group">
                                         <label for="company_gst_no">Company GST No.</label>
                                         <input name="company_gst_no" id="company_gst_no" class="form-control" value="<?= (!empty($dataRow->company_gst_no)) ? $dataRow->company_gst_no : "" ?>">
                                     </div>
 
-                                    <div class="col-md-3 form-group">
+                                    <div class="col-md-4 form-group">
                                         <label for="company_pan_no">Company Pan No.</label>
                                         <input name="company_pan_no" id="company_pan_no" class="form-control" value="<?= (!empty($dataRow->company_pan_no)) ? $dataRow->company_pan_no : "" ?>">
-                                    </div>
-
-                                    <div class="col-md-3 form-group">
-                                        <label for="company_state_code">Company State Code </label>
-                                        <input name="company_state_code" id="company_state_code" class="form-control" value="<?= (!empty($dataRow->company_state_code)) ? $dataRow->company_state_code : "" ?>">
                                     </div>
 
                                     <div class="col-md-4 form-group">
@@ -122,7 +165,7 @@
                     <div class="card-footer">
                         <div class="row">                    
                             <div class="col-md-12">
-                                <button type="button" class="btn waves-effect waves-light btn-outline-success btn-save float-right save-form permission-write" onclick="customStore('addCompanyInfo','save');"><i class="fa fa-check"></i> Save</button>
+                                <button type="button" class="btn waves-effect waves-light btn-outline-success btn-save float-right save-form permission-write" onclick="customStore({'formId':'addCompanyInfo','fnsave':'save'});"><i class="fa fa-check"></i> Save</button>
                             </div>
                         </div>
                     </div>
@@ -134,6 +177,11 @@
 
 <?php $this->load->view('includes/footer'); ?>
 <script>
+$(document).ready(function(){
+    $("#company_country_id").trigger('change');
+    $("#delivery_country_id").trigger('change');
+});
+
 function companyInfoRes(data,formId){
     if(data.status==1){
         toastr.success(data.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
