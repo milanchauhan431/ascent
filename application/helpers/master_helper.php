@@ -45,9 +45,9 @@ function getMasterDtHeader($page){
     $data['finish_goods'][] = ["name"=>"Item Name"];
     $data['finish_goods'][] = ["name"=>"Category Name"];
     $data['finish_goods'][] = ["name"=>"Unit"];
-    $data['finish_goods'][] = ["name"=>"HSN Code"];
-    $data['finish_goods'][] = ["name"=>"GST Per"];
-    $data['finish_goods'][] = ["name"=>"Remark"];
+    $data['finish_goods'][] = ["name"=>"Make"];
+    $data['finish_goods'][] = ["name"=>"Defual Disc. (%)"];
+    $data['finish_goods'][] = ["name"=>"Price"];
 
     /* Row Material Header */
     $data['raw_material'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
@@ -56,9 +56,9 @@ function getMasterDtHeader($page){
     $data['raw_material'][] = ["name"=>"Item Name"];
     $data['raw_material'][] = ["name"=>"Category Name"];
     $data['raw_material'][] = ["name"=>"Unit"];
-    $data['raw_material'][] = ["name"=>"HSN Code"];
-    $data['raw_material'][] = ["name"=>"GST Per"];
-    $data['raw_material'][] = ["name"=>"Remark"];
+    $data['raw_material'][] = ["name"=>"Make"];
+    $data['raw_material'][] = ["name"=>"Defual Disc. (%)"];
+    $data['raw_material'][] = ["name"=>"Price"];
 
     /* Consumable Header */
     $data['consumable'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
@@ -67,9 +67,9 @@ function getMasterDtHeader($page){
     $data['consumable'][] = ["name"=>"Item Name"];
     $data['consumable'][] = ["name"=>"Category Name"];
     $data['consumable'][] = ["name"=>"Unit"];
-    $data['consumable'][] = ["name"=>"HSN Code"];
-    $data['consumable'][] = ["name"=>"GST Per"];
-    $data['consumable'][] = ["name"=>"Remark"];
+    $data['consumable'][] = ["name"=>"Make"];
+    $data['consumable'][] = ["name"=>"Defual Disc. (%)"];
+    $data['consumable'][] = ["name"=>"Price"];
 
     return tableHeader($data[$page]);
 }
@@ -140,5 +140,5 @@ function getProductData($data){
 
     $action = getActionButton($editButton.$deleteButton);
 
-    return [$action,$data->sr_no,$data->item_code,$data->item_name,$data->category_name,$data->unit_name,$data->hsn_code,$data->gst_per,$data->note];
+    return [$action,$data->sr_no,$data->item_code,$data->item_name,$data->category_name,$data->unit_name,$data->make_brand,floatVal($data->defualt_disc),floatVal($data->price)];
 }
