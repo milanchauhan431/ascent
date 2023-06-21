@@ -158,6 +158,7 @@ $(document).ready(function(){
 	$(document).on('change','.country_list',function(){
 		var id = $(this).val();
 		var state_id = $(this).data('state_id');
+		var selected_state_id = $(this).data('selected_state_id') || "";
 		var city_id = $("#"+state_id).data('city_id');
 		if(id == ""){
 			$("#"+state_id).html('<option value="">Select State</option>');
@@ -171,8 +172,14 @@ $(document).ready(function(){
 				dataType:'json',
 				success:function(data){
 					$("#"+state_id).html(data.result);
-					$("#"+state_id).comboSelect();
-					$("#"+state_id).focus();
+					if(selected_state_id != ""){
+						$("#"+state_id).val(selected_state_id);
+						$(".state_list").trigger('change');
+						$("#"+state_id).comboSelect();
+					}else{
+						$("#"+state_id).comboSelect();
+						$("#"+state_id).focus();
+					}	
 				}
 			});
 		}
@@ -181,6 +188,7 @@ $(document).ready(function(){
 	$(document).on('change',".state_list",function(){
 		var id = $(this).val();
 		var city_id = $(this).data('city_id');
+		var selected_city_id = $(this).data('selected_city_id') || "";
 		if(id == ""){
 			$("#"+city_id).html('<option value="">Select City</option>');
 			$("#"+city_id).comboSelect();
@@ -192,8 +200,13 @@ $(document).ready(function(){
 				dataType:'json',
 				success:function(data){
 					$("#"+city_id).html(data.result);
-					$("#"+city_id).comboSelect();
-					$("#"+city_id).focus();
+					if(selected_city_id != ""){
+						$("#"+city_id).val(selected_city_id);
+						$("#"+city_id).comboSelect();
+					}else{
+						$("#"+city_id).comboSelect();
+						$("#"+city_id).focus();
+					}					
 				}
 			});
 		}
