@@ -68,8 +68,10 @@ class HsnMasterModel extends MasterModel{
         try{
             $this->db->trans_begin();
 
-            $checkData['columnName'] = [];
-            $checkData['value'] = $id;
+            $hsnData = $this->getHSNDetail(['id'=>$id]);
+
+            $checkData['columnName'] = ["hsn_code"];
+            $checkData['value'] = $hsnData->hsn;
             $checkUsed = $this->checkUsage($checkData);
 
             if($checkUsed == true):
