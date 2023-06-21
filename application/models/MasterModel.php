@@ -837,7 +837,17 @@ class MasterModel extends CI_Model{
 	/* Company Information */
 	public function getCompanyInfo(){
 		$data['tableName'] = 'company_info';
-		$data['where']['id'] = 1;
+        $data['select'] = "company_info.*,bcountry.name as company_country, bstate.name as company_state, bstate.gst_statecode as company_state_code, bcity.name as company_city, dcountry.name as delivery_country, dstate.name as delivery_state, dstate.gst_statecode as delivery_state_code, dcity.name as delivery_city";
+
+        $data['leftJoin']['countries as bcountry'] = "company_info.company_country_id = bcountry.id";
+        $data['leftJoin']['states as bstate'] = "company_info.company_state_id = bstate.id";
+        $data['leftJoin']['cities as bcity'] = "company_info.company_city_id = bcity.id";
+
+        $data['leftJoin']['countries as dcountry'] = "company_info.delivery_country_id = dcountry.id";
+        $data['leftJoin']['states as dstate'] = "company_info.delivery_state_id = dstate.id";
+        $data['leftJoin']['cities as dcity'] = "company_info.delivery_city_id = dcity.id";
+
+		$data['where']['company_info.id'] = 1;
 		return $this->row($data);
 	}
 
