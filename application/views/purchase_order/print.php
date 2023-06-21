@@ -11,13 +11,13 @@
 				<td style="width:50%;vertical-align:top;">
 					TO,<br>
 					<b>M/S. <?=$poData->party_name?></b> <br>
-					<small><?=$partyData->party_address?></small><br><br>
+					<small><?=htmlspecialchars($partyData->party_address)?></small><br><br>
 				</td>
 				<td style="width:50%;vertical-align:top;">
 					<small>
 						Contact Person : <?=$partyData->contact_person?><br>
 						Contact No. : <?=$partyData->party_mobile?><br>
-						Email : <?=$partyData->contact_email?><br>
+						Email : <?=$partyData->party_email?><br>
 						GSTIN : <?=$poData->gstin ?><br><br>
 					</small><br><br>
 				</td> 
@@ -35,12 +35,10 @@
 				</td>
 				<td style="width:50%;vertical-align:top;">
 					<b>Delivery/Booking Address: </b><br>
-					Ascent Engineers <br>
+					<?=$companyData->company_name?> <br>
 					<small>
-						GIDC metoda(Gujarat)
-						Transpotation : Jamnagar Transport /
-						Alpesh Roadways/Om Shakti Cargo
-						Topay Basis (Godowndelivery)
+						<?=$poData->delivery_address?></br>
+						Transpotation : <?=$poData->transport_name?>
 					</small><br><br>
 				</td>
 			</tr>

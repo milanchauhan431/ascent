@@ -40,6 +40,8 @@ class PurchaseOrders extends MY_Controller{
         $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(1);
         $this->data['orderItemList'] = $this->purchaseIndent->getRequestItems($ids);
         $this->data['termsList'] = $this->terms->getTermsList(['type'=>'Purchase']);
+        $this->data['companyInfo'] = $this->masterModel->getCompanyInfo();
+        $this->data['transportList'] = $this->transport->getTransportList();
         $this->load->view($this->form,$this->data);
     }
 
@@ -53,6 +55,8 @@ class PurchaseOrders extends MY_Controller{
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(1);
         $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(1);
         $this->data['termsList'] = $this->terms->getTermsList(['type'=>'Purchase']);
+        $this->data['companyInfo'] = $this->masterModel->getCompanyInfo();
+        $this->data['transportList'] = $this->transport->getTransportList();
         $this->load->view($this->form,$this->data);
     }
 
@@ -81,6 +85,7 @@ class PurchaseOrders extends MY_Controller{
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(2);
         $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(2);
         $this->data['termsList'] = $this->terms->getTermsList(['type'=>'Purchase']);
+        $this->data['transportList'] = $this->transport->getTransportList();
         $this->load->view($this->form,$this->data);
     }
 
@@ -136,7 +141,7 @@ class PurchaseOrders extends MY_Controller{
                 </tr>
             </table>';
         
-            //print_r($htmlFooter);exit;
+            //print_r($htmlHeader);exit;
 		$mpdf = new \Mpdf\Mpdf();
 		$pdfFileName='PO-'.$id.'.pdf';
 		$stylesheet = file_get_contents(base_url('assets/extra-libs/datatables.net-bs4/css/dataTables.bootstrap4.css'));

@@ -1,4 +1,7 @@
 $(document).ready(function(){
+	$(".ledgerColumn").hide();
+	$(".summary_desc").attr('style','width: 60%;');
+
 
     $(document).on('click', '.add-item', function () {
 		$('#itemForm')[0].reset();

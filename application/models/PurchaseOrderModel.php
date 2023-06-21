@@ -61,17 +61,25 @@ class PurchaseOrderModel extends MasterModel{
 
                 $this->trash($this->transExpense,['trans_main_id'=>$data['id']]);
                 $this->remove($this->transDetails,['main_ref_id'=>$data['id'],'table_name'=>$this->transMain,'description'=>"PO TERMS"]);
+                $this->remove($this->transDetails,['main_ref_id'=>$data['id'],'table_name'=>$this->transMain,'description'=>"PO MASTER DETAILS"]);
             endif;
             
+            $masterDetails = $data['masterDetails'];
             $itemData = $data['itemData'];
 
             $transExp = getExpArrayMap($data['expenseData']);
 			$expAmount = $transExp['exp_amount'];
             $termsData = $data['termsData'];
 
-            unset($transExp['exp_amount'],$data['itemData'],$data['expenseData'],$data['termsData']);		
+            unset($transExp['exp_amount'],$data['itemData'],$data['expenseData'],$data['termsData'],$data['masterDetails']);		
 
             $result = $this->store($this->transMain,$data,'Purchase Order');
+
+            $masterDetails['id'] = "";
+            $masterDetails['main_ref_id'] = $result['id'];
+            $masterDetails['table_name'] = $this->transMain;
+            $masterDetails['description'] = "PO MASTER DETAILS";
+            $this->store($this->transDetails,$masterDetails);
 
             $expenseData = array();
             if($expAmount <> 0):				
@@ -135,7 +143,10 @@ class PurchaseOrderModel extends MasterModel{
     public function getPurchaseOrder($data){
         $queryData = array();
         $queryData['tableName'] = $this->transMain;
-        $queryData['where']['id'] = $data['id'];
+        $queryData['select'] = "trans_main.*,trans_details.t_col_1 as delivery_address,trans_details.i_col_1 as transport_id,transport_master.transport_name,transport_master.transport_id as gstin";
+        $queryData['leftJoin']['trans_details'] = "trans_main.id = trans_details.main_ref_id AND trans_details.description = 'PO MASTER DETAILS' AND trans_details.table_name = '".$this->transMain."'";
+        $queryData['leftJoin']['transport_master'] = "trans_details.i_col_1 = transport_master.id";
+        $queryData['where']['trans_main.id'] = $data['id'];
         $result = $this->row($queryData);
 
         if($data['itemList'] == 1):
