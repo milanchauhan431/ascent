@@ -2,6 +2,7 @@
 class GateInward extends MY_Controller{
     private $indexPage = "gate_inward/index";
     private $form = "gate_inward/form";
+    private $inspectionFrom = "gate_inward/material_inspection";
 
     public function __construct(){
         parent::__construct();
@@ -64,7 +65,7 @@ class GateInward extends MY_Controller{
 
         $options = '<option value="">Select Purchase Order</option>';
         foreach($poList as $row):
-            $options .= '<option value="'.$row->po_trans_id.'" data-po_id="'.$row->po_id.'" data-po_no="'.$row->trans_number.'" >'.$row->trans_number.' [ Pending Qty : '.$row->pending_qty.' ]</option>';
+            $options .= '<option value="'.$row->po_trans_id.'" data-po_id="'.$row->po_id.'" data-po_no="'.$row->trans_number.'" data-price="'.$row->price.'" data-disc_per="'.$row->disc_per.'">'.$row->trans_number.' [ Pending Qty : '.$row->pending_qty.' ]</option>';
         endforeach;
 
         $this->printJson(['status'=>1,'poOptions'=>$options]);
@@ -104,7 +105,6 @@ class GateInward extends MY_Controller{
             $this->printJson($this->gateInward->delete($id));
         endif;
     }
-
     
     public function ir_print($id){
         $irData = $this->gateInward->getGateInward($id);  
@@ -166,6 +166,17 @@ class GateInward extends MY_Controller{
 		$mpdf->AddPage('P','','','','',2,2,2,2,2,2);
 		$mpdf->WriteHTML($pdfData);
 		$mpdf->Output($pdfFileName,'I');
+    }
+
+    public function materialInspection(){
+        $data = $this->input->post();
+        $this->data['dataRow'] = $this->gateInward->getGateInwardItems($data['id']);
+        $this->load->view($this->inspectionFrom,$this->data);
+    }
+
+    public function saveInspectedMaterial(){
+        $data = $this->input->post();
+        $this->printJson($this->gateInward->saveInspectedMaterial($data));
     }
 }
 ?>

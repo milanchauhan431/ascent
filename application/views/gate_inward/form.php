@@ -25,6 +25,26 @@
                 </select>                
             </div>
 
+            <div class="col-md-3 form-group">
+                <label for="inv_no">Invoice No.</label>
+                <input type="text" name="inv_no" id="inv_no" class="form-control req text-uppercase" value="<?=(!empty($gateInwardData->inv_no))?$gateInwardData->inv_no:""?>">
+            </div>
+
+            <div class="col-md-3 form-group">
+                <label for="inv_date">Invoice Date</label>
+                <input type="date" name="inv_date" id="inv_date" class="form-control req" value="<?=(!empty($gateInwardData->inv_date))?$gateInwardData->inv_date:""?>" >
+            </div>
+
+            <div class="col-md-3 form-group">
+                <label for="doc_no">Challan No.</label>
+                <input type="text" name="doc_no" id="doc_no" class="form-control req text-uppercase" value="<?=(!empty($gateInwardData->doc_no))?$gateInwardData->doc_no:""?>">
+            </div>
+
+            <div class="col-md-3 form-group">
+                <label for="doc_date">Challan Date</label>
+                <input type="date" name="doc_date" id="doc_date" class="form-control req" value="<?=(!empty($gateInwardData->doc_date))?$gateInwardData->doc_date:""?>">
+            </div>
+
             <div class="col-md-4 form-group">
                 <label for="item_id">Item Name</label>
                 <select id="item_id" class="form-control itemDetails single-select" data-res_function="resItemDetail">
@@ -52,6 +72,11 @@
             </div>
 
             <div class="col-md-2 form-group">
+                <label for="disc_per">Disc. (%)</label>
+                <input type="text" id="disc_per" class="form-control" value="">
+            </div>
+
+            <div class="col-md-2 form-group">
                 <label for="price">Price</label>
                 <input type="text" id="price" class="form-control floatVal" value="">
             </div>
@@ -69,17 +94,19 @@
                 <div class="error location_id"></div>
             </div>
 
-            <div class="col-md-4 form-group" >
+            <input type="hidden" id="heat_no" class="form-control" value="">
+            <!-- <div class="col-md-4 form-group" >
                 <label for="heat_no">Heat No.</label>
                 <input type="text" id="heat_no" class="form-control" value="">
                 <div class="error heat_no"></div>
-            </div>
+            </div> -->
 
-            <div class="col-md-4 form-group" >
+            <input type="hidden" id="mill_heat_no" class="form-control" value="">
+            <!-- <div class="col-md-4 form-group" >
                 <label for="mill_heat_no">Mill Heat No.</label>
                 <input type="text" id="mill_heat_no" class="form-control" value="">
                 <div class="error mill_heat_no"></div>
-            </div>
+            </div> -->
 
         </div>
 

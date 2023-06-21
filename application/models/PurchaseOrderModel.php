@@ -211,7 +211,7 @@ class PurchaseOrderModel extends MasterModel{
 
     public function getItemWisePoList($data){
         $queryData['tableName'] = $this->transChild;
-        $queryData['select'] = "trans_main.id as po_id,trans_main.trans_number,trans_child.id as po_trans_id,trans_child.qty,trans_child.dispatch_qty as received_qty,(trans_child.qty - trans_child.dispatch_qty) as pending_qty";
+        $queryData['select'] = "trans_main.id as po_id,trans_main.trans_number,trans_child.id as po_trans_id,trans_child.qty,trans_child.dispatch_qty as received_qty,(trans_child.qty - trans_child.dispatch_qty) as pending_qty,trans_child.price,trans_child.disc_per";
 
         $queryData['leftJoin']['trans_main'] = "trans_main.id = trans_child.trans_main_id";
 

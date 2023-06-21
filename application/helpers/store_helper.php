@@ -112,9 +112,12 @@ function getGateInwardData($data){
             $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
         endif;
 
+        $insParam = "{'postData':{'id' : ".$data->id."},'modal_id' : 'modal-xl', 'form_id' : 'materialInspection', 'title' : 'Material Inspection','fnedit':'materialInspection','fnsave':'saveInspectedMaterial'}";
+        $inspection = '<a href="javscript:voide(0);" type="button" class="btn btn-warning permission-modify" datatip="Inspection" flow="down" onclick="edit('.$insParam.');"><i class="fas fa-search"></i></a>';
+
 	    $iirPrint = '<a href="'.base_url('gateInward/ir_print/'.$data->id).'" type="button" class="btn btn-primary" datatip="IIR Print" flow="down" target="_blank"><i class="fas fa-print"></i></a>';
 
-	    $action = getActionButton($iirPrint.$editButton.$deleteButton);
+	    $action = getActionButton($iirPrint.$inspection.$editButton.$deleteButton);
 
         return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->item_name,$data->qty,$data->po_number];
     endif;

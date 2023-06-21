@@ -19,6 +19,12 @@ class TransactionMainModel extends MasterModel{
 		$nextTransNo = (!empty($trans_no))?($trans_no + 1):1;
 		return $nextTransNo;
     }
+
+	public function getStockUniqueId(){
+		$queryData['tableName'] = "stock_transaction";
+		$queryData['select'] = "ifnull((MAX(unique_id) + 1),1) as unique_id";
+		return $this->row($queryData)->unique_id;
+	}
 	
     public function getTransPrefix($entry_type){
 		$prefix = 'TRANS/';

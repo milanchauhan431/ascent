@@ -9,8 +9,12 @@ $(document).ready(function(){
         if(po_trans_id){
             var po_id = $(this).find(":selected").data('po_id');
             $("#po_id").val(po_id);
+            $("#price").val(($(this).find(":selected").data('price') || 0));
+            $("#disc_per").val(($(this).find(":selected").data('disc_per') || 0));
         }else{
             $("#po_id").val("");
+            $("#price").val("");
+            $("#disc_per").val("");
         }
     });
 
@@ -27,6 +31,7 @@ $(document).ready(function(){
         formData.heat_no = $("#heat_no").val();
         formData.mill_heat_no = $("#mill_heat_no").val();
         formData.qty = $("#qty").val();
+        formData.disc_per = $("#disc_per").val();
         formData.price = $("#price").val();
         formData.po_trans_id = $("#po_trans_id").val();
         formData.po_id = $("#po_id").val();
@@ -60,6 +65,7 @@ $(document).ready(function(){
             $("#heat_no").val("");
             $("#mill_heat_no").val("");
             $("#qty").val("");
+            $("#disc_per").val("");
             $("#item_stock_type").val("");
             $("#item_id").val("");
             $("#item_type").val("");
@@ -157,10 +163,12 @@ function AddBatchRow(data){
     cell.append(millHeatNoInput);
 
     var batchQtyInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][qty]",value:data.qty});   
+    var discPerInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][disc_per]",value:data.disc_per});   
     var priceInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][price]",value:data.price});   
     cell = $(row.insertCell(-1));
 	cell.html(data.qty);
     cell.append(batchQtyInput);
+    cell.append(discPerInput);
     cell.append(priceInput);
 
     //Add Button cell.	

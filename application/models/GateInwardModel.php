@@ -12,19 +12,22 @@ class GateInwardModel extends masterModel{
 
             $data['select'] = "mir.id,mir.trans_number,DATE_FORMAT(mir.trans_date,'%d-%m-%Y') as trans_date,mir.qty as no_of_items,party_master.party_name,mir.inv_no,ifnull(DATE_FORMAT(mir.inv_date,'%d-%m-%Y'),'') as inv_date,mir.doc_no,ifnull(DATE_FORMAT(mir.doc_date,'%d-%m-%Y'),'') as doc_date,mir.qty_kg,mir.inward_qty,mir.trans_status,mir.trans_type";
 
+            $data['where']['mir.trans_status'] = $data['trans_status'];
         else:
             $data['tableName'] = $this->mirTrans;
 
-            $data['select'] = "mir.id,mir.trans_number,DATE_FORMAT(mir.trans_date,'%d-%m-%Y') as trans_date,mir.qty as no_of_items,party_master.party_name,item_master.item_name,mir.inv_no,ifnull(DATE_FORMAT(mir.inv_date,'%d-%m-%Y'),'') as inv_date,mir.doc_no,ifnull(DATE_FORMAT(mir.doc_date,'%d-%m-%Y'),'') as doc_date,trans_main.trans_number as po_number,mir.qty_kg,mir.inward_qty,mir_transaction.trans_status,mir.trans_type,mir_transaction.qty";
+            $data['select'] = "mir.id,mir.trans_number,DATE_FORMAT(mir.trans_date,'%d-%m-%Y') as trans_date,mir.qty as no_of_items,party_master.party_name,item_master.item_name,mir.inv_no,ifnull(DATE_FORMAT(mir.inv_date,'%d-%m-%Y'),'') as inv_date,mir.doc_no,ifnull(DATE_FORMAT(mir.doc_date,'%d-%m-%Y'),'') as doc_date,trans_main.trans_number as po_number,mir.qty_kg,mir.inward_qty,mir_transaction.trans_status,mir.trans_type,mir_transaction.qty,mir_transaction.id as mir_trans_id";
 
             $data['leftJoin']['mir'] = "mir.id = mir_transaction.mir_id";
             $data['leftJoin']['item_master'] = "item_master.id = mir_transaction.item_id";
             $data['leftJoin']['trans_main'] = "trans_main.id = mir_transaction.po_id";
+
+            $data['where']['mir_transaction.trans_status'] = $data['trans_status'];
         endif;
 
         $data['leftJoin']['party_master'] = "party_master.id = mir.party_id";
 
-        $data['where']['mir.trans_status'] = $data['trans_status'];
+        
         $data['where']['mir.trans_type'] = $data['trans_type'];
             
         $data['order_by']['mir.id'] = "DESC";
@@ -215,12 +218,22 @@ class GateInwardModel extends masterModel{
     
     public function getGateInwardItems($id){
         $queryData['tableName'] = $this->mirTrans;
-        $queryData['select'] = "mir_transaction.*,item_master.item_name,location_master.location as location_name,trans_main.trans_number as po_no";
+        $queryData['select'] = "mir_transaction.*,item_master.item_code,item_master.item_name,location_master.location as location_name,trans_main.trans_number as po_no";
         $queryData['leftJoin']['item_master'] = "item_master.id = mir_transaction.item_id";
         $queryData['leftJoin']['location_master'] = "location_master.id = mir_transaction.location_id";
         $queryData['leftJoin']['trans_main'] = "trans_main.id = mir_transaction.po_id";
         $queryData['where']['mir_transaction.mir_id'] = $id;
         return $this->rows($queryData);
+    }
+
+    public function getInwardItem($data){
+        $queryData['tableName'] = $this->mirTrans;
+        $queryData['select'] = "mir_transaction.*,item_master.item_code,item_master.item_name,location_master.location as location_name,trans_main.trans_number as po_no";
+        $queryData['leftJoin']['item_master'] = "item_master.id = mir_transaction.item_id";
+        $queryData['leftJoin']['location_master'] = "location_master.id = mir_transaction.location_id";
+        $queryData['leftJoin']['trans_main'] = "trans_main.id = mir_transaction.po_id";
+        $queryData['where']['mir_transaction.id'] = $data['id'];
+        return $this->row($queryData);
     }
 
     public function delete($id){
@@ -247,6 +260,65 @@ class GateInwardModel extends masterModel{
             endforeach;
 
             $result = $this->trash($this->mir,['id'=>$id],'Gate Inward');        
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }	
+    }
+
+    public function saveInspectedMaterial($data){
+        try{
+            $this->db->trans_begin();
+
+            foreach($data['itemData'] as $key => $row):
+                $mirData = $this->getGateInward($row['mir_id']);
+                $mirItem = $this->getInwardItem(['id'=>$row['id']]);
+
+                $this->remove($this->stockTrans,['entry_type'=>26,'main_ref_id' => $mirData->id,'child_ref_id' => $mirItem->id]);
+
+                $row['ok_qty'] = (!empty($row['ok_qty']))?$row['ok_qty']:0;
+                $row['reject_qty'] = (!empty($row['reject_qty']))?$row['reject_qty']:0;
+                $row['short_qty'] = (!empty($row['short_qty']))?$row['short_qty']:0;
+                
+                $totalQty = 0;
+                $totalQty = ($row['ok_qty'] + $row['reject_qty'] + $row['short_qty']);
+                if($mirItem->qty < $totalQty):
+                    $this->db->trans_rollback(); break;
+                    return ['status'=>0,'message'=>['ok_qty_'.$key => "Invalid Qty."]];
+                endif;
+
+                $row['trans_status'] = ($mirItem->qty >= $totalQty)?1:0;
+
+                $this->store($this->mirTrans,$row);
+
+                if(!empty($row['ok_qty'])):
+                    $stockData = [
+                        'id' => "",
+                        'entry_type' => 26,
+                        'unique_id' => $this->transMainModel->getStockUniqueId(),
+                        'ref_date' => $mirData->trans_date,
+                        'ref_no' => $mirData->trans_number,
+                        'main_ref_id' => $mirData->id,
+                        'child_ref_id' => $mirItem->id,
+                        'location_id' => $mirItem->location_id,
+                        'batch_no' => $mirItem->batch_no,
+                        'party_id' => $mirData->party_id,
+                        'item_id' => $mirItem->item_id,
+                        'p_or_m' => 1,
+                        'qty' => $row['ok_qty'],
+                        'price' => $mirItem->price
+                    ];
+
+                    $this->store($this->stockTrans,$stockData);
+                endif;
+            endforeach;
+
+            $result = ['status'=>1,'message'=>"Material Inspected successfully."];
 
             if ($this->db->trans_status() !== FALSE):
                 $this->db->trans_commit();
