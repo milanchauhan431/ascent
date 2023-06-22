@@ -300,6 +300,7 @@ function resPartyDetail(response = ""){
     if(response != ""){
         var partyDetail = response.data.partyDetail;
         $("#party_name").val(partyDetail.party_name);
+		$("#master_t_col_1").val(partyDetail.delivery_address);
 
         var gstDetails = response.data.gstDetails;
         $.each(gstDetails,function(index,row){  
@@ -307,6 +308,7 @@ function resPartyDetail(response = ""){
         });        
     }else{
         $("#party_name").val("");
+		$("#master_t_col_1").val("");
     }
     html += '<option value="URP">URP</option>';
     $("#gstin").html(html);$("#gstin").comboSelect();gstin();

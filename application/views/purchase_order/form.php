@@ -97,7 +97,7 @@
 
                                     <div class="col-md-9 form-group">
                                         <label for="master_t_col_1">Delivery Address</label>
-                                        <input type="text" name="masterDetails[t_col_1]" id="master_t_col_1" class="form-control" value="<?=(!empty($dataRow->delivery_address))?$dataRow->delivery_address:((!empty($companyInfo))?$companyInfo->delivery_address:"")?>">
+                                        <input type="text" name="masterDetails[t_col_1]" id="master_t_col_1" class="form-control" value="<?=(!empty($dataRow->delivery_address))?$dataRow->delivery_address:""?>">
                                     </div>
                                 </div>
 
