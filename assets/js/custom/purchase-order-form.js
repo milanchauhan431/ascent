@@ -320,6 +320,8 @@ function resItemDetail(response = ""){
         $("#itemForm #item_type").val(itemDetail.item_type);
         $("#itemForm #unit_id").val(itemDetail.unit_id);
         $("#itemForm #unit_name").val(itemDetail.unit_name);
+        $("#itemForm #disc_per").val(itemDetail.defualt_disc);
+        $("#itemForm #price").val(itemDetail.price);
         $("#itemForm #hsn_code").val(itemDetail.hsn_code);$("#itemForm #hsn_code").comboSelect();
         $("#itemForm #gst_per").val(parseFloat(itemDetail.gst_per).toFixed(0));$("#itemForm #gst_per").comboSelect();
     }else{
@@ -328,6 +330,8 @@ function resItemDetail(response = ""){
         $("#itemForm #item_type").val("");
         $("#itemForm #unit_id").val("");
         $("#itemForm #unit_name").val("");
+		$("#itemForm #disc_per").val("");
+        $("#itemForm #price").val("");
         $("#itemForm #hsn_code").val("");$("#itemForm #hsn_code").comboSelect();
         $("#itemForm #gst_per").val(0);$("#itemForm #gst_per").comboSelect(); 
     }
