@@ -38,7 +38,7 @@
 					<?=$companyData->company_name?> <br>
 					<small>
 						<?=$poData->delivery_address?></br>
-						Transpotation : <?=$poData->transport_name?>
+						Transport Name : <?=$poData->transport_name?>
 					</small><br><br>
 				</td>
 			</tr>
