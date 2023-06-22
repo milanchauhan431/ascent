@@ -31,7 +31,6 @@ $(document).ready(function(){
 });
 
 function getFilePath(file,e="",row_id = ""){
-    console.log(e);
     if(file){
         // Check if the file extension is an image
         var extension = (e == "")?file.split('.').pop().toLowerCase():file.name.split('.').pop().toLowerCase();
