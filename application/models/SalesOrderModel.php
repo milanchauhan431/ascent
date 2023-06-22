@@ -179,7 +179,9 @@ class SalesOrderModel extends MasterModel{
     public function getSalesOrderItems($data){
         $queryData = array();
         $queryData['tableName'] = $this->transChild;
-        $queryData['where']['trans_main_id'] = $data['id'];
+        $queryData['select'] = "trans_child.*,COUNT(order_bom.id) as bom_items";
+        $queryData['leftJoin']['order_bom'] = "order_bom.trans_child_id = trans_child.id";
+        $queryData['where']['trans_child.trans_main_id'] = $data['id'];
         $result = $this->rows($queryData);
         return $result;
     }
@@ -201,88 +203,6 @@ class SalesOrderModel extends MasterModel{
             $this->remove($this->transDetails,['main_ref_id'=>$id,'table_name'=>$this->transMain,'description'=>"SO TERMS"]);
             $this->remove($this->transDetails,['main_ref_id'=>$id,'table_name'=>$this->transMain,'description'=>"SO MASTER DETAILS"]);
             $result = $this->trash($this->transMain,['id'=>$id],'Sales Order');
-
-            if ($this->db->trans_status() !== FALSE):
-                $this->db->trans_commit();
-                return $result;
-            endif;
-        }catch(\Exception $e){
-            $this->db->trans_rollback();
-            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
-        }
-    }
-
-    public function saveOrderBom($postData){
-        try{
-            $this->db->trans_begin();
-            
-            foreach($postData as $row):
-                $row['id'] = "";
-                $this->store($this->orderBom,$row);
-            endforeach;
-
-            $result = ['status'=>1,'message'=>'Order Bom saved successfully.'];
-
-            if ($this->db->trans_status() !== FALSE):
-                $this->db->trans_commit();
-                return $result;
-            endif;
-        }catch(\Exception $e){
-            $this->db->trans_rollback();
-            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
-        }
-    }
-
-    public function getOrderBomItems($data){
-        $queryData['tableName'] = $this->orderBom;
-        $queryData['select'] = "order_bom.*,item_master.item_name,(trans_child.qty * order_bom.qty) as reqired_qty,ifnull(SUM(stock_transaction.qty * stock_transaction.p_or_m),0) as stock_qty,trans_child.trans_status";
-
-        $queryData['leftJoin']['trans_child'] = "order_bom.trans_child_id = trans_child.id";
-        $queryData['leftJoin']['item_master'] = "order_bom.item_id = item_master.id";
-        $queryData['leftJoin']['stock_transaction'] = "order_bom.item_id = stock_transaction.item_id";
-
-        $queryData['where']['order_bom.trans_child_id'] = $data['trans_child_id'];
-
-        $queryData['group_by'][] = "order_bom.id";
-        return $this->rows($queryData);
-    }
-
-    public function removeBomItem($id){
-        try{
-            $this->db->trans_begin();
-
-            $result = $this->trash($this->orderBom,['id'=>$id],'Bom Item');
-
-            if ($this->db->trans_status() !== FALSE):
-                $this->db->trans_commit();
-                return $result;
-            endif;
-        }catch(\Exception $e){
-            $this->db->trans_rollback();
-            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
-        }
-    }
-
-    public function savePurchaseRequest($data){
-        try{
-            $this->db->trans_begin();
-            
-            foreach($data['itemData'] as $row):
-                if(!empty($row['req_qty'])):
-                    $row['req_no'] = $this->purchaseIndent->nextIndentNo();
-                    $row['id'] = "";
-                    $row['req_date'] = $data['req_date'];
-                    $this->store($this->purchseReq,$row);
-
-                    $setData = Array();
-                    $setData['tableName'] = $this->orderBom;
-                    $setData['where']['id'] = $row['bom_id'];
-                    $setData['set']['req_qty'] = 'req_qty, + '.$row['req_qty'];
-                    $this->setValue($setData);
-                endif;
-            endforeach;
-
-            $result = ['status'=>1,'message'=>'Request sent successfully.'];
 
             if ($this->db->trans_status() !== FALSE):
                 $this->db->trans_commit();

@@ -260,7 +260,7 @@ function AddRow(data) {
 	btnEdit.attr("class", "btn btn-outline-warning waves-effect waves-light");
 
 	cell.append(btnEdit);
-	cell.append(btnRemove);
+	cell.append(((data.bom_items == 0)?btnRemove:""));
 	cell.attr("class", "text-center");
 	cell.attr("style", "width:10%;");
 
@@ -327,6 +327,9 @@ function resPartyDetail(response = ""){
         });        
     }else{
         $("#party_name").val("");
+		$("#master_t_col_1").val("");
+        $("#master_t_col_2").val("");
+        $("#master_t_col_3").val("");
     }
     $("#gstin").html(html);$("#gstin").comboSelect();gstin();
 }

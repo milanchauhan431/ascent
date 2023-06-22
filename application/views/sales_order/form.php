@@ -205,6 +205,8 @@
 								<input type="hidden" name="item_code" id="item_code" value="" />
                                 <input type="hidden" name="item_id" id="item_id" value="0" />
                                 <input type="hidden" name="item_type" id="item_type" value="1" />
+                                <input type="hidden" name="bom_items" id="bom_items" value="0" />
+                                <!-- <input type="hidden" name="attachment" id="attachment" value=""> -->
                             </div>
                             
 

@@ -32,6 +32,10 @@ function getSalesOrderData($data){
     $reqParam = "{'postData':{'trans_child_id':".$data->trans_child_id.",'trans_number':'".$data->trans_number."','item_name':'".$data->item_name."'},'modal_id' : 'modal-xl', 'form_id' : 'addOrderBom', 'fnedit':'purchaseRequest', 'fnsave':'savePurchaseRequest','title' : 'Send Purchase Request'}";
     $reqButton = '<a class="btn btn-info btn-delete permission-write" href="javascript:void(0)" onclick="edit('.$reqParam.');" datatip="Purchase Request" flow="down"><i class="fa fa-paper-plane"></i></a>';
 
+    if($data->bom_items > 0):
+        $deleteButton = "";
+    endif;
+
     $action = getActionButton($soBom.$viewBom.$reqButton.$editButton.$deleteButton);
 
     return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->job_number,$data->party_name,$data->item_name,$data->qty,$data->dispatch_qty,$data->pending_qty];
