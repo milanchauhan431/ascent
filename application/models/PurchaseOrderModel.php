@@ -143,7 +143,7 @@ class PurchaseOrderModel extends MasterModel{
     public function getPurchaseOrder($data){
         $queryData = array();
         $queryData['tableName'] = $this->transMain;
-        $queryData['select'] = "trans_main.*,trans_details.t_col_1 as delivery_address,trans_details.i_col_1 as transport_id,transport_master.transport_name,transport_master.transport_id as gstin";
+        $queryData['select'] = "trans_main.*,trans_details.t_col_1 as delivery_address,trans_details.i_col_1 as transport_id,transport_master.transport_name,transport_master.transport_id as transport_gstin";
         $queryData['leftJoin']['trans_details'] = "trans_main.id = trans_details.main_ref_id AND trans_details.description = 'PO MASTER DETAILS' AND trans_details.table_name = '".$this->transMain."'";
         $queryData['leftJoin']['transport_master'] = "trans_details.i_col_1 = transport_master.id";
         $queryData['where']['trans_main.id'] = $data['id'];

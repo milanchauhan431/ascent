@@ -18,7 +18,7 @@
 						Contact Person : <?=$partyData->contact_person?><br>
 						Contact No. : <?=$partyData->party_mobile?><br>
 						Email : <?=$partyData->party_email?><br>
-						GSTIN : <?=$poData->gstin ?><br><br>
+						GSTIN : <?=$poData->gstin?><br><br>
 					</small><br><br>
 				</td> 
 			</tr>
