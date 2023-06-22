@@ -351,6 +351,12 @@ $(document).ready(function(){
 	$(document).on('click','.btn-close',function(){
 		$(".modal").css({'overflow':'auto'});
 	});
+
+	$(document).on('change','.custom-file-input',function(){
+		var inputId = $(this).attr('id');
+		var fileName = $('#'+inputId).val().split('\\').pop() || "Choose file";
+        $('label[for="' + inputId + '"]').html(fileName);
+	});
 });
 
 $(window).on('pageshow', function() {
@@ -488,7 +494,8 @@ function reInitMultiSelect(){
 }
 
 function statusTab(tableId,status,hp_fn_name="",page=""){
-    $("#"+tableId).attr("data-url",'/getDTRows/'+status);
+
+    $("#"+tableId).attr("data-url",$("#"+tableId).data('url')+'/'+status);
 
 	$("#"+tableId).data("hp_fn_name","");
     $("#"+tableId).data("page","");
