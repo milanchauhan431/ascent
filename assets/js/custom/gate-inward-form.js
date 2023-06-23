@@ -90,8 +90,8 @@ $(document).ready(function(){
 function resItemDetail(response = ""){
     if(response != ""){
         var itemDetail = response.data.itemDetail;
-        $("#item_type").val(itemDetail.item_type); 
-        $("#item_stock_type").val(itemDetail.stock_type);
+        $("#item_type").val(itemDetail.item_type || ""); 
+        $("#item_stock_type").val(itemDetail.stock_type || "");
         if($("#po_id").find(":selected").val() == ""){
             $("#disc_per").val(itemDetail.defualt_disc);
             $("#price").val(itemDetail.price);
