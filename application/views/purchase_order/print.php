@@ -37,8 +37,8 @@
 					<b>Delivery/Booking Address: </b><br>
 					<?=$companyData->company_name?> <br>
 					<small>
-						<?=$poData->delivery_address." ".$partyData->delivery_state_name.", ".$partyData->delivery_city_name." - ".$partyData->delivery_pincode?></br>
-						Transport Name : <?=$poData->transport_name?>
+						<?=$poData->delivery_address." ".$partyData->delivery_state_name.", ".$partyData->delivery_city_name." - ".$partyData->delivery_pincode?></br><br>
+						Transport Name : <?=$poData->transport_name?><br>
 						Contact Person : <?=$poData->contact_person?><br>
 						Contact No. : <?=$poData->contact_no?><br>
 					</small><br><br>
