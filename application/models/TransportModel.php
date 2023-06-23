@@ -48,7 +48,7 @@ class TransportModel extends MasterModel{
 		try{
             $this->db->trans_begin();
 
-            $checkData['columnName'] = ["i_col_1"];
+            $checkData['columnName'] = ["transporter","i_col_1"];
             $checkData['table_condition']['trans_detail']['where']['i_col_1']['table_name'] = "trans_main";
             $checkData['table_condition']['trans_detail']['where_in']['i_col_1']['description'] = ["PO MASTER DETAILS"];            
             $checkData['value'] = $id;
