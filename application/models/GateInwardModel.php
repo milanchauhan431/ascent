@@ -274,7 +274,7 @@ class GateInwardModel extends masterModel{
                     $this->setValue($setData);
                 endif;
 
-                $this->trash($this->mirTrans,['id',$row->id]);
+                $this->trash($this->mirTrans,['id'=>$row->id]);
             endforeach;
 
             $result = $this->trash($this->mir,['id'=>$id],'Gate Inward');        
