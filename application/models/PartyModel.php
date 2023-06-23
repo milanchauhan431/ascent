@@ -8,7 +8,7 @@ class PartyModel extends MasterModel{
 
     public function getPartyCode($category=1){
         $queryData['tableName'] = $this->partyMaster;
-        $queryData['select'] = "ifnull((MAX(CAST(party_code AS UNSIGNED)) + 1),1) as code";
+        $queryData['select'] = "ifnull((MAX(CAST(REGEXP_SUBSTR(party_code,'[0-9]+') AS UNSIGNED)) + 1),1) as code";
         $queryData['where']['party_category'] = $category;
         $result = $this->row($queryData)->code;
         return $result;
@@ -57,10 +57,21 @@ class PartyModel extends MasterModel{
     public function getParty($data){
         $queryData = array();
         $queryData['tableName']  = $this->partyMaster;
-        $queryData['where']['id'] = $data['id'];
+        $queryData['select'] = "party_master.*,b_countries.name as country_name,b_states.name as state_name,b_states.gst_statecode as state_code,b_cities.name as city_name,d_countries.name as delivery_country_name,d_states.name as delivery_state_name,d_states.gst_statecode as delivery_state_code,d_cities.name as delivery_city_name";
+
+        $queryData['leftJoin']['countries as b_countries'] = "party_master.country_id = b_countries.id";
+        $queryData['leftJoin']['states as b_states'] = "party_master.state_id = b_states.id";
+        $queryData['leftJoin']['cities as b_cities'] = "party_master.city_id = b_cities.id";
+
+        $queryData['leftJoin']['countries as d_countries'] = "party_master.delivery_country_id = d_countries.id";
+        $queryData['leftJoin']['states as d_states'] = "party_master.delivery_state_id = d_states.id";
+        $queryData['leftJoin']['cities as d_cities'] = "party_master.delivery_city_id = d_cities.id";
+
+
+        $queryData['where']['party_master.id'] = $data['id'];
 
         if(!empty($data['party_category'])):
-            $queryData['where_in']['party_category'] = $data['party_category'];
+            $queryData['where_in']['party_master.party_category'] = $data['party_category'];
         endif;
         return $this->row($queryData);
     }
