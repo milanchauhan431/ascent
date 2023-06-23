@@ -3,9 +3,47 @@
         <div class="row">
 
             <input type="hidden" name="id" id="id" value="<?=(!empty($dataRow->id))?$dataRow->id:""?>">
+            <input type="hidden" name="entry_type" id="entry_type" value="<?=(!empty($dataRow->entry_type))?$dataRow->entry_type:$entry_type?>">
             <input type="hidden" name="trans_main_id" id="trans_main_id" value="<?=(!empty($dataRow->trans_main_id))?$dataRow->trans_main_id:""?>">
             <input type="hidden" name="trans_child_id" id="trans_child_id" value="<?=(!empty($dataRow->trans_child_id))?$dataRow->trans_child_id:""?>">
             <input type="hidden" name="ga_file_name" id="ga_file_name" value="<?=(!empty($dataRow->ga_file))?$dataRow->ga_file:""?>">
+
+            <div class="col-md-4 form-group">
+                <label for="entry_date">Date</label>
+                <input type="date" name="entry_date" id="entry_date" class="form-control" value="<?=(!empty($dataRow->entry_date))?$dataRow->entry_date:getFyDate()?>">
+            </div>
+
+            <div class="col-md-4 form-group">
+                <label for="priority">Priority</label>
+                <select name="priority" id="priority" class="form-control single-select">
+                    <option value="0">Select</option>
+                    <option value="1" <?=(!empty($dataRow->priority) && $dataRow->priority == 1)?"selected":""?> >HIGH</option>
+                    <option value="2" <?=(!empty($dataRow->priority) && $dataRow->priority == 2)?"selected":""?> >MEDIUM</option>
+                    <option value="3" <?=(!empty($dataRow->priority) && $dataRow->priority == 3)?"selected":""?> >LOW</option>
+                </select>
+            </div>
+
+            <div class="col-md-4 form-group">
+                <label for="department_ids">Department</label>
+                <select id="department" data-input_id="department_ids" class="form-control jp_multiselect req" multiple="multiple">
+                    <?php
+                        foreach ($departmentList as $dept_id=>$dept):
+                            if (!empty($dataRow->department_ids)):
+                                if(in_array($dept_id, explode(',', $dataRow->department_ids))):
+                                    $selected = "selected";
+                                else:
+                                    $selected = '';
+                                endif;
+                            else:
+                                $selected = 'selected';
+                            endif;
+                            echo '<option value="' . $dept_id . '" ' . $selected . '>' . $dept . '</option>';
+                        endforeach;
+                    ?>
+                </select>
+                <input type="hidden" name="department_ids" id="department_ids" value="<?= (!empty($dataRow->department_ids)) ? $dataRow->department_ids : implode(",",array_keys($departmentList)) ?>" />
+                <div class="error type"></div>
+            </div>
 
             <div class="col-md-4 form-group">
                 <label for="">GA File</label>
@@ -72,37 +110,7 @@
                 <input type="text" name="remark" id="remark" class="form-control" value="<?=(!empty($dataRow->remark))?$dataRow->remark:""?>">
             </div>
 
-            <div class="col-md-4 form-group">
-                <label for="priority">Priority</label>
-                <select name="priority" id="priority" class="form-control single-select">
-                    <option value="0">Select</option>
-                    <option value="1" <?=(!empty($dataRow->priority) && $dataRow->priority == 1)?"selected":""?> >HIGH</option>
-                    <option value="2" <?=(!empty($dataRow->priority) && $dataRow->priority == 2)?"selected":""?> >MEDIUM</option>
-                    <option value="3" <?=(!empty($dataRow->priority) && $dataRow->priority == 3)?"selected":""?> >LOW</option>
-                </select>
-            </div>
-
-            <div class="col-md-4 form-group">
-                <label for="department_ids">Department</label>
-                <select id="department" data-input_id="department_ids" class="form-control jp_multiselect req" multiple="multiple">
-                    <?php
-                        foreach ($departmentList as $dept_id=>$dept):
-                            if (!empty($dataRow->department_ids)):
-                                if(in_array($dept_id, explode(',', $dataRow->department_ids))):
-                                    $selected = "selected";
-                                else:
-                                    $selected = '';
-                                endif;
-                            else:
-                                $selected = 'selected';
-                            endif;
-                            echo '<option value="' . $dept_id . '" ' . $selected . '>' . $dept . '</option>';
-                        endforeach;
-                    ?>
-                </select>
-                <input type="hidden" name="department_ids" id="department_ids" value="<?= (!empty($dataRow->department_ids)) ? $dataRow->department_ids : implode(",",array_keys($departmentList)) ?>" />
-                <div class="error type"></div>
-            </div>
+            
 
         </div>
     </div>
