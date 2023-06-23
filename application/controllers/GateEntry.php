@@ -43,17 +43,17 @@ class GateEntry extends MY_Controller{
         $data = $this->input->post();
         $errorMessage = array();
 
-        if(empty($data['driver_name']))
+        /* if(empty($data['driver_name']))
             $errorMessage['driver_name'] = "Driver Name is required.";
 
         if(empty($data['driver_contact']))
-            $errorMessage['driver_contact'] = "Driver Contact No. is required.";
+            $errorMessage['driver_contact'] = "Driver Contact No. is required."; */
 
         if(empty($data['vehicle_type']))
             $errorMessage['vehicle_type'] = "vehicle Type is required.";
 
-        if(empty($data['vehicle_no']))
-            $errorMessage['vehicle_no'] = "Vehicle No. is required.";
+        if(empty($data['lr']))
+            $errorMessage['lr'] = "LR No. is required.";
 
         if(empty($data['inv_no']) && empty($data['doc_no']))
             $errorMessage['inv_no'] = "Invoice No OR Challan No is required";
@@ -75,8 +75,8 @@ class GateEntry extends MY_Controller{
                 $data['trans_no'] = $this->gateEntry->getNextNo();
                 $data['trans_number'] = $data['trans_prefix'].sprintf("%04d",$data['trans_no']);
             endif;
-            $data['driver_name'] = ucwords($data['driver_name']);
-            $data['vehicle_no'] = strtoupper($data['vehicle_no']);
+            /* $data['driver_name'] = ucwords($data['driver_name']); */
+            $data['vehicle_no'] = (!empty($data['vehicle_no']))?strtoupper($data['vehicle_no']):"";
             $data['inv_date'] = (!empty($data['inv_date']))?$data['inv_date']:null;
             $data['doc_date'] = (!empty($data['doc_date']))?$data['doc_date']:null;
             $this->printJson($this->gateEntry->save($data));
