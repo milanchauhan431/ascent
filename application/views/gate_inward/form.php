@@ -27,44 +27,49 @@
 
             <div class="col-md-3 form-group">
                 <label for="inv_no">Invoice No.</label>
-                <input type="text" name="inv_no" id="inv_no" class="form-control req text-uppercase" value="<?=(!empty($gateInwardData->inv_no))?$gateInwardData->inv_no:""?>">
+                <input type="text" name="inv_no" id="inv_no" class="form-control req text-uppercase" value="<?=(!empty($gateInwardData->inv_no))?$gateInwardData->inv_no:((!empty($gateEntryData->inv_no))?$gateEntryData->inv_no:"")?>">
             </div>
 
             <div class="col-md-3 form-group">
                 <label for="inv_date">Invoice Date</label>
-                <input type="date" name="inv_date" id="inv_date" class="form-control req" value="<?=(!empty($gateInwardData->inv_date))?$gateInwardData->inv_date:""?>" >
+                <input type="date" name="inv_date" id="inv_date" class="form-control req" value="<?=(!empty($gateInwardData->inv_date))?$gateInwardData->inv_date:((!empty($gateEntryData->inv_date))?$gateEntryData->inv_date:"")?>" >
             </div>
 
             <div class="col-md-3 form-group">
                 <label for="doc_no">Challan No.</label>
-                <input type="text" name="doc_no" id="doc_no" class="form-control req text-uppercase" value="<?=(!empty($gateInwardData->doc_no))?$gateInwardData->doc_no:""?>">
+                <input type="text" name="doc_no" id="doc_no" class="form-control req text-uppercase" value="<?=(!empty($gateInwardData->doc_no))?$gateInwardData->doc_no:((!empty($gateEntryData->doc_no))?$gateEntryData->doc_no:"")?>">
             </div>
 
             <div class="col-md-3 form-group">
                 <label for="doc_date">Challan Date</label>
-                <input type="date" name="doc_date" id="doc_date" class="form-control req" value="<?=(!empty($gateInwardData->doc_date))?$gateInwardData->doc_date:""?>">
+                <input type="date" name="doc_date" id="doc_date" class="form-control req" value="<?=(!empty($gateInwardData->doc_date))?$gateInwardData->doc_date:((!empty($gateEntryData->doc_date))?$gateEntryData->doc_date:"")?>">
+            </div>
+
+            <div class="col-md-4 form-group">
+                <!-- <label for="po_trans_id">Purchase Order</label>
+                <select id="po_trans_id" class="form-control single-select">
+                    <option value="">Select Purchase Order</option>
+                </select>
+                <div class="error po_trans_id"></div>
+                <input type="hidden" id="po_id" value=""> -->
+                <label for="po_id">Purchase Order</label>
+                <select id="po_id" class="form-control single-select">
+                    <option value="">Select Purchase Order</option>
+                </select>
+                <div class="error po_id"></div>
+                <input type="hidden" id="po_trans_id" value="">
             </div>
 
             <div class="col-md-4 form-group">
                 <label for="item_id">Item Name</label>
                 <select id="item_id" class="form-control itemDetails single-select" data-res_function="resItemDetail">
                     <option value="">Select Item Name</option>
-                    <?=getItemListOption($itemList,(!empty($gateInwardData->item_id))?$gateInwardData->item_id:"")?>
+                    <?=getItemListOption($itemList)?>
                 </select>
 
                 <input type="hidden" id="item_stock_type" value="">
-                <input type="hidden" id="inward_qty" value="">
                 <input type="hidden" id="item_type" value="">
-            </div>
-
-            <div class="col-md-4 form-group">
-                <label for="po_trans_id">Purchase Order</label>
-                <select id="po_trans_id" class="form-control single-select">
-                    <option value="">Select Purchase Order</option>
-                </select>
-                <div class="error po_trans_id"></div>
-                <input type="hidden" id="po_id" value="">
-            </div>
+            </div>            
 
             <div class="col-md-2 form-group">
                 <label for="qty">Qty</label>
@@ -132,11 +137,11 @@
                         <tr>
                             <th>#</th>
                             <th>PO No</th>
-                            <th>Item Name</th>
+                            <th style="width:30%;">Item Name</th>
                             <th>Location</th>
                             <th>Batch NO</th>
-                            <th>Heat No</th>
-                            <th>Mill Heat No</th>
+                            <!-- <th>Heat No</th>
+                            <th>Mill Heat No</th> -->
                             <th>Qty</th>
                             <th>Action</th>
                         </tr>

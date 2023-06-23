@@ -1,10 +1,21 @@
 $(document).ready(function(){
-    $(document).on('change',"#item_id",function(){
+    $("#party_id").trigger('change');
+    $(document).on('change',"#party_id",function(){
+        var party_id = $(this).val();
+        getPoList(party_id);
+    });
+
+    $(document).on('change',"#po_id",function(){
+        var po_id = $(this).val();
+        getItemList(po_id);
+    });
+
+    /* $(document).on('change',"#item_id",function(){
         var item_id = $(this).val();
         getPoList(item_id);
-    });
+    }); */
     
-    $(document).on('change',"#po_trans_id",function(){
+    /* $(document).on('change',"#po_trans_id",function(){
         var po_trans_id = $(this).val();
         if(po_trans_id){
             var po_id = $(this).find(":selected").data('po_id');
@@ -16,7 +27,7 @@ $(document).ready(function(){
             $("#price").val("");
             $("#disc_per").val("");
         }
-    });
+    }); */
 
     $(document).on('click','.addBatch',function(){
         var formData = {};
@@ -26,7 +37,7 @@ $(document).ready(function(){
 
         formData.location_id = $("#location_id").val();
         formData.location_name = $("#location_id :selected").text();
-        formData.po_number = $("#po_trans_id :selected").data('po_no');
+        formData.po_number = $("#po_id :selected").data('po_no');
         formData.item_name = $("#item_idc").val();
         formData.heat_no = $("#heat_no").val();
         formData.mill_heat_no = $("#mill_heat_no").val();
@@ -61,17 +72,16 @@ $(document).ready(function(){
            
             AddBatchRow(formData);
 
-            $("#location_id").val("");$("#location_id").select2();
+            $("#location_id").val("");$("#location_id").select2({ dropdownParent: $('#location_id').parent() });
             $("#heat_no").val("");
             $("#mill_heat_no").val("");
             $("#qty").val("");
             $("#disc_per").val("");
             $("#item_stock_type").val("");
-            $("#item_id").val("");
+            $("#item_id").val("");$("#item_id").comboSelect();
             $("#item_type").val("");
             $("#po_trans_id").val("");
-            $("#po_trans_id").comboSelect();
-            $("#po_id").val("");
+            $("#po_id").val("");$("#po_id").comboSelect();            
             $("#price").val("");
         }
     });
@@ -82,13 +92,54 @@ function resItemDetail(response = ""){
         var itemDetail = response.data.itemDetail;
         $("#item_type").val(itemDetail.item_type); 
         $("#item_stock_type").val(itemDetail.stock_type);
+        if($("#po_id").find(":selected").val() == ""){
+            $("#disc_per").val(itemDetail.defualt_disc);
+            $("#price").val(itemDetail.price);
+            $("#po_trans_id").val("");
+        }else{
+            $("#disc_per").val(($("#item_id").find(":selected").data('disc_per') || 0));
+            $("#price").val(($("#item_id").find(":selected").data('price') || 0));
+            $("#po_trans_id").val(($("#item_id").find(":selected").data('po_trans_id') || 0));
+        }        
     }else{
         $("#item_type").val(""); 
         $("#item_stock_type").val("");
+        $("#disc_per").val("");
+        $("#price").val("");
+        $("#po_trans_id").val("");
     }
 }
 
-function getPoList(item_id,po_trans_id = ""){
+function getPoList(party_id){
+    if(party_id){
+        $.ajax({
+            url : base_url + controller + '/getPoNumberList',
+            type : 'post',
+            data : {party_id : party_id},
+            dataType : 'json'
+        }).done(function(response){
+            $("#po_id").html(response.poOptions);
+            $("#po_id").comboSelect();
+        });
+    }else{
+        $("#po_id").html('<option value="">Select Purchase Order</option>');
+        $("#po_id").comboSelect();
+    }
+}
+
+function getItemList(po_id){
+    $.ajax({
+        url : base_url + controller + '/getItemList',
+        type : 'post',
+        data : {po_id : po_id},
+        dataType : 'json'
+    }).done(function(response){
+        $("#item_id").html(response.itemOptions);
+        $("#item_id").comboSelect();
+    });
+}
+
+/* function getPoList(item_id,po_trans_id = ""){
     if(item_id){
         $.ajax({
             url : base_url + controller + '/getPoNumberListOnItemId',
@@ -103,7 +154,8 @@ function getPoList(item_id,po_trans_id = ""){
         $("#po_trans_id").html('<option value="">Select Purchase Order</option>');
         $("#po_trans_id").comboSelect();
     }
-}
+} */
+
 
 function AddBatchRow(data){
     $('table#batchTable tr#noData').remove();
@@ -153,13 +205,13 @@ function AddBatchRow(data){
     cell.append(batchNoInput);
 
     var heatNoInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][heat_no]",value:data.heat_no});
-    cell = $(row.insertCell(-1));
-	cell.html(data.heat_no);
+    /* cell = $(row.insertCell(-1));
+	cell.html(data.heat_no); */
     cell.append(heatNoInput);
     
     var millHeatNoInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][mill_heat_no]",value:data.mill_heat_no});
-    cell = $(row.insertCell(-1));
-	cell.html(data.mill_heat_no);
+    /* cell = $(row.insertCell(-1));
+	cell.html(data.mill_heat_no); */
     cell.append(millHeatNoInput);
 
     var batchQtyInput = $("<input/>",{type:"hidden",name:"batchData["+countRow+"][qty]",value:data.qty});   

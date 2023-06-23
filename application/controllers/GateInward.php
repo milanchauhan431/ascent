@@ -59,7 +59,7 @@ class GateInward extends MY_Controller{
         $this->load->view($this->form,$this->data);
     }
 
-    public function getPoNumberListOnItemId(){
+    /* public function getPoNumberListOnItemId(){
         $data = $this->input->post();
         $poList = $this->purchaseOrder->getItemWisePoList($data);
 
@@ -69,6 +69,35 @@ class GateInward extends MY_Controller{
         endforeach;
 
         $this->printJson(['status'=>1,'poOptions'=>$options]);
+    } */
+
+    public function getPoNumberList(){
+        $data = $this->input->post();
+        $poList = $this->purchaseOrder->getPartyWisePoList($data);
+
+        $options = '<option value="">Select Purchase Order</option>';
+        foreach($poList as $row):
+            $options .= '<option value="'.$row->po_id.'" data-po_no="'.$row->trans_number.'" >'.$row->trans_number.'</option>';
+        endforeach;
+
+        $this->printJson(['status'=>1,'poOptions'=>$options]);
+    }
+
+    public function getItemList(){
+        $data = $this->input->post();
+
+        $options = '<option value="">Select Item Name</option>';
+        if(empty($data['po_id'])):
+            $options .= getItemListOption($this->item->getItemList());
+        else:
+            $itemList = $this->purchaseOrder->getPendingPoItems($data);
+
+            foreach($itemList as $row):
+                $options .= '<option value="'.$row->item_id.'" data-po_trans_id="'.$row->po_trans_id.'" data-price="'.$row->price.'" data-disc_per="'.$row->disc_per.'">[ '.$row->item_code.' ] '.$row->item_name.' [ Pending Qty : '.$row->pending_qty.' ]</option>';
+            endforeach;
+        endif;
+
+        $this->printJson(['status'=>1,'itemOptions'=>$options]);
     }
 
     public function save(){

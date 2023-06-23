@@ -2,6 +2,7 @@
 class GateInwardModel extends masterModel{
     private $mir = "mir";
     private $mirTrans = "mir_transaction";
+    private $transMain = "trans_main";
     private $transChild = "trans_child";
     private $stockTrans = "stock_transaction";
 
@@ -38,7 +39,6 @@ class GateInwardModel extends masterModel{
             $data['searchCol'][] = "mir.trans_number";
             $data['searchCol'][] = "DATE_FORMAT(mir.trans_date,'%d-%m-%Y')";
             $data['searchCol'][] = "party_master.party_name";
-            $data['searchCol'][] = "mir.qty";
             $data['searchCol'][] = "mir.inv_no";
             $data['searchCol'][] = "ifnull(DATE_FORMAT(mir.inv_date,'%d-%m-%Y'),'')";
             $data['searchCol'][] = "mir.doc_no";
@@ -79,6 +79,12 @@ class GateInwardModel extends masterModel{
                         $setData['tableName'] = $this->transChild;
                         $setData['where']['id'] = $row->po_trans_id;
                         $setData['set']['dispatch_qty'] = 'dispatch_qty, - '.$row->qty;
+                        $setData['update']['trans_status'] = 0;
+                        $this->setValue($setData);
+
+                        $setData = array();
+                        $setData['tableName'] = $this->transMain;
+                        $setData['where']['id'] = $row->po_id;
                         $setData['update']['trans_status'] = 0;
                         $this->setValue($setData);
                     endif;
@@ -123,6 +129,12 @@ class GateInwardModel extends masterModel{
                     $setData['where']['id'] = $row['po_trans_id'];
                     $setData['set']['dispatch_qty'] = 'dispatch_qty, + '.$row['qty'];
                     $setData['update']['trans_status'] = "(CASE WHEN (dispatch_qty + ".$row['qty'].") >= qty THEN 1 ELSE 0 END)";
+                    $this->setValue($setData);
+
+                    $setData = array();
+                    $setData['tableName'] = $this->transMain;
+                    $setData['where']['id'] = $row['po_id'];
+                    $setData['update']['trans_status'] = "(SELECT IF( COUNT(id) = SUM(IF(trans_status = 1, 1, 0)) ,1 , 0 ) as trans_status FROM trans_child WHERE trans_main_id = ".$row['po_id']." AND is_delete = 0)";
                     $this->setValue($setData);
                 endif;
                 
@@ -218,7 +230,7 @@ class GateInwardModel extends masterModel{
     
     public function getGateInwardItems($id){
         $queryData['tableName'] = $this->mirTrans;
-        $queryData['select'] = "mir_transaction.*,item_master.item_code,item_master.item_name,location_master.location as location_name,trans_main.trans_number as po_no";
+        $queryData['select'] = "mir_transaction.*,item_master.item_code,item_master.item_name,location_master.location as location_name,trans_main.trans_number as po_number";
         $queryData['leftJoin']['item_master'] = "item_master.id = mir_transaction.item_id";
         $queryData['leftJoin']['location_master'] = "location_master.id = mir_transaction.location_id";
         $queryData['leftJoin']['trans_main'] = "trans_main.id = mir_transaction.po_id";
@@ -252,6 +264,12 @@ class GateInwardModel extends masterModel{
                     $setData['tableName'] = $this->transChild;
                     $setData['where']['id'] = $row->po_trans_id;
                     $setData['set']['dispatch_qty'] = 'dispatch_qty, - '.$row->qty;
+                    $setData['update']['trans_status'] = 0;
+                    $this->setValue($setData);
+
+                    $setData = array();
+                    $setData['tableName'] = $this->transMain;
+                    $setData['where']['id'] = $row->po_id;
                     $setData['update']['trans_status'] = 0;
                     $this->setValue($setData);
                 endif;
