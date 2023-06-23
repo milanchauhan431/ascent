@@ -143,7 +143,7 @@ class PurchaseOrderModel extends MasterModel{
     public function getPurchaseOrder($data){
         $queryData = array();
         $queryData['tableName'] = $this->transMain;
-        $queryData['select'] = "trans_main.*,trans_details.t_col_1 as delivery_address,trans_details.i_col_1 as transport_id,transport_master.transport_name,transport_master.transport_id as transport_gstin";
+        $queryData['select'] = "trans_main.*, trans_details.i_col_1 as transport_id, transport_master.transport_name, transport_master.transport_id as transport_gstin, trans_details.t_col_1 as contact_person, trans_details.t_col_2 as contact_no, trans_details.t_col_3 as delivery_address";
         $queryData['leftJoin']['trans_details'] = "trans_main.id = trans_details.main_ref_id AND trans_details.description = 'PO MASTER DETAILS' AND trans_details.table_name = '".$this->transMain."'";
         $queryData['leftJoin']['transport_master'] = "trans_details.i_col_1 = transport_master.id";
         $queryData['where']['trans_main.id'] = $data['id'];
@@ -218,6 +218,30 @@ class PurchaseOrderModel extends MasterModel{
         $queryData['where']['trans_child.entry_type'] = 21;
 
         $queryData['where']['trans_child.item_id'] = $data['item_id'];
+        $queryData['where']['(trans_child.qty - trans_child.dispatch_qty) >'] = 0;
+
+        return $this->rows($queryData);
+    }
+
+    public function getPartyWisePoList($data){
+        $queryData['tableName'] = $this->transMain;
+        $queryData['select'] = "trans_main.id as po_id,trans_main.trans_number";
+
+        $queryData['where']['trans_main.entry_type'] = 21;
+        $queryData['where']['trans_main.party_id'] = $data['party_id'];
+        $queryData['where']['trans_main.trans_status'] = 0;
+
+        return $this->rows($queryData);
+    }
+
+    public function getPendingPoItems($data){
+        $queryData['tableName'] = $this->transChild;
+        $queryData['select'] = "trans_child.id as po_trans_id,trans_child.item_id,item_master.item_code,item_master.item_name,trans_child.qty,trans_child.dispatch_qty as received_qty,(trans_child.qty - trans_child.dispatch_qty) as pending_qty,trans_child.price,trans_child.disc_per";
+
+        $queryData['leftJoin']['item_master'] = "item_master.id = trans_child.item_id";
+
+        $queryData['where']['trans_child.entry_type'] = 21;
+        $queryData['where']['trans_child.trans_main_id'] = $data['po_id'];
         $queryData['where']['(trans_child.qty - trans_child.dispatch_qty) >'] = 0;
 
         return $this->rows($queryData);

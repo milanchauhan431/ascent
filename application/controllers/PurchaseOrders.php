@@ -41,6 +41,7 @@ class PurchaseOrders extends MY_Controller{
         $this->data['orderItemList'] = $this->purchaseIndent->getRequestItems($ids);
         $this->data['termsList'] = $this->terms->getTermsList(['type'=>'Purchase']);
         //$this->data['companyInfo'] = $this->masterModel->getCompanyInfo();
+        $this->data['unitList'] = $this->item->itemUnits();
         $this->data['transportList'] = $this->transport->getTransportList();
         $this->load->view($this->form,$this->data);
     }
@@ -56,6 +57,7 @@ class PurchaseOrders extends MY_Controller{
         $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(1);
         $this->data['termsList'] = $this->terms->getTermsList(['type'=>'Purchase']);
         //$this->data['companyInfo'] = $this->masterModel->getCompanyInfo();
+        $this->data['unitList'] = $this->item->itemUnits();
         $this->data['transportList'] = $this->transport->getTransportList();
         $this->load->view($this->form,$this->data);
     }
@@ -85,6 +87,7 @@ class PurchaseOrders extends MY_Controller{
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(2);
         $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(2);
         $this->data['termsList'] = $this->terms->getTermsList(['type'=>'Purchase']);
+        $this->data['unitList'] = $this->item->itemUnits();
         $this->data['transportList'] = $this->transport->getTransportList();
         $this->load->view($this->form,$this->data);
     }

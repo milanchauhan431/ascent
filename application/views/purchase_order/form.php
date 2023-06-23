@@ -82,7 +82,7 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-md-3 form-group">
+                                    <div class="col-md-4 form-group">
                                         <label for="master_i_col_1">Transport Name</label>
                                         <select name="masterDetails[i_col_1]" id="master_i_col_1" class="form-control single-select">
                                             <option value="">Select Transport</option>
@@ -95,9 +95,19 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-md-9 form-group">
-                                        <label for="master_t_col_1">Delivery Address</label>
-                                        <input type="text" name="masterDetails[t_col_1]" id="master_t_col_1" class="form-control" value="<?=(!empty($dataRow->delivery_address))?$dataRow->delivery_address:""?>">
+                                    <div class="col-md-4 form-group">
+                                        <label for="master_t_col_1">Contact Person</label>
+                                        <input type="text" name="masterDetails[t_col_1]" id="master_t_col_1" class="form-control" value="<?=(!empty($dataRow->contact_person))?$dataRow->contact_person:""?>">
+                                    </div>
+
+                                    <div class="col-md-4 form-group">
+                                        <label for="master_t_col_2">Contact No.</label>
+                                        <input type="text" name="masterDetails[t_col_2]" id="master_t_col_2" class="form-control numericOnly" value="<?=(!empty($dataRow->contact_no))?$dataRow->contact_no:""?>">
+                                    </div>
+
+                                    <div class="col-md-12 form-group">
+                                        <label for="master_t_col_3">Delivery Address</label>
+                                        <input type="text" name="masterDetails[t_col_3]" id="master_t_col_3" class="form-control" value="<?=(!empty($dataRow->delivery_address))?$dataRow->delivery_address:""?>">
                                     </div>
                                 </div>
 
@@ -217,19 +227,18 @@
                                 <input type="text" name="price" id="price" class="form-control floatOnly req" value="0" />
                             </div>
                             <div class="col-md-4 form-group">
-                                <label for="unit_id">Unit</label>                                
-                                <input type="text" name="unit_name" id="unit_name" class="form-control" value="" readonly />
-                                <input type="hidden" name="unit_id" id="unit_id" value="" >
+                                <label for="unit_id">Unit</label>
+                                <select name="unit_id" id="unit_id" class="form-control single-select req">
+                                    <option value="0" selected>--</option>
+                                    <?=getItemUnitListOption($unitList)?>
+                                </select>
+                                <input type="hidden" name="unit_name" id="unit_name" value="" />
                             </div>
 							<div class="col-md-4 form-group">
                                 <label for="hsn_code">HSN Code</label>
                                 <select name="hsn_code" id="hsn_code" class="form-control single-select">
                                     <option value="">Select HSN Code</option>
-                                    <?php
-                                        foreach($hsnList as $row):
-                                            echo '<option value="'.$row->hsn.'">'.$row->hsn.'</option>';
-                                        endforeach;
-                                    ?>
+                                    <?=getHsnCodeListOption($hsnList)?>
                                 </select>
                             </div>
                             <div class="col-md-4 form-group">
