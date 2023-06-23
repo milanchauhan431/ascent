@@ -11,7 +11,7 @@
 				<td style="width:50%;vertical-align:top;">
 					TO,<br>
 					<b>M/S. <?=$poData->party_name?></b> <br>
-					<small><?=htmlspecialchars($partyData->party_address)?></small><br><br>
+					<small><?=htmlspecialchars($partyData->party_address)." ".$partyData->state_name.", ".$partyData->city_name." - ".$partyData->party_pincode?></small><br><br>
 				</td>
 				<td style="width:50%;vertical-align:top;">
 					<small>
@@ -37,8 +37,10 @@
 					<b>Delivery/Booking Address: </b><br>
 					<?=$companyData->company_name?> <br>
 					<small>
-						<?=$poData->delivery_address?></br>
+						<?=$poData->delivery_address." ".$partyData->delivery_state_name.", ".$partyData->delivery_city_name." - ".$partyData->delivery_pincode?></br>
 						Transport Name : <?=$poData->transport_name?>
+						Contact Person : <?=$poData->contact_person?><br>
+						Contact No. : <?=$poData->contact_no?><br>
 					</small><br><br>
 				</td>
 			</tr>
@@ -121,7 +123,7 @@
                     $taxAmt = floatVal($poData->{$taxRow->map_code . '_amount'});
                     if(!empty($taxAmt)):
                         $taxHtml .= '<tr>
-                            <th colspan="2" class="text-right">' . $taxRow->name . ' @'.$migst.'%</th>
+                            <th colspan="2" class="text-right">' . $taxRow->name . ' @'.(($poData->gst_type == 1)?floatVal($migst/2):$migst).'%</th>
                             <td class="text-right">'.sprintf('%.2f',$taxAmt).'</td>
                         </tr>';
                         $rwspan++;
