@@ -15,12 +15,14 @@ function getStoreDtHeader($page){
     $data['gateEntry'][] = ["name" => "#", "style" => "width:5%;", "textAlign" => "center"];
     $data['gateEntry'][] = ["name"=> "GE No.", "textAlign" => "center"];
     $data['gateEntry'][] = ["name" => "GE Date", "textAlign" => "center"];
-    $data['gateEntry'][] = ["name" => "Driver Name"];
-    $data['gateEntry'][] = ["name" => "Driver No."];
-    $data['gateEntry'][] = ["name" => "Vehicle No."];
-    $data['gateEntry'][] = ["name" => "Vehicle Type"];
     $data['gateEntry'][] = ["name" => "Transport"];
-    $data['gateEntry'][] = ['name' => "No. of Items"];
+    $data['gateEntry'][] = ["name" => "LR No."];
+    $data['gateEntry'][] = ["name" => "Vehicle Type"];
+    $data['gateEntry'][] = ["name" => "Vehicle No."];
+    $data['gateEntry'][] = ['name' => "Invoice No."];
+    $data['gateEntry'][] = ['name' => "Invoice Date"];
+    $data['gateEntry'][] = ['name' => "Challan No."];
+    $data['gateEntry'][] = ['name' => "Challan Date"];
 
     /* Gate Inward Pending GE Tab Header */
     $data['pendingGE'][] = ["name" => "Action", "style" => "width:5%;", "textAlign" => "center"];
@@ -28,7 +30,6 @@ function getStoreDtHeader($page){
     $data['pendingGE'][] = ["name"=> "GE No.", "textAlign" => "center"];
     $data['pendingGE'][] = ["name" => "GE Date", "textAlign" => "center"];
     $data['pendingGE'][] = ["name" => "Party Name"];
-    $data['pendingGE'][] = ["name" => "No. of Items"];
     $data['pendingGE'][] = ["name" => "Inv. No."];
     $data['pendingGE'][] = ["name" => "Inv. Date"];
     $data['pendingGE'][] = ['name' => "CH. NO."];
@@ -84,7 +85,7 @@ function getGateEntryData($data){
 
     $action = getActionButton($editButton.$deleteButton);
 
-    return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->driver_name,$data->driver_contact,$data->vehicle_no,$data->vehicle_type_name,$data->transport_name,$data->no_of_items];
+    return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->transport_name,$data->lr,$data->vehicle_type_name,$data->vehicle_no,$data->inv_no,((!empty($data->inv_date))?formatDate($data->inv_date):""),$data->doc_no,((!empty($data->doc_date))?formatDate($data->doc_date):"")];
 }
 
 /* GateInward Data Data  */
@@ -98,7 +99,7 @@ function getGateInwardData($data){
 
         $action = getActionButton($createGI);
 
-        return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->no_of_items,$data->inv_no,$data->inv_date,$data->doc_no,$data->doc_date];
+        return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->inv_no,$data->inv_date,$data->doc_no,$data->doc_date];
     else: // Gate Inward Pending/Completed Data
 
         $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Gate Inward'}";
