@@ -566,7 +566,8 @@ function getItemUnitListOption($unitList,$unit_id = 0){
 	$options = '';
 	foreach($unitList as $row):
 		$selected = (!empty($unit_id) && $unit_id == $row->id)?"selected":"";
-		$options .= '<option value="'.$row->id.'" '.$selected.'>'.$row->unit_name.'</option>';
+		//$options .= '<option value="'.$row->id.'" '.$selected.'>'.$row->unit_name.'</option>';
+		$options .= '<option value="'.$row->id.'" data-unit="'.$row->unit_name.'" data-description="'.$row->description.'" '.$selected.'>[' . $row->unit_name . '] ' . $row->description . '</option>';
 	endforeach;
 
 	return $options;
