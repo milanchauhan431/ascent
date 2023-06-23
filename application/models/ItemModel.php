@@ -130,7 +130,7 @@ class ItemModel extends MasterModel{
         try{
             $this->db->trans_begin();
 
-            $checkData['columnName'] = ["scrap_group"];
+            $checkData['columnName'] = ["item_id","scrap_group"];
             $checkData['value'] = $id;
             $checkUsed = $this->checkUsage($checkData);
             

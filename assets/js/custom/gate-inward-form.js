@@ -90,11 +90,11 @@ $(document).ready(function(){
 function resItemDetail(response = ""){
     if(response != ""){
         var itemDetail = response.data.itemDetail;
-        $("#item_type").val(itemDetail.item_type || ""); 
-        $("#item_stock_type").val(itemDetail.stock_type || "");
+        $("#item_type").val((itemDetail.item_type || 0)); 
+        $("#item_stock_type").val((itemDetail.stock_type || 0));
         if($("#po_id").find(":selected").val() == ""){
-            $("#disc_per").val(itemDetail.defualt_disc);
-            $("#price").val(itemDetail.price);
+            $("#disc_per").val((itemDetail.defualt_disc || 0));
+            $("#price").val((itemDetail.price || 0));
             $("#po_trans_id").val("");
         }else{
             $("#disc_per").val(($("#item_id").find(":selected").data('disc_per') || 0));
