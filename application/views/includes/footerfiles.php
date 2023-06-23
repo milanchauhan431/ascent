@@ -123,3 +123,10 @@
 	<img src="<?=base_url()?>assets/images/logo.png" style="width:85%;height:auto;"><br>
 	<img src="<?=base_url()?>assets/images/ajaxLoading.gif" style="margin-top:-25px;">
 </div>
+
+<?php $this->load->view('includes/modal_md');?>
+		<?php $this->load->view('includes/modal_lg');?>
+		<?php $this->load->view('includes/modal_xl');?>
+		<?php $this->load->view('includes/modal_xxl');?>
+		<?php $this->load->view('includes/modal_master');?>
+		
