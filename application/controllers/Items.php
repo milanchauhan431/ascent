@@ -49,6 +49,8 @@ class Items extends MY_Controller{
             $errorMessage['item_name'] = "Item Name is required.";
         if(empty($data['unit_id']))
             $errorMessage['unit_id'] = "Unit is required.";
+        if(empty($data['category_id']))
+            $errorMessage['category_id'] = "Category is required.";
             
         if(!empty($errorMessage)):
             $this->printJson(['status'=>0,'message'=>$errorMessage]);
@@ -57,7 +59,7 @@ class Items extends MY_Controller{
             if(!empty($data['item_code'])){$fname[] = $data['item_code'];}
             if(!empty($data['item_name'])){$fname[] = $data['item_name'];}
             if(!empty($data['part_no'])){$fname[] = $data['part_no'];}
-            $data['full_name'] = (!empty($fname)) ? implode('-',$fname) : '';			
+            $data['full_name'] = (!empty($fname)) ? implode(' - ',$fname) : '';			
 			
 			if(!empty($data['hsn_code'])):
 			    $hsnData = $this->hsnModel->getHSNDetail(['hsn'=>$data['hsn_code']]);

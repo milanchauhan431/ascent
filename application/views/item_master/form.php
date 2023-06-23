@@ -15,18 +15,11 @@
                 <input type="hidden" name="full_name" class="form-control " value="" />
             </div>
 
-            
-
             <div class="<?=(!empty($dataRow->item_type) && $dataRow->item_type == 1 || !empty($item_type) && $item_type == 1)?"col-md-3":"col-md-2"?> form-group">
                 <label for="unit_id">Unit</label>
                 <select name="unit_id" id="unit_id" class="form-control single-select req">
                     <option value="0">--</option>
-                    <?php
-                    foreach ($unitData as $row) :
-                        $selected = (!empty($dataRow->unit_id) && $dataRow->unit_id == $row->id) ? "selected" : "";
-                        echo '<option value="' . $row->id . '" ' . $selected . '>[' . $row->unit_name . '] ' . $row->description . '</option>';
-                    endforeach;
-                    ?>
+                    <?=getItemUnitListOption($unitData,((!empty($dataRow->unit_id))?$dataRow->unit_id:""))?>
                 </select>
             </div>
 
@@ -54,30 +47,37 @@
             </div>
 
             <div class="col-md-3 form-group">
+                <label for="make_brand">Make</label>
+                <input type="text" name="make_brand" class="form-control" value="<?= (!empty($dataRow->make_brand)) ? $dataRow->make_brand : "" ?>" />
+            </div>
+
+            <div class="col-md-2 form-group">
                 <label for="hsn_code">HSN Code</label>
-                <select name="hsn_code" id="hsn_code" class="form-control single-select req">
+                <select name="hsn_code" id="hsn_code" class="form-control single-select">
                     <option value="">Select HSN Code</option>
+                    <?=getHsnCodeListOption($hsnData,((!empty($dataRow->hsn_code))?$dataRow->hsn_code:""))?>
+                </select>
+            </div>
+
+            <div class="col-md-2 form-group">
+                <label for="gst_per">GST (%)</label>
+                <select name="gst_per" id="gst_per" class="form-control single-select">
                     <?php
-                        foreach ($hsnData as $row) :
-                            $selected = (!empty($dataRow->hsn_code) && $dataRow->hsn_code == $row->hsn) ? "selected" : "";
-                            echo '<option value="' . floatVal($row->hsn) . '" ' . $selected . '>' . floatVal($row->hsn) . '</option>';
+                        foreach($this->gstPer as $per=>$text):
+                            $selected = (!empty($dataRow->gst_per) && floatVal($dataRow->gst_per) == $per)?"selected":"";
+                            echo '<option value="'.$per.'" '.$selected.'>'.$text.'</option>';
                         endforeach;
                     ?>
                 </select>
             </div>
 
-            <div class="col-md-3 form-group">
+            <div class="col-md-2 form-group">
                 <label for="active">Active</label>
                 <select name="active" id="active" class="form-control">
                     <option value="1" <?=(!empty($dataRow->active) && $dataRow->active == 1)?"selected":""?>>Active</option>
                     <option value="0" <?=(!empty($dataRow->active) && $dataRow->active == 0)?"selected":""?>>De-active</option>
                     <option value="2" <?=(!empty($dataRow->active) && $dataRow->active ==2)?"selected":((!empty($active) && $active == 2)?'selected':'')?>>Enquiry</option>
                 </select>
-            </div>
-
-            <div class="col-md-3 form-group">
-                <label for="make_brand">Make</label>
-                <input type="text" name="make_brand" class="form-control" value="<?= (!empty($dataRow->make_brand)) ? $dataRow->make_brand : "" ?>" />
             </div>
 
             <div class="col-md-3 form-group">
@@ -102,3 +102,11 @@
         </div>
     </div>
 </form>
+<script>
+$(document).ready(function(){
+    $(document).on('change','#hsn_code',function(){
+        $("#gst_per").val(($(this).find(':selected').data('gst_per') || 0));
+        $("#gst_per").comboSelect();
+    });
+});
+</script>
