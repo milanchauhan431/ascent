@@ -50,14 +50,22 @@ class SalesOrderModel extends MasterModel{
         return $this->pagingRows($data);
     }
 
-    public function getNextJobNo(){
+    public function getNextJobChar(){
         $queryData['tableName'] = $this->transChild;
-        $queryData['select'] = "MAX(job_no) as job_no";
+        $queryData['select'] = "MAX(job_char) as job_char";
         $queryData['where']['entry_type'] = 20;
-        $result =  $this->row($queryData)->job_no;
+        $result =  $this->row($queryData)->job_char;
 
         $nextChar = (!empty($result) && $result != 'Z')? ++$result : 'A';        
         return $nextChar;
+    }
+
+    public function getNextJobNo(){
+        $queryData['tableName'] = $this->transChild;
+        $queryData['select'] = "ifnull((MAX(job_no) + 1),1) as job_no";
+        $queryData['where']['entry_type'] = 20;
+        $result =  $this->row($queryData)->job_no;
+        return $result;
     }
 
     public function save($data){
@@ -113,7 +121,7 @@ class SalesOrderModel extends MasterModel{
 
             $partyData = $this->party->getParty(['id'=>$data['party_id']]);
             //$jobPrefix = "AE-".$data['order_type']."-".$partyData->party_code."-";
-            $jobPrefix = "AE-".$data['order_type']."-".sprintf("%04d",$data['trans_no'])."-";
+            $jobPrefix = "AE-".$data['order_type']."-";
 
             $i=1;
             foreach($itemData as $row):
@@ -121,8 +129,9 @@ class SalesOrderModel extends MasterModel{
                 $row['trans_main_id'] = $result['id'];
                 $row['is_delete'] = 0;
                 if(empty($row['id'])):
+                    $row['job_char'] = $this->getNextJobChar();
                     $row['job_no'] = $this->getNextJobNo();
-                    $row['job_number'] = $jobPrefix.$i++.$row['job_no'];
+                    $row['job_number'] = $jobPrefix.sprintf("%04d",$row['job_no'])."-".$i++.$row['job_char'];
                 endif;
                 $this->store($this->transChild,$row);
             endforeach;
