@@ -19,6 +19,7 @@
                         <button class="btn btn-outline-secondary" id="clearData" type="button">Reset</button>
                     </div> -->
                 </div>
+                <div class="error excel_file"></div>
             </div>
         </div>
     </div>
@@ -66,57 +67,63 @@ $(document).ready(function() {
     }); */
 
     $(document).on("click",'#readButton',function() {
-        var columnCount = $('table#salesOrderBomItems thead tr').first().children().length;
-        $("table#salesOrderBomItems > TBODY").html('<tr><td id="noData" colspan="'+columnCount+'" class="text-center">Loading...</td></tr>');
-
         var fileInput = document.getElementById('excelFile');
         var file = fileInput.files[0];
+        $(".excel_file").html("");
+        if(file){
+            var columnCount = $('table#salesOrderBomItems thead tr').first().children().length;
+            $("table#salesOrderBomItems > TBODY").html('<tr><td id="noData" colspan="'+columnCount+'" class="text-center">Loading...</td></tr>'); 
 
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            var data = new Uint8Array(e.target.result);
-            var workbook = XLSX.read(data, { type: 'array' });
+            setTimeout(function(){
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var data = new Uint8Array(e.target.result);
+                    var workbook = XLSX.read(data, { type: 'array' });
 
-            var sheetName = workbook.SheetNames[0]; // Assuming the first sheet
-            var worksheet = workbook.Sheets[sheetName];
+                    var sheetName = workbook.SheetNames[0]; // Assuming the first sheet
+                    var worksheet = workbook.Sheets[sheetName];
 
-            var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-            var fileData = [];
-            // Process the data or display it in the table
+                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                    var fileData = [];
+                    // Process the data or display it in the table
 
-            //Remove blank line.
-            $('table#salesOrderBomItems > TBODY').html("");              
+                    //Remove blank line.
+                    $('table#salesOrderBomItems > TBODY').html("");              
 
-            $.each(jsonData,function(ind,row){ 
-                if(ind > 0){
-                    var item_id = "";
-                    if(row[1]){
-                        row[3] = row[3] || -1;
-                        $.ajax({
-                            url : base_url + '/items/getItemDetails',
-                            type : 'post',
-                            data : { item_code : row[3], item_types : "2,3"},
-                            global:false,
-                            async:false,
-                            dataType:'json'
-                        }).done(function(res){
-                            item_id = "";
-                            if(res != ""){
-                                var itemDetail = res.data.itemDetail;
-                                if(itemDetail != null){
-                                    item_id = itemDetail.id;
-                                }                            
-                            }
-                            row[3] = (row[3] != -1)?row[3]:"";
-                            row.push(item_id);
-                            AddRow(row);
-                        }); 
-                    } 
-                } 
-            });
-        };
+                    $.each(jsonData,function(ind,row){ 
+                        if(ind > 0){
+                            var item_id = "";
+                            if(row[1]){
+                                row[3] = row[3] || -1;
+                                $.ajax({
+                                    url : base_url + '/items/getItemDetails',
+                                    type : 'post',
+                                    data : { item_code : row[3], item_types : "2,3"},
+                                    global:false,
+                                    async:false,
+                                    dataType:'json'
+                                }).done(function(res){
+                                    item_id = "";
+                                    if(res != ""){
+                                        var itemDetail = res.data.itemDetail;
+                                        if(itemDetail != null){
+                                            item_id = itemDetail.id;
+                                        }                            
+                                    }
+                                    row[3] = (row[3] != -1)?row[3]:"";
+                                    row.push(item_id);
+                                    AddRow(row);
+                                }); 
+                            } 
+                        } 
+                    });
+                };
 
-        reader.readAsArrayBuffer(file);   
+                reader.readAsArrayBuffer(file); 
+            },200);
+        }else{
+            $(".excel_file").html("Please Select File.");
+        }         
     });
 
     $(document).on('click','.addNew',function(){ 
