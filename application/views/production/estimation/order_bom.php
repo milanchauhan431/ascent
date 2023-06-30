@@ -65,7 +65,10 @@ $(document).ready(function() {
         $(".custom-file-label").html(fileName);
     }); */
 
-    $('#readButton').click(function() {
+    $(document).on("click",'#readButton',function() {
+        var columnCount = $('table#salesOrderBomItems thead tr').first().children().length;
+        $("table#salesOrderBomItems > TBODY").html('<tr><td id="noData" colspan="'+columnCount+'" class="text-center">Loading...</td></tr>');
+
         var fileInput = document.getElementById('excelFile');
         var file = fileInput.files[0];
 
@@ -78,11 +81,11 @@ $(document).ready(function() {
             var worksheet = workbook.Sheets[sheetName];
 
             var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-
+            var fileData = [];
             // Process the data or display it in the table
 
             //Remove blank line.
-            $('table#salesOrderBomItems > TBODY').html("");
+            $('table#salesOrderBomItems > TBODY').html("");              
 
             $.each(jsonData,function(ind,row){ 
                 if(ind > 0){
@@ -93,8 +96,9 @@ $(document).ready(function() {
                             url : base_url + '/items/getItemDetails',
                             type : 'post',
                             data : { item_code : row[3], item_types : "2,3"},
-                            global:false ,
-                            dataType:'json',
+                            global:false,
+                            async:false,
+                            dataType:'json'
                         }).done(function(res){
                             item_id = "";
                             if(res != ""){
@@ -106,13 +110,13 @@ $(document).ready(function() {
                             row[3] = (row[3] != -1)?row[3]:"";
                             row.push(item_id);
                             AddRow(row);
-                        });
+                        }); 
                     } 
                 } 
             });
         };
 
-        reader.readAsArrayBuffer(file);      
+        reader.readAsArrayBuffer(file);   
     });
 
     $(document).on('click','.addNew',function(){ 
@@ -120,24 +124,25 @@ $(document).ready(function() {
         var formData = $("#add-item-"+clickedTr).data('form_data');  
         
         setTimeout(function(){
-            console.log(formData[3]);
             $("#addItem input[name='item_code']").val(formData[3]);
             $("#addItem input[name='item_name']").val(formData[1]);
             $("#addItem input[name='make_brand']").val(formData[2]);
+            $("#addItem #unit_id").val(25);$("#addItem #unit_id").comboSelect();
+            $("#addItem #defualt_disc").val(formData[8]);
+            $("#addItem #price").val(formData[6]);
         },1000);
     });
 });
 
 function AddRow(data){
+
     var tblName = "salesOrderBomItems";
 
     //Remove blank line.
 	$('table#'+tblName+' tr#noData').remove();
 
     //Get the reference of the Table's TBODY element.
-	var tBody = $("#" + tblName + " > TBODY")[0];
-
-    
+	var tBody = $("#" + tblName + " > TBODY")[0];    
 
     var ind = -1 ;
 	row = tBody.insertRow(ind);
@@ -239,6 +244,8 @@ function resBomItem(data,formId){
         clickedTr = 0;
 
         $(".modal").css({'overflow':'auto'});
+
+        $('#readButton').trigger("click");
 
         toastr.success(data.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
     }else{
