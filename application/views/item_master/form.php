@@ -6,12 +6,12 @@
 
             <div class="col-md-2 form-group">
                 <label for="item_code">CAT No.</label>
-                <input type="text" name="item_code" class="form-control" value="<?= (!empty($dataRow->item_code)) ? $dataRow->item_code : ""; ?>" />
+                <input type="text" name="item_code" id="item_code" class="form-control" value="<?= (!empty($dataRow->item_code)) ? $dataRow->item_code : ""; ?>" />
             </div>
 
             <div class="col-md-4 form-group">
                 <label for="item_name">Item Name</label>
-                <input type="text" name="item_name" class="form-control req" value="<?=htmlentities((!empty($dataRow->item_name)) ? $dataRow->item_name : "")?>" />
+                <input type="text" name="item_name" id="item_name" class="form-control req" value="<?=htmlentities((!empty($dataRow->item_name)) ? $dataRow->item_name : "")?>" />
                 <input type="hidden" name="full_name" class="form-control " value="" />
             </div>
 
@@ -25,12 +25,12 @@
 
             <div class="<?=(!empty($dataRow->item_type) && $dataRow->item_type == 1 || !empty($item_type) && $item_type == 1)?"col-md-3":"col-md-2"?> form-group">
                 <label for="defualt_disc">Defual Disc. (%)</label>
-                <input type="text" name="defualt_disc" id="defualt_disc" class="form-control floatOnly req" value="<?=(!empty($dataRow->defualt_disc)) ? $dataRow->defualt_disc : ""?>" />
+                <input type="text" name="defualt_disc" id="defualt_disc" class="form-control floatOnly req" value="<?=(!empty($dataRow->defualt_disc)) ? floatVal($dataRow->defualt_disc) : ""?>" />
             </div>
 
             <div class="<?=(!empty($dataRow->item_type) && $dataRow->item_type == 1 || !empty($item_type) && $item_type == 1)?"hidden":""?> col-md-2 form-group">
                 <label for="price">Price</label>
-                <input type="text" name="price" id="price" class="form-control floatOnly" value="<?=(!empty($dataRow->price))?$dataRow->price:""?>">
+                <input type="text" name="price" id="price" class="form-control floatOnly" value="<?=(!empty($dataRow->price))?floatVal($dataRow->price):""?>">
             </div>
 
             <div class="col-md-3 form-group">
@@ -48,7 +48,15 @@
 
             <div class="col-md-3 form-group">
                 <label for="make_brand">Make</label>
-                <input type="text" name="make_brand" class="form-control" value="<?= (!empty($dataRow->make_brand)) ? $dataRow->make_brand : "" ?>" />
+                <select name="make_brand" id="make_brand" class="form-control single-select">
+                    <option value="">Select Make</option>
+                    <?php
+                        foreach ($brandList as $row) :
+                            $selected = (!empty($dataRow->make_brand) && $dataRow->make_brand == $row->brand_name) ? "selected" : "";
+                            echo '<option value="' . $row->brand_name . '" ' . $selected . '>' . $row->brand_name . '</option>';
+                        endforeach;
+                    ?>
+                </select>
             </div>
 
             <div class="col-md-2 form-group">
@@ -81,18 +89,25 @@
             </div>
 
             <div class="col-md-3 form-group">
-                <label for="wh_min_qty">Min. Stock Qty (WH)</label>
-                <input type="text" name="wh_min_qty" class="form-control floatOnly" value="<?= (!empty($dataRow->wh_min_qty)) ? $dataRow->wh_min_qty : "" ?>" />
+                <label for="std_qty">Conversion Qty</label>
+                <div class="input-group">
+                    <input type="text" name="std_qty" id="std_qty" class="form-control floatOnly" value="<?=(!empty($dataRow->std_qty))?floatVal($dataRow->std_qty):""?>" style="width:40%;">
+
+                    <select name="sec_unit_id" id="sec_unit_id" class="form-control single-select" style="width:60%;">
+                        <option value="0">--</option>
+                        <?=getItemUnitListOption($unitData,((!empty($dataRow->sec_unit_id))?$dataRow->sec_unit_id:""))?>
+                    </select>
+                </div>
             </div>
-            
+
             <div class="col-md-3 form-group">
-                <label for="wkg">Weight/Nos <small>(In Kg.)</small> </label>
-                <input type="text" name="wkg" class="form-control floatOnly" value="<?= (!empty($dataRow->wkg)) ? $dataRow->wkg : "" ?>" />
+                <label for="std_pck_qty">Standard Packing Qty</label>
+                <input type="text" name="std_pck_qty" id="std_pck_qty" class="form-control numericOnly" value="<?=(!empty($dataRow->std_pck_qty))?floatVal($dataRow->std_pck_qty):""?>">
             </div>
 
             <div class="col-md-6 form-group">
                 <label for="description">Product Description</label>
-                <textarea name="note" id="note" class="form-control" rows="1"><?=(!empty($dataRow->note))?$dataRow->note:""?></textarea>
+                <textarea name="description" id="description" class="form-control" rows="1"><?=(!empty($dataRow->description))?$dataRow->description:""?></textarea>
             </div>
 
             <div class="col-md-12 form-group">
