@@ -121,7 +121,7 @@ class SalesOrderModel extends MasterModel{
 
             $partyData = $this->party->getParty(['id'=>$data['party_id']]);
             //$jobPrefix = "AE-".$data['order_type']."-".$partyData->party_code."-";
-            $jobPrefix = "AE-".$data['order_type']."-";
+            $jobPrefix = "AE/".$data['order_type']."-";
 
             $i=1;
             foreach($itemData as $row):
