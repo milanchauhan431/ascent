@@ -261,7 +261,7 @@ function resBomItem(data,formId){
 function resSaveOrderBom(data,formId){
     if(data.status==1){
         $("#salesOrderBomItems tr.success").remove();
-        
+        initTable();
         toastr.success(data.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
     }else{
         if(typeof data.message === "object"){

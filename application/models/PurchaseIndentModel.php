@@ -33,6 +33,8 @@ class PurchaseIndentModel extends MasterModel{
         $data['searchCol'][] = "";
         $data['searchCol'][] = "DATE_FORMAT(purchase_request.req_date,'%d-%m-%Y')";
         $data['searchCol'][] = "CONCAT('IND',LPAD(purchase_request.req_no, 5, '0'))";
+        $data['searchCol'][] = "trans_child.job_number";
+        $data['searchCol'][] = "order_bom.make";
         $data['searchCol'][] = "item_master.item_name";
         $data['searchCol'][] = "order_bom.uom";
         $data['searchCol'][] = "purchase_request.req_qty";
@@ -85,7 +87,7 @@ class PurchaseIndentModel extends MasterModel{
 
     public function getRequestItems($ids){
         $queryData['tableName'] = $this->purchaseReq;
-        $queryData['select'] = "purchase_request.*,order_bom.item_id,order_bom.uom,order_bom.make,item_master.item_code,item_master.item_name,item_master.hsn_code,item_master.gst_per,order_bom.price,order_bom.disc_per,item_master.unit_id,unit_master.unit_name";
+        $queryData['select'] = "purchase_request.*,order_bom.item_id,order_bom.uom,order_bom.make,item_master.item_code,item_master.item_name,item_master.hsn_code,item_master.gst_per,item_master.wkg as qty_kg,order_bom.price,order_bom.disc_per,item_master.unit_id,unit_master.unit_name";
         $queryData['leftJoin']['order_bom'] = "purchase_request.bom_id = order_bom.id";
         $queryData['leftJoin']['item_master'] = "item_master.id = order_bom.item_id";
         $queryData['leftJoin']['unit_master'] = "unit_master.id = item_master.unit_id";

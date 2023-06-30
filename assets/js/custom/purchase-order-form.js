@@ -159,10 +159,12 @@ function AddRow(data) {
 	cell.append(hsnCodeInput);
 
     var qtyInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][qty]", class:"item_qty", value: data.qty });
+    var qtyKgInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][qty_kg]", class:"item_qty", value: data.qty_kg });
 	var qtyErrorDiv = $("<div></div>", { class: "error qty" + countRow });
 	cell = $(row.insertCell(-1));
 	cell.html(data.qty);
 	cell.append(qtyInput);
+	cell.append(qtyKgInput);
 	cell.append(qtyErrorDiv);
 
     var unitIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][unit_id]", value: data.unit_id });
@@ -269,8 +271,8 @@ function AddRow(data) {
 function Edit(data, button) {
 	var row_index = $(button).closest("tr").index();
 	$("#itemModel").modal();
-	$(".btn-close").hide();
-	$(".btn-save").hide();
+	//$("#itemModel .btn-close").hide();
+	$("#itemModel .btn-save").hide();
 	$.each(data, function (key, value) {
 		$("#itemForm #" + key).val(value);
 	});
@@ -330,6 +332,7 @@ function resItemDetail(response = ""){
         $("#itemForm #disc_per").val(itemDetail.defualt_disc);
         $("#itemForm #price").val(itemDetail.price);
         $("#itemForm #make").val(itemDetail.make_brand);
+        $("#itemForm #qty_kg").val(itemDetail.wkg);
         $("#itemForm #hsn_code").val(itemDetail.hsn_code);$("#itemForm #hsn_code").comboSelect();
         $("#itemForm #gst_per").val(parseFloat(itemDetail.gst_per).toFixed(0));$("#itemForm #gst_per").comboSelect();
     }else{
@@ -341,6 +344,7 @@ function resItemDetail(response = ""){
 		$("#itemForm #disc_per").val("");
         $("#itemForm #price").val("");
 		$("#itemForm #make").val("");
+		$("#itemForm #qty_kg").val("");
         $("#itemForm #hsn_code").val("");$("#itemForm #hsn_code").comboSelect();
         $("#itemForm #gst_per").val(0);$("#itemForm #gst_per").comboSelect(); 
     }

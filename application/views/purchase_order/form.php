@@ -187,7 +187,7 @@
 </div>
 
 <div class="modal fade" id="itemModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-md" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content animated slideDown">
             <div class="modal-header" style="display:block;"><h4 class="modal-title">Add or Update Item</h4></div>
             <div class="modal-body">
@@ -214,19 +214,23 @@
                                     <?=getItemListOption($itemList)?>
                                 </select>
                             </div>
-                            <div class="col-md-4 form-group">
+                            <div class="col-md-3 form-group">
                                 <label for="qty">Quantity</label>
                                 <input type="text" name="qty" id="qty" class="form-control floatOnly req" value="0">
                             </div>
-                            <div class="col-md-4 form-group">
+                            <div class="col-md-3 form-group">
+                                <label for="qty_kg">Qty (Kg.)</label>
+                                <input type="text" name="qty_kg" id="qty_kg" class="form-control floatOnly" value="0">
+                            </div>
+                            <div class="col-md-3 form-group">
                                 <label for="disc_per">Disc. (%)</label>
                                 <input type="text" name="disc_per" id="disc_per" class="form-control floatOnly" value="0">
                             </div>
-                            <div class="col-md-4 form-group">
+                            <div class="col-md-3 form-group">
                                 <label for="price">Price</label>
                                 <input type="text" name="price" id="price" class="form-control floatOnly req" value="0" />
                             </div>
-                            <div class="col-md-4 form-group">
+                            <div class="col-md-3 form-group">
                                 <label for="unit_id">Unit</label>
                                 <select name="unit_id" id="unit_id" class="form-control single-select req">
                                     <option value="0" selected>--</option>
@@ -234,14 +238,14 @@
                                 </select>
                                 <input type="hidden" name="unit_name" id="unit_name" value="" />
                             </div>
-							<div class="col-md-4 form-group">
+							<div class="col-md-3 form-group">
                                 <label for="hsn_code">HSN Code</label>
                                 <select name="hsn_code" id="hsn_code" class="form-control single-select">
                                     <option value="">Select HSN Code</option>
                                     <?=getHsnCodeListOption($hsnList)?>
                                 </select>
                             </div>
-                            <div class="col-md-4 form-group">
+                            <div class="col-md-3 form-group">
                                 <label for="gst_per">GST Per.(%)</label>
                                 <select name="gst_per" id="gst_per" class="form-control single-select">
                                     <?php
@@ -251,11 +255,11 @@
                                     ?>
                                 </select>
                             </div>
-                            <div class="col-md-4 form-group">
+                            <div class="col-md-3 form-group">
                                 <label for="make">Make</label>
                                 <input type="text" name="make" id="make" class="form-control" value="" />
                             </div>  
-                            <div class="col-md-8 form-group">
+                            <div class="col-md-12 form-group">
                                 <label for="item_remark">Remark</label>
                                 <input type="text" name="item_remark" id="item_remark" class="form-control" value="" />
                             </div>                            

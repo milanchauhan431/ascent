@@ -111,6 +111,9 @@ class ProductionModel extends MasterModel{
                     $row['req_no'] = $this->purchaseIndent->nextIndentNo();
                     $row['id'] = "";
                     $row['req_date'] = $data['req_date'];
+                    $row['order_status'] = 1;
+                    $row['approved_by'] = $this->loginId;
+                    $row['approved_at'] = date("Y-m-d H:i:s");
                     $this->store($this->purchseReq,$row);
 
                     $setData = Array();
