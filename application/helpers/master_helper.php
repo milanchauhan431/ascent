@@ -38,6 +38,12 @@ function getMasterDtHeader($page){
     $data['itemCategory'][] = ["name"=>"Is Returnable ?"];
     $data['itemCategory'][] = ["name"=>"Remark"];
 
+    /* Brand Master Header */
+    $data['brandMaster'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['brandMaster'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+    $data['brandMaster'][] = ["name"=>"Make"];
+    $data['brandMaster'][] = ["name"=>"Remark"];
+
     /* Finish Goods Header */
     $data['finish_goods'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
     $data['finish_goods'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
@@ -129,6 +135,18 @@ function getItemCategoryData($data){
     $action = getActionButton($editButton.$deleteButton);
 
     return [$action,$data->sr_no,$data->category_name,$data->parent_category_name,$data->is_final_text,$data->stock_type_text,$data->is_returnable_text,$data->remark];
+}
+
+function getBrandData($data){
+    $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Make'}";
+    $editParam = "{'postData':{'id' : ".$data->id."},'modal_id' : 'modal-md', 'form_id' : 'editBrand', 'title' : 'Update Make'}";
+
+    $editButton = '<a class="btn btn-success btn-edit permission-modify" href="javascript:void(0)" datatip="Edit" flow="down" onclick="edit('.$editParam.');"><i class="ti-pencil-alt"></i></a>';
+    $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
+
+    $action = getActionButton($editButton.$deleteButton);
+
+    return [$action,$data->sr_no,$data->brand_name,$data->remark];
 }
 
 function getProductData($data){
