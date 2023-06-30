@@ -108,6 +108,7 @@ $(document).ready(function() {
                                         var itemDetail = res.data.itemDetail;
                                         if(itemDetail != null){
                                             item_id = itemDetail.id;
+                                            row[2] = itemDetail.make_brand;
                                         }                            
                                     }
                                     row[3] = (row[3] != -1)?row[3]:"";
@@ -131,9 +132,9 @@ $(document).ready(function() {
         var formData = $("#add-item-"+clickedTr).data('form_data');  
         
         setTimeout(function(){
-            $("#addItem input[name='item_code']").val(formData[3]);
-            $("#addItem input[name='item_name']").val(formData[1]);
-            $("#addItem input[name='make_brand']").val(formData[2]);
+            $("#addItem #item_code").val(formData[3]);
+            $("#addItem #item_name").val(formData[1]);
+            $("#addItem #make_brand").val(formData[2]);$("#addItem #make_brand").comboSelect();
             $("#addItem #unit_id").val(25);$("#addItem #unit_id").comboSelect();
             $("#addItem #defualt_disc").val(formData[8]);
             $("#addItem #price").val(formData[6]);
