@@ -62,11 +62,10 @@
                 <th>MAKE</th>
                 <th>CAT No.</th>
 				<th class="text-left">PRODUCT NAME</th>
-				<th style="width:60px;">GST <small>%</small></th>
 				<th style="width:100px;">Qty</th>
-				<th style="width:50px;">UOM</th>
 				<th style="width:60px;">Rate<br><small>(INR)</small></th>
 				<th style="width:60px;">Disc (%)</th>
+				<th style="width:60px;">GST <small>%</small></th>
 				<th style="width:110px;">Amount<br><small>(INR)</small></th>
 			</tr>
 			<?php
@@ -78,11 +77,10 @@
 							echo '<td>'.$row->make.'</td>';
 							echo '<td>'.$row->item_code.'</td>';
 							echo '<td>'.$row->item_name.'</td>';
-							echo '<td class="text-center">'.$row->gst_per.'</td>';
-							echo '<td class="text-right">'.$row->qty.'</td>';
-							echo '<td class="text-center">'.$row->unit_name.'</td>';
+							echo '<td class="text-right">'.$row->qty.' '.$row->unit_name.'  '.((!empty(floatVal($row->qty_kg)))?"<br>(".$row->qty_kg." ".$row->sec_unit_name.")":"").'</td>';
 							echo '<td class="text-right">'.$row->price.'</td>';
 							echo '<td class="text-right">'.$row->disc_per.'</td>';
+							echo '<td class="text-center">'.$row->gst_per.'</td>';							
 							echo '<td class="text-right">'.$row->taxable_amount.'</td>';
 						echo '</tr>';
 						$totalQty += $row->qty;
@@ -131,20 +129,20 @@
                 endforeach;
 			?>
 			<tr>
-				<th colspan="5" class="text-right">Total Qty.</th>
+				<th colspan="4" class="text-right">Total Qty.</th>
 				<th class="text-right"><?=sprintf('%.3f',$totalQty)?></th>
 				<th></th>
 				<th colspan="2" class="text-right">Sub Total</th>
 				<th class="text-right"><?=sprintf('%.2f',$poData->taxable_amount)?></th>
 			</tr>
 			<tr>
-				<th class="text-left" colspan="7" rowspan="<?=$rwspan?>">
+				<th class="text-left" colspan="6" rowspan="<?=$rwspan?>">
 					Notes : <br><?=$poData->remark?>
 				</th>				
 			</tr>
 			<?=$beforExp.$taxHtml.$afterExp?>
 			<tr>
-				<th class="text-left" colspan="7" rowspan="3">
+				<th class="text-left" colspan="6" rowspan="3">
 					Amount In Words : <br><?=numToWordEnglish($poData->net_amount)?>
 				</th>				
 			</tr>

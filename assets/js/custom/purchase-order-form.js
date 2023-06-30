@@ -23,6 +23,20 @@ $(document).ready(function(){
         }
 	});
 
+	$(document).on('keyup change','.calQty',function(){
+		var std_qty = $("#itemForm #std_qty").val() || 0;
+
+		if($(this).attr('id') == "qty"){
+			var qty = $(this).val() || 0;			
+			var qty_kg = parseFloat(parseFloat(qty) * parseFloat(std_qty)).toFixed(3);
+			$("#itemForm #qty_kg").val(qty_kg);
+		}else{
+			var qty_kg = $(this).val() || 0;			
+			var qty = parseFloat(parseFloat(qty_kg) / parseFloat(std_qty)).toFixed(3);
+			$("#itemForm #qty").val((qty || 0));
+		}
+	});
+
     $(document).on('click', '.saveItem', function () {
         
 		var fd = $('#itemForm').serializeArray();
@@ -41,6 +55,13 @@ $(document).ready(function(){
         if (formData.price == "" || parseFloat(formData.price) == 0) {
             $(".price").html("Price is required.");
         }
+
+		if(parseFloat(formData.qty) > 0 && parseInt(formData.std_pck_qty) > 0){
+			var totalBox = parseFloat(parseFloat(formData.qty) / parseFloat(formData.std_pck_qty));
+			if(!Number.isInteger(totalBox)){
+				$(".qty").html("Invalid qty against standard packing qty.");
+			}
+		}
 
         var item_ids = $(".item_id").map(function () { return $(this).val(); }).get();
         if ($.inArray(formData.item_id, item_ids) >= 0 && formData.row_index == "") {
@@ -142,6 +163,10 @@ function AddRow(data) {
     var itemCodeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_code]", value: data.item_code });
     var itemtypeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_type]", value: data.item_type });
     var makeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][make]", value: data.make });
+    var stdPckQtyInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][std_pck_qty]", value: data.std_pck_qty });
+    var stdQtyInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][std_qty]", value: data.std_qty });
+    var qtyKgInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][qty_kg]", value: data.qty_kg });
+    var secUnitIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][sec_unit_id]", value: data.sec_unit_id });
     cell = $(row.insertCell(-1));
     cell.html(data.item_name);
     cell.append(idInput);
@@ -152,6 +177,10 @@ function AddRow(data) {
     cell.append(itemCodeInput);
     cell.append(itemtypeInput);
     cell.append(makeInput);
+    cell.append(stdPckQtyInput);
+    cell.append(stdQtyInput);
+    cell.append(qtyKgInput);
+    cell.append(secUnitIdInput);
 
     var hsnCodeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][hsn_code]", value: data.hsn_code });
 	cell = $(row.insertCell(-1));
@@ -159,12 +188,10 @@ function AddRow(data) {
 	cell.append(hsnCodeInput);
 
     var qtyInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][qty]", class:"item_qty", value: data.qty });
-    var qtyKgInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][qty_kg]", class:"item_qty", value: data.qty_kg });
 	var qtyErrorDiv = $("<div></div>", { class: "error qty" + countRow });
 	cell = $(row.insertCell(-1));
 	cell.html(data.qty);
 	cell.append(qtyInput);
-	cell.append(qtyKgInput);
 	cell.append(qtyErrorDiv);
 
     var unitIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][unit_id]", value: data.unit_id });
@@ -331,8 +358,10 @@ function resItemDetail(response = ""){
         $("#itemForm #unit_name").val(itemDetail.unit_name);
         $("#itemForm #disc_per").val(itemDetail.defualt_disc);
         $("#itemForm #price").val(itemDetail.price);
-        $("#itemForm #make").val(itemDetail.make_brand);
-        $("#itemForm #qty_kg").val(itemDetail.wkg);
+        $("#itemForm #make").val(itemDetail.make_brand);$("#itemForm #make").comboSelect();
+        $("#itemForm #std_qty").val(itemDetail.std_qty);
+        $("#itemForm #std_pck_qty").val(itemDetail.std_pck_qty);
+        $("#itemForm #sec_unit_id").val(itemDetail.sec_unit_id);$("#itemForm #sec_unit_id").comboSelect();
         $("#itemForm #hsn_code").val(itemDetail.hsn_code);$("#itemForm #hsn_code").comboSelect();
         $("#itemForm #gst_per").val(parseFloat(itemDetail.gst_per).toFixed(0));$("#itemForm #gst_per").comboSelect();
     }else{
@@ -343,8 +372,10 @@ function resItemDetail(response = ""){
         $("#itemForm #unit_name").val("");
 		$("#itemForm #disc_per").val("");
         $("#itemForm #price").val("");
-		$("#itemForm #make").val("");
-		$("#itemForm #qty_kg").val("");
+		$("#itemForm #make").val("");$("#itemForm #make").comboSelect();
+		$("#itemForm #std_qty").val("");
+        $("#itemForm #std_pck_qty").val("");
+        $("#itemForm #sec_unit_id").val("");$("#itemForm #sec_unit_id").comboSelect();
         $("#itemForm #hsn_code").val("");$("#itemForm #hsn_code").comboSelect();
         $("#itemForm #gst_per").val(0);$("#itemForm #gst_per").comboSelect(); 
     }

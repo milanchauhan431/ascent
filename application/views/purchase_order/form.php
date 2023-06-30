@@ -204,6 +204,8 @@
 								<input type="hidden" name="item_code" id="item_code" value="" />
                                 <input type="hidden" name="item_name" id="item_name" value="" />
                                 <input type="hidden" name="item_type" id="item_type" value="" />
+                                <input type="hidden" name="std_pck_qty" id="std_pck_qty" value="" />
+                                <input type="hidden" name="std_qty" id="std_qty" value="" />
                             </div>
                             
 
@@ -214,22 +216,12 @@
                                     <?=getItemListOption($itemList)?>
                                 </select>
                             </div>
+
                             <div class="col-md-3 form-group">
                                 <label for="qty">Quantity</label>
-                                <input type="text" name="qty" id="qty" class="form-control floatOnly req" value="0">
+                                <input type="text" name="qty" id="qty" class="form-control calQty floatOnly req" value="0">
                             </div>
-                            <div class="col-md-3 form-group">
-                                <label for="qty_kg">Qty (Kg.)</label>
-                                <input type="text" name="qty_kg" id="qty_kg" class="form-control floatOnly" value="0">
-                            </div>
-                            <div class="col-md-3 form-group">
-                                <label for="disc_per">Disc. (%)</label>
-                                <input type="text" name="disc_per" id="disc_per" class="form-control floatOnly" value="0">
-                            </div>
-                            <div class="col-md-3 form-group">
-                                <label for="price">Price</label>
-                                <input type="text" name="price" id="price" class="form-control floatOnly req" value="0" />
-                            </div>
+
                             <div class="col-md-3 form-group">
                                 <label for="unit_id">Unit</label>
                                 <select name="unit_id" id="unit_id" class="form-control single-select req">
@@ -238,6 +230,29 @@
                                 </select>
                                 <input type="hidden" name="unit_name" id="unit_name" value="" />
                             </div>
+
+                            <div class="col-md-4 form-group">
+                                <label for="qty_kg">Conversion Qty</label>
+                                <div class="input-group">
+                                    <input type="text" name="qty_kg" id="qty_kg" class="form-control calQty floatOnly" value="" style="width:40%;">
+
+                                    <select name="sec_unit_id" id="sec_unit_id" class="form-control single-select" style="width:60%;">
+                                        <option value="0">--</option>
+                                        <?=getItemUnitListOption($unitList)?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 form-group">
+                                <label for="disc_per">Disc. (%)</label>
+                                <input type="text" name="disc_per" id="disc_per" class="form-control floatOnly" value="0">
+                            </div>
+
+                            <div class="col-md-3 form-group">
+                                <label for="price">Price</label>
+                                <input type="text" name="price" id="price" class="form-control floatOnly req" value="0" />
+                            </div>                            
+
 							<div class="col-md-3 form-group">
                                 <label for="hsn_code">HSN Code</label>
                                 <select name="hsn_code" id="hsn_code" class="form-control single-select">
@@ -257,7 +272,14 @@
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="make">Make</label>
-                                <input type="text" name="make" id="make" class="form-control" value="" />
+                                <select name="make" id="make" class="form-control single-select">
+                                    <option value="">Select Make</option>
+                                    <?php
+                                        foreach ($brandList as $row) :
+                                            echo '<option value="' . $row->brand_name . '">' . $row->brand_name . '</option>';
+                                        endforeach;
+                                    ?>
+                                </select>
                             </div>  
                             <div class="col-md-12 form-group">
                                 <label for="item_remark">Remark</label>
@@ -293,28 +315,31 @@ endif;
 
 if(!empty($orderItemList)):
     foreach($orderItemList as $row):
-        $row->row_index = "";
-        $row->ref_id = $row->id;
-        $row->id = "";
-        $row->qty = $row->req_qty;
-        $row->amount = round(($row->qty * $row->price),2);
-        if(!empty($row->disc_per)):
-            $row->disc_amount = round((($row->amount * $row->disc_per) / 100),2);
-            $row->taxable_amount = round(($row->amount - $row->disc_amount),2);
-        else:
-            $row->taxable_amount = $row->amount;
+        if(($row->req_qty - $row->po_qty) > 0):
+            $row->row_index = "";
+            $row->ref_id = $row->id;
+            $row->id = "";
+            $row->qty = ($row->req_qty - $row->po_qty);
+            $row->qty_kg = ($row->qty * $row->std_qty);
+            $row->amount = round(($row->qty * $row->price),2);
+            if(!empty($row->disc_per)):
+                $row->disc_amount = round((($row->amount * $row->disc_per) / 100),2);
+                $row->taxable_amount = round(($row->amount - $row->disc_amount),2);
+            else:
+                $row->taxable_amount = $row->amount;
+            endif;
+
+            $row->gst_per = $row->igst_per = floatVal($row->gst_per);
+            $row->gst_amount = $row->igst_amount = round((($row->taxable_amount * $row->gst_per) / 100),2);
+
+            $row->cgst_per = $row->sgst_per = round(($row->gst_per / 2),2);
+            $row->cgst_amount = $row->sgst_amount = round(($row->gst_amount / 2),2);
+
+            $row->net_amount = round(($row->taxable_amount + $row->gst_amount),2);
+            $row->item_remark = "";
+
+            echo '<script>AddRow('.json_encode($row).');</script>';
         endif;
-
-        $row->gst_per = $row->igst_per = floatVal($row->gst_per);
-        $row->gst_amount = $row->igst_amount = round((($row->taxable_amount * $row->gst_per) / 100),2);
-
-        $row->cgst_per = $row->sgst_per = round(($row->gst_per / 2),2);
-        $row->cgst_amount = $row->sgst_amount = round(($row->gst_amount / 2),2);
-
-        $row->net_amount = round(($row->taxable_amount + $row->gst_amount),2);
-        $row->item_remark = "";
-
-        echo '<script>AddRow('.json_encode($row).');</script>';
     endforeach;
 endif;
 ?>

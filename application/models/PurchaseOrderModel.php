@@ -172,7 +172,9 @@ class PurchaseOrderModel extends MasterModel{
     public function getPurchaseOrderItems($data){
         $queryData = array();
         $queryData['tableName'] = $this->transChild;
-        $queryData['where']['trans_main_id'] = $data['id'];
+        $queryData['select'] = "trans_child.*,sec_unit.unit_name as sec_unit_name";
+        $queryData['leftJoin']['unit_master as sec_unit'] = "sec_unit.id = trans_child.sec_unit_id";
+        $queryData['where']['trans_child.trans_main_id'] = $data['id'];
         $result = $this->rows($queryData);
         return $result;
     }

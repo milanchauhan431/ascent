@@ -30,6 +30,7 @@ class PurchaseOrders extends MY_Controller{
     }
 
     public function createOrder($ids){
+        $ids = decodeURL($ids);
         $this->data['trans_prefix'] = $this->transMainModel->getTransPrefix($this->data['entry_type']);
         $this->data['trans_no'] = $this->transMainModel->nextTransNo($this->data['entry_type']);
         $this->data['trans_number'] = $this->data['trans_prefix'].$this->data['trans_no'];
@@ -43,6 +44,7 @@ class PurchaseOrders extends MY_Controller{
         //$this->data['companyInfo'] = $this->masterModel->getCompanyInfo();
         $this->data['unitList'] = $this->item->itemUnits();
         $this->data['transportList'] = $this->transport->getTransportList();
+        $this->data['brandList'] = $this->brandMaster->getBrandList();
         $this->load->view($this->form,$this->data);
     }
 
@@ -59,6 +61,7 @@ class PurchaseOrders extends MY_Controller{
         //$this->data['companyInfo'] = $this->masterModel->getCompanyInfo();
         $this->data['unitList'] = $this->item->itemUnits();
         $this->data['transportList'] = $this->transport->getTransportList();
+        $this->data['brandList'] = $this->brandMaster->getBrandList();
         $this->load->view($this->form,$this->data);
     }
 
@@ -68,8 +71,17 @@ class PurchaseOrders extends MY_Controller{
 
         if(empty($data['party_id']))
             $errorMessage['party_id'] = "Party Name is required.";
-        if(empty($data['itemData']))
+        if(empty($data['itemData'])):
             $errorMessage['itemData'] = "Item Details is required.";
+        else:
+            foreach($data['itemData'] as $key => $row):
+                if(!empty(floatVal($row['qty'])) && !empty(floatVal($row['std_pck_qty']))):
+                    if(is_int(($row['qty'] / $row['std_pck_qty'])) == false):
+                        $errorMessage['qty'.$key] = "Invalid qty against packing standard.";
+                    endif;
+                endif;
+            endforeach;
+        endif;
         
         if(!empty($errorMessage)):
             $this->printJson(['status'=>0,'message'=>$errorMessage]);
@@ -89,6 +101,7 @@ class PurchaseOrders extends MY_Controller{
         $this->data['termsList'] = $this->terms->getTermsList(['type'=>'Purchase']);
         $this->data['unitList'] = $this->item->itemUnits();
         $this->data['transportList'] = $this->transport->getTransportList();
+        $this->data['brandList'] = $this->brandMaster->getBrandList();
         $this->load->view($this->form,$this->data);
     }
 
