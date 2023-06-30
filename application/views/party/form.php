@@ -34,7 +34,7 @@
 					<option value="">Sales Executive</option>
 					<?php
 						foreach($salesExecutives as $row):
-							$selected = (!empty($dataRow->sales_executive) && $dataRow->sales_executive == $row->id)?"selected":"";
+							$selected = (!empty($dataRow->sales_executive) && $dataRow->sales_executive == $row->id)?"selected":(($this->loginId == $row->id)?"selected":"");
 							echo '<option value="'.$row->id.'" '.$selected.'>'.$row->emp_name.'</option>';
 						endforeach;
 					?>
