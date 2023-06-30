@@ -91,8 +91,8 @@ $(document).ready(function(){
                     btnClass: 'btn waves-effect waves-light btn-outline-success',
                     keys: ['enter'],
                     action: function() {
+                        ids = encodeURIComponent(window.btoa(JSON.stringify(ids)));
                         window.open(base_url + 'purchaseOrders/createOrder/' + ids, '_self');
-
                     }
                 },
                 cancel: {
