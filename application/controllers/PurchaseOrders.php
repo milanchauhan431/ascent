@@ -124,31 +124,19 @@ class PurchaseOrders extends MY_Controller{
 		$logo=base_url('assets/images/logo.png');
 		$this->data['letter_head']=base_url('assets/images/letterhead-top.png');
 				
-		$pdfData = $this->load->view('purchase_order/print',$this->data,true);
 		//print_r($pdfData);exit;
 		$prepare = $this->employee->getEmployee(['id'=>$poData->created_by]);
-		$prepareBy = $prepare->emp_name.' <br>('.formatDate($poData->created_at).')'; 
-		$approveBy = '';
+		$this->data['prepareBy'] = $prepareBy = $prepare->emp_name.' <br>('.formatDate($poData->created_at).')'; 
+		$this->data['approveBy'] = $approveBy = '';
 		if(!empty($poData->is_approve)){
-			$approve = $this->employee->getEmployee(['id'=>$poData->is_approve]);
-			$approveBy .= $approve->emp_name.' <br>('.formatDate($poData->approve_date).')'; 
+            $approve = $this->employee->getEmployee(['id'=>$poData->is_approve]);
+			$this->data['approveBy'] = $approveBy .= $approve->emp_name.' <br>('.formatDate($poData->approve_date).')'; 
 		}
 		
-		$htmlHeader = '<img src="'.$this->data['letter_head'].'" class="img">';
-		$htmlFooter = '<table class="table top-table" style="margin-top:10px;border-top:1px solid #545454;border-bottom:1px solid #000000;">
-                <tr>
-                    <td style="width:50%;" rowspan="3"></td>
-                    <th colspan="2">For, '.$this->data['companyData']->company_name.'</th>
-                </tr>
-                <tr>
-                    <td style="width:25%;" class="text-center">'.$prepareBy.'</td>
-                    <td style="width:25%;" class="text-center">'.$approveBy.'</td>
-                </tr>
-                <tr>
-                    <td style="width:25%;" class="text-center">Prepared By</td>
-                    <td style="width:25%;" class="text-center">Authorised By</td>
-                </tr>
-            </table>
+        $pdfData = $this->load->view('purchase_order/print',$this->data,true);
+
+		$htmlHeader = "";//'<img src="'.$this->data['letter_head'].'" class="img">';
+		$htmlFooter = '
             <table class="table top-table" style="margin-top:10px;">
                 <tr>
                     <td style="width:25%;">PO No. & Date : '.$poData->trans_number.' ['.formatDate($poData->trans_date).']</td>
@@ -157,9 +145,9 @@ class PurchaseOrders extends MY_Controller{
                 </tr>
             </table>';
         
-            //print_r($htmlHeader);exit;
+            //print_r($pdfData);exit;
 		$mpdf = new \Mpdf\Mpdf();
-		$pdfFileName='PO-'.$id.'.pdf';
+		$pdfFileName=str_replace(["/","-"],"_",$poData->trans_number).'.pdf';
 		$stylesheet = file_get_contents(base_url('assets/extra-libs/datatables.net-bs4/css/dataTables.bootstrap4.css'));
 		$stylesheet = file_get_contents(base_url('assets/css/style.css?v='.time()));
 		$stylesheet = file_get_contents(base_url('assets/css/pdf_style.css'));
@@ -169,9 +157,9 @@ class PurchaseOrders extends MY_Controller{
 		$mpdf->showWatermarkImage = true;
 		$mpdf->SetProtection(array('print'));
 		
-		$mpdf->SetHTMLHeader($htmlHeader);
+		//$mpdf->SetHTMLHeader($htmlHeader);
 		$mpdf->SetHTMLFooter($htmlFooter);
-		$mpdf->AddPage('P','','','','',5,5,38,30,5,5,'','','','','','','','','','A4-P');
+		$mpdf->AddPage('P','','','','',5,5,5,5,5,5,'','','','','','','','','','A4-P');
 		$mpdf->WriteHTML($pdfData);
 		$mpdf->Output($pdfFileName,'I');
 	}
