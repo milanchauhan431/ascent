@@ -218,7 +218,8 @@
                             </div>
 
                             <div class="col-md-3 form-group">
-                                <label for="qty">Quantity</label>
+                                <label for="qty">Qty.</label>
+                                <span class="float-right align-middle" id="stdPck"></span>
                                 <input type="text" name="qty" id="qty" class="form-control calQty floatOnly req" value="0">
                             </div>
 

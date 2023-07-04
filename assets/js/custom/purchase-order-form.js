@@ -8,6 +8,7 @@ $(document).ready(function(){
 		$("#itemForm input:hidden").val('');
 		$('#itemForm #row_index').val("");
         $("#itemForm .error").html();
+		$("#itemForm #stdPck").html("");
 
 		var party_id = $('#party_id').val();
 		$(".party_id").html("");
@@ -46,7 +47,7 @@ $(document).ready(function(){
 		$.each(fd, function (i, v) {
 			formData[v.name] = v.value;
 		});
-        $("#itemForm .error").html();
+        $("#itemForm .error").html("");
 
         if (formData.item_id == "") {
 			$(".item_id").html("Item Name is required.");
@@ -306,6 +307,11 @@ function Edit(data, button) {
 		$("#itemForm #" + key).val(value);
 	});
 
+	if(parseFloat(data.std_pck_qty) > 0){
+		$("#itemForm #stdPck").html("Box Cap. : "+parseFloat(data.std_pck_qty));
+	}else{  
+		$("#itemForm #stdPck").html("");
+	}	
 	$("#itemForm .single-select").comboSelect();
 	$("#itemForm #row_index").val(row_index);
 }
@@ -366,6 +372,10 @@ function resItemDetail(response = ""){
         $("#itemForm #sec_unit_id").val(itemDetail.sec_unit_id);$("#itemForm #sec_unit_id").comboSelect();
         $("#itemForm #hsn_code").val(itemDetail.hsn_code);$("#itemForm #hsn_code").comboSelect();
         $("#itemForm #gst_per").val(parseFloat(itemDetail.gst_per).toFixed(0));$("#itemForm #gst_per").comboSelect();
+
+		if(parseFloat(itemDetail.std_pck_qty) > 0){
+			$("#itemForm #stdPck").html("Box Cap. : "+parseFloat(itemDetail.std_pck_qty));
+		}		
     }else{
         $("#itemForm #item_code").val("");
         $("#itemForm #item_name").val("");
@@ -380,6 +390,8 @@ function resItemDetail(response = ""){
         $("#itemForm #sec_unit_id").val("");$("#itemForm #sec_unit_id").comboSelect();
         $("#itemForm #hsn_code").val("");$("#itemForm #hsn_code").comboSelect();
         $("#itemForm #gst_per").val(0);$("#itemForm #gst_per").comboSelect(); 
+
+		$("#itemForm #stdPck").html("");
     }
 }
 

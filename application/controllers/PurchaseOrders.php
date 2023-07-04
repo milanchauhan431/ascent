@@ -76,7 +76,8 @@ class PurchaseOrders extends MY_Controller{
         else:
             foreach($data['itemData'] as $key => $row):
                 if(!empty(floatVal($row['qty'])) && !empty(floatVal($row['std_pck_qty']))):
-                    if(is_int(($row['qty'] / $row['std_pck_qty'])) == false):
+                    $boxQty = floatval(floatVal($row['qty']) / floatVal($row['std_pck_qty']));
+                    if(floor($boxQty) != $boxQty):
                         $errorMessage['qty'.$key] = "Invalid qty against packing standard.";
                     endif;
                 endif;

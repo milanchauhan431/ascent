@@ -15,14 +15,16 @@
 				<td style="width:50%;vertical-align:top;">
 					TO,<br>
 					<b>M/S. <?=$poData->party_name?></b> <br>
-					<small><?=htmlspecialchars($partyData->party_address)." ".$partyData->state_name.", ".$partyData->city_name." - ".$partyData->party_pincode?></small><br><br>
+					<small>
+						<?=htmlspecialchars($partyData->party_address)." ".$partyData->state_name.", ".$partyData->city_name." - ".$partyData->party_pincode?><br>
+						GSTIN : <?=$poData->gstin?>
+					</small>
 				</td>
 				<td style="width:50%;vertical-align:top;">
-					<small>
+					<small><br>
 						Contact Person : <?=$partyData->contact_person?><br>
 						Contact No. : <?=$partyData->party_mobile?><br>
 						Email : <?=$partyData->party_email?><br>
-						GSTIN : <?=$poData->gstin?><br><br>
 					</small><br><br>
 				</td> 
 			</tr>
@@ -68,11 +70,11 @@
 						<th>MAKE</th>
 						<th>CAT No.</th>
 						<th class="text-left">PRODUCT NAME</th>
-						<th style="width:100px;">Qty</th>
-						<th style="width:60px;">Rate<br><small>(INR)</small></th>
-						<th style="width:60px;">Disc (%)</th>
-						<th style="width:60px;">GST <small>%</small></th>
-						<th style="width:110px;">Amount<br><small>(INR)</small></th>
+						<th style="width:80px;">Qty</th>
+						<th style="width:50px;">Rate<br><small>(INR)</small></th>
+						<th style="width:50px;">Disc<br><small>(%)</small></th>
+						<th style="width:50px;">GST<br><small>(%)</small></th>
+						<th style="width:80px;">Amount<br><small>(INR)</small></th>
 					</tr>
 				</thead>';
 				echo $thead;
@@ -88,11 +90,11 @@
 								echo '<td>'.$row->make.'</td>';
 								echo '<td>'.$row->item_code.'</td>';
 								echo '<td>'.$row->item_name.'</td>';
-								echo '<td class="text-right">'.$row->qty.' '.$row->unit_name.'  '.((!empty(floatVal($row->qty_kg)))?"<br>(".$row->qty_kg." ".$row->sec_unit_name.")":"").'</td>';
-								echo '<td class="text-right">'.$row->price.'</td>';
-								echo '<td class="text-right">'.$row->disc_per.'</td>';
-								echo '<td class="text-center">'.$row->gst_per.'</td>';							
-								echo '<td class="text-right">'.$row->taxable_amount.'</td>';
+								echo '<td class="text-right">'.floatVal($row->qty).' '.$row->unit_name.'  '.((!empty(floatVal($row->qty_kg)))?"<br>(".$row->qty_kg." ".$row->sec_unit_name.")":"").'</td>';
+								echo '<td class="text-right">'.floatVal($row->price).'</td>';
+								echo '<td class="text-right">'.floatVal($row->disc_per).'</td>';
+								echo '<td class="text-right">'.floatVal($row->gst_per).'</td>';							
+								echo '<td class="text-right">'.sprintf('%.2f',$row->taxable_amount).'</td>';
 							echo '</tr>';
 
 							if(($rowCount == 10 && $pageCount == 1) || ($rowCount == 25 && $pageCount != 1)): 

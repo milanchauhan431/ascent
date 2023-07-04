@@ -61,7 +61,7 @@ class GateEntryModel extends MasterModel{
     public function getGateEntry($id){
         $queryData = array();
         $queryData['tableName'] = $this->mir;
-        $queryData['select'] = "mir.*,item_master.item_name,item_master.item_code,item_master.item_type,item_master.material_grade";
+        $queryData['select'] = "mir.*,item_master.item_name,item_master.item_code,item_master.item_type";
         $queryData['leftJoin']['item_master'] = "item_master.id = mir.item_id";
         $queryData['where']['mir.id'] = $id;
         $result = $this->row($queryData);
