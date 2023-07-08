@@ -1,4 +1,7 @@
 <?php
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class Items extends MY_Controller{
     private $indexPage = "item_master/index";
     private $form = "item_master/form";
@@ -40,8 +43,8 @@ class Items extends MY_Controller{
         $this->load->view($this->form,$this->data);
     }
 
-    public function save(){
-        $data = $this->input->post();
+    public function save($excel_data = array()){
+        $data = (!empty($excel_data))?$excel_data:$this->input->post();
         $errorMessage = array();
         
         if(empty($data['item_code']))
@@ -67,7 +70,11 @@ class Items extends MY_Controller{
 				$data['gst_per'] = $hsnData->gst_per;
 			endif;
 
-            $this->printJson($this->item->save($data));
+            if(!empty($excel_data)):
+                return $this->item->save($data);
+            else:
+                $this->printJson($this->item->save($data));
+            endif;
         endif;
     }
 
@@ -101,5 +108,183 @@ class Items extends MY_Controller{
         $itemDetail = $this->item->getItem($data);
         $this->printJson(['status'=>1,'data'=>['itemDetail'=>$itemDetail]]);
     }
+
+    public function createExcel($jsonData=''){
+        $postData = (Array) decodeURL($jsonData);
+
+        $paramData = $this->item->getItemList(['item_type'=>$postData['item_type']]);
+        $table_column = array('id', 'item_code', 'item_name', 'unit_id', 'defualt_disc', 'price', 'category_id', 'make_brand', 'hsn_code', 'gst_per','std_qty', 'sec_unit_id', 'std_pck_qty','description', 'note');
+        $spreadsheet = new Spreadsheet();
+        $inspSheet = $spreadsheet->getActiveSheet();
+        $inspSheet = $inspSheet->setTitle('Item');
+        $xlCol = 'A';
+        $rows = 1;
+        foreach ($table_column as $tCols):
+            $inspSheet->setCellValue($xlCol . $rows, $tCols);
+            $xlCol++;
+        endforeach;
+
+        $rows = 2;
+        foreach ($paramData as $row):
+            $xlCol = "A";
+            foreach ($table_column as $tCols):
+                $inspSheet->setCellValue($xlCol . $rows, $row->{$tCols});
+                $xlCol++;
+            endforeach;
+            $rows++;
+        endforeach;
+
+        /** Category Master */
+        $catData = $this->itemCategory->getCategoryList(['category_type'=>$postData['item_type'],'final_category'=>1]);
+        $catSheet = $spreadsheet->createSheet();
+        $catSheet = $catSheet->setTitle('Item Category');
+        $xlCol = 'A'; $rows = 1;
+        $table_column_category = array('id', 'category_name');
+        foreach ($table_column_category as $tCols):
+            $catSheet->setCellValue($xlCol . $rows, $tCols);
+            $xlCol++;
+        endforeach;
+
+        $rows = 2;        
+        foreach ($catData as $row):
+            $xlCol = 'A';
+            foreach ($table_column_category as $tCols):
+                $catSheet->setCellValue($xlCol . $rows, $row->{$tCols});
+                $xlCol++;
+            endforeach;
+            $rows++;
+        endforeach;
+
+        /* Units */
+        $unitData = $this->item->itemUnits();
+        $unitSheet = $spreadsheet->createSheet();
+        $unitSheet = $unitSheet->setTitle('Unit Master');
+        $xlCol = 'A';$rows = 1;
+        $table_column_unit = array('id', 'unit_name','description');
+
+        foreach ($table_column_unit as $tCols):
+            $unitSheet->setCellValue($xlCol . $rows, $tCols);
+            $xlCol++;
+        endforeach;
+        $rows = 2; 
+        foreach ($unitData as $row):
+            $xlCol = 'A';
+            foreach ($table_column_unit as $tCols):
+                $unitSheet->setCellValue($xlCol . $rows, $row->{$tCols});
+                $xlCol++;
+            endforeach;
+            $rows++;
+        endforeach;
+
+        /* Hsn Master */
+        $hsnData = $this->hsnModel->getHSNList();
+        $hsnSheet = $spreadsheet->createSheet();
+        $hsnSheet = $hsnSheet->setTitle('HSN Master');
+        $xlCol = 'A';$rows = 1;
+        $table_column_hsn = array('id', 'hsn','gst_per','description');
+
+        foreach ($table_column_hsn as $tCols):
+            $hsnSheet->setCellValue($xlCol . $rows, $tCols);
+            $xlCol++;
+        endforeach;
+        $rows = 2; 
+        foreach ($hsnData as $row):
+            $xlCol = 'A';
+            foreach ($table_column_hsn as $tCols):
+                $hsnSheet->setCellValue($xlCol . $rows, $row->{$tCols});
+                $xlCol++;
+            endforeach;
+            $rows++;
+        endforeach;
+
+        /** Make Master */
+        $brandList = $this->brandMaster->getBrandList();
+        $makeSheet = $spreadsheet->createSheet();
+        $makeSheet = $makeSheet->setTitle('Make Master');
+        $xlCol = 'A';$rows = 1;
+        $table_column_make = array('id','brand_name','remark');
+
+        foreach ($table_column_make as $tCols):
+            $makeSheet->setCellValue($xlCol . $rows, $tCols);
+            $xlCol++;
+        endforeach;
+
+        $rows = 2;     
+        foreach ($brandList as $row):
+            $xlCol = 'A';   
+            foreach ($table_column_make as $tCols):
+                $makeSheet->setCellValue($xlCol . $rows, $row->{$tCols});
+                $xlCol++;
+            endforeach;
+            $rows++;
+        endforeach;
+
+        $fileDirectory = realpath(APPPATH . '../assets/uploads/item_master');
+        $fileName = '/'.str_replace([" ","-","/"],"_",$postData['item_type_name']).'_' . time() . '.xlsx';
+        $writer = new Xlsx($spreadsheet);
+
+        $writer->save($fileDirectory . $fileName);
+        header("Content-Type: application/vnd.ms-excel");
+        redirect(base_url('assets/uploads/item_master') . $fileName);
+    }
+
+    public function importExcel(){
+        $item_type = $this->input->post('item_type');
+        if(!isset($file['name'])):
+            $this->printJson(['status'=>2,'message'=>'Please Select File!']);
+        endif;
+
+        $fileData = $this->importExcelFile($_FILES['item_excel'], 'item_master', 'Item');
+        $row = 0;$errorMessage = array();$itemData = array();
+        if (isset($fileData['status'])):
+            $this->printJson($fileData);
+        else:
+            $fieldArray = $fileData[0][1];
+            for ($i = 2; $i <= count($fileData[0]); $i++):
+                $rowData = array();$c = 'A';
+                foreach ($fileData[0][$i] as $key => $colData) :
+                    $rowData[strtolower($fieldArray[$c])] = $colData;
+                    $c++;
+                endforeach;
+                $rowData['item_type'] = $item_type;
+
+                if(empty($rowData['item_code']))
+                    $errorMessage['item_code'] = "CAT No. is required at row no. : ".$i;
+
+                if(empty($rowData['item_name']))
+                    $errorMessage['item_name'] = "Item Name is required at row no. : ".$i;
+
+                if(empty($rowData['unit_id']))
+                    $errorMessage['unit_id'] = "Unit is required at row no. : ".$i;
+
+                if(empty($rowData['category_id']))
+                    $errorMessage['category_id'] = "Category is required at row no. : ".$i;
+
+                if($this->item->checkDuplicate(['item_code'=>$rowData['item_code'],'id'=>$rowData['id']])  > 0)
+                    $errorMessage['item_code'] = "CAT No. is duplicate at row no. : ".$i;
+
+                if($this->item->checkDuplicate($rowData) > 0)
+                    $errorMessage['item_name'] = "Item Name is duplicate at row no. : ".$i;
+
+                if(!empty($errorMessage)):
+                    $this->printJson(['status'=>0,'message'=>$errorMessage]);
+                else:
+                    $itemData[] = $rowData;
+                endif;
+                        
+                $row++;
+            endfor;
+        endif;
+
+        $i=0;
+        if(!empty($itemData)):
+            foreach($itemData as $row):
+                $this->save($row); $i++;
+            endforeach;
+        endif;
+
+        $this->printJson(['status' => 1, 'message' => $i . ' Record import successfully.']);
+    }
+
 }
 ?>

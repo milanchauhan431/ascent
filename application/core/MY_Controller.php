@@ -168,5 +168,40 @@ class MY_Controller extends CI_Controller{
 
 		$this->printJson(['status'=>1,'data'=>$result]);
 	}
+
+	public function importExcelFile($file,$path,$sheetName){
+		$item_excel = '';
+		if(isset($file['name']) || !empty($file['name']) ):
+			$this->load->library('upload');
+			$_FILES['userfile']['name']     = $file['name'];
+			$_FILES['userfile']['type']     = $file['type'];
+			$_FILES['userfile']['tmp_name'] = $file['tmp_name'];
+			$_FILES['userfile']['error']    = $file['error'];
+			$_FILES['userfile']['size']     = $file['size'];
+			
+			$imagePath = realpath(APPPATH . '../assets/uploads/'.$path);
+			$config = ['file_name' => "".$_FILES['userfile']['name'],'allowed_types' => '*','max_size' => 10240,'overwrite' => FALSE, 'upload_path' =>$imagePath];
+
+			$this->upload->initialize($config);
+			if (!$this->upload->do_upload()):
+				$errorMessage['item_excel'] = $this->upload->display_errors();
+				$this->printJson(["status"=>0,"message"=>$errorMessage]);
+			else:
+				$uploadData = $this->upload->data();
+				$item_excel = $uploadData['file_name'];
+			endif;
+
+			if(!empty($item_excel)):
+				$spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($imagePath.'/'.$item_excel);
+				$fileData = array($spreadsheet->getSheetByName($sheetName)->toArray(null,true,true,true));
+				return $fileData;
+			else:
+				return ['status'=>2,'message'=>'Data not found...!'];
+			endif;
+		else:
+			return ['status'=>2,'message'=>'Please Select File!'];
+		endif;
+    }
+
 }
 ?>
