@@ -230,7 +230,7 @@ class Items extends MY_Controller{
 
     public function importExcel(){
         $item_type = $this->input->post('item_type');
-        if(!isset($file['name'])):
+        if(empty($_FILES['item_excel'])):
             $this->printJson(['status'=>2,'message'=>'Please Select File!']);
         endif;
 
