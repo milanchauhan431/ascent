@@ -269,6 +269,13 @@ class Items extends MY_Controller{
                 if(!empty($errorMessage)):
                     $this->printJson(['status'=>0,'message'=>$errorMessage]);
                 else:
+                    $rowData['defualt_disc'] = (!empty($rowData['defualt_disc']))?$rowData['defualt_disc']:0;
+                    $rowData['price'] = (!empty($rowData['price']))?$rowData['price']:0;
+                    $rowData['gst_per'] = (!empty($rowData['gst_per']))?$rowData['gst_per']:0;
+                    $rowData['std_qty'] = (!empty($rowData['std_qty']))?$rowData['std_qty']:0;
+                    $rowData['sec_unit_id'] = (!empty($rowData['sec_unit_id']))?$rowData['sec_unit_id']:0;
+                    $rowData['std_pck_qty'] = (!empty($rowData['defualt_disc']))?$rowData['std_pck_qty']:0;
+
                     $itemData[] = $rowData;
                 endif;
                         
