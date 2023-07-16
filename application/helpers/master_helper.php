@@ -47,7 +47,7 @@ function getMasterDtHeader($page){
     /* Finish Goods Header */
     $data['finish_goods'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
     $data['finish_goods'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
-    $data['finish_goods'][] = ["name"=>"CAT Code"];
+    $data['finish_goods'][] = ["name"=>"CAT No."];
     $data['finish_goods'][] = ["name"=>"Item Name"];
     $data['finish_goods'][] = ["name"=>"Category Name"];
     $data['finish_goods'][] = ["name"=>"Unit"];
@@ -58,7 +58,7 @@ function getMasterDtHeader($page){
     /* Row Material Header */
     $data['raw_material'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
     $data['raw_material'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
-    $data['raw_material'][] = ["name"=>"CAT Code"];
+    $data['raw_material'][] = ["name"=>"CAT No."];
     $data['raw_material'][] = ["name"=>"Item Name"];
     $data['raw_material'][] = ["name"=>"Category Name"];
     $data['raw_material'][] = ["name"=>"Unit"];
@@ -69,7 +69,7 @@ function getMasterDtHeader($page){
     /* Consumable Header */
     $data['consumable'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
     $data['consumable'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
-    $data['consumable'][] = ["name"=>"CAT Code"];
+    $data['consumable'][] = ["name"=>"CAT No."];
     $data['consumable'][] = ["name"=>"Item Name"];
     $data['consumable'][] = ["name"=>"Category Name"];
     $data['consumable'][] = ["name"=>"Unit"];

@@ -53,9 +53,9 @@ $(document).ready(function(){
 
         $(".error").html("");
 
-        /* if(formData.po_trans_id == ""){ 
-            $('.po_trans_id').html("PO is required.");
-        } */
+        if(formData.po_id == ""){ 
+            $('.po_id').html("PO is required.");
+        }
         if(formData.qty == "" || parseFloat(formData.qty) == 0){ 
             $('.qty').html("Qty is required.");
         }

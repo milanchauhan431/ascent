@@ -106,11 +106,6 @@ function ssDatatable(ele,tableHeaders,tableOptions,dataSet={}){
 		//'stateSave':true,
 		"autoWidth" : false,
 		pageLength: 50,
-		/* "rowCallback": function (nRow, aData, iDisplayIndex) {
-			var oSettings = this.fnSettings ();
-			console.log(nRow);
-			return nRow;
-	  	}, */
 		language: { search: "" },
 		lengthMenu: [
 			[ 10, 20, 25, 50, 75, 100, 250,500 ],

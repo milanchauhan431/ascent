@@ -8,6 +8,7 @@ function getPurchaseDtHeader($page){
 	$data['purchaseOrders'][] = ["name"=>"PO. No."];
 	$data['purchaseOrders'][] = ["name"=>"PO. Date"];
 	$data['purchaseOrders'][] = ["name"=>"Party Name"];
+	$data['purchaseOrders'][] = ["name"=>"CAT No."];
 	$data['purchaseOrders'][] = ["name"=>"Item Name"];
     $data['purchaseOrders'][] = ["name"=>"Order Qty"];
     $data['purchaseOrders'][] = ["name"=>"Remark"];
@@ -41,7 +42,7 @@ function getPurchaseOrderData($data){
 
     $action = getActionButton($printBtn.$editButton.$deleteButton);
 
-    return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->item_name,$data->qty,$data->item_remark];
+    return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->item_code,$data->item_name,$data->qty,$data->item_remark];
 }
 
 /* Purchase Request Data  */

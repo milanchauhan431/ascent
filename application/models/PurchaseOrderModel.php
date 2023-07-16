@@ -8,7 +8,7 @@ class PurchaseOrderModel extends MasterModel{
 
     public function getDTRows($data){
         $data['tableName'] = $this->transChild;
-        $data['select'] = "trans_child.id as trans_child_id,trans_child.item_name,trans_child.qty,trans_child.item_remark,trans_main.id,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_name,trans_main.sales_type";
+        $data['select'] = "trans_child.id as trans_child_id,trans_child.item_code,trans_child.item_name,trans_child.qty,trans_child.item_remark,trans_main.id,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_name,trans_main.sales_type";
 
         $data['leftJoin']['trans_main'] = "trans_main.id = trans_child.trans_main_id";
 
@@ -25,6 +25,7 @@ class PurchaseOrderModel extends MasterModel{
         $data['searchCol'][] = "trans_main.trans_number";
         $data['searchCol'][] = "DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y')";
         $data['searchCol'][] = "trans_main.party_name";
+        $data['searchCol'][] = "trans_child.item_code";
         $data['searchCol'][] = "trans_child.item_name";
         $data['searchCol'][] = "trans_child.qty";
         $data['searchCol'][] = "trans_child.item_remark";
