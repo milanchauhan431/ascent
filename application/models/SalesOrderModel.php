@@ -60,11 +60,20 @@ class SalesOrderModel extends MasterModel{
         return $nextChar;
     }
 
-    public function getNextJobNo(){
+    public function getNextJobNo($order_type = ""){
         $queryData['tableName'] = $this->transChild;
-        $queryData['select'] = "ifnull((MAX(job_no) + 1),1) as job_no";
-        $queryData['where']['entry_type'] = 20;
+        $queryData['select'] = "ifnull((MAX(trans_child.job_no) + 1),1) as job_no";
+        $queryData['leftJoin']['trans_main'] = "trans_main.id = trans_child.trans_main_id";
+        $queryData['where']['trans_child.entry_type'] = 20;
+        if(!empty($order_type)):
+            $queryData['where']['trans_main.order_type'] = $order_type;
+        endif;
         $result =  $this->row($queryData)->job_no;
+
+        if(in_array($order_type,["F","S"]) && $result == 1):
+            $result = 1700;
+        endif;
+        
         return $result;
     }
 
