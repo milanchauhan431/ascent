@@ -86,7 +86,6 @@ function ssDatatable(ele,tableHeaders,tableOptions,dataSet={}){
 	if(tableHeaders.theads != ""){
 		$('#' + tableId).html("");		
 		$('#' + tableId).append(tableHeaders.theads);		
-		delete tableHeaders['reInit'];
 	}	
 
 	var ssTableOptions = {
@@ -137,18 +136,6 @@ function ssDatatable(ele,tableHeaders,tableOptions,dataSet={}){
 			$('#' + tableId +' tbody tr:first').trigger('click');
 		}
 	};	
-	
-	$.extend( ssTableOptions, tableOptions );
-	ssTable = ele.DataTable(ssTableOptions);
-	ssTable.buttons().container().appendTo( '#' + tableId +'_wrapper toolbar' );
-	$('.dataTables_filter').css("text-align","left");
-	$('#' + tableId +'_filter label').css("display","block");
-	$('.btn-group>.btn:first-child').css("border-top-right-radius","0");
-	$('.btn-group>.btn:first-child').css("border-bottom-right-radius","0");
-	$('#' + tableId +'_filter label').attr("id","search-form");	
-	$('#' + tableId +'_filter .form-control-sm').css("width","97%");
-	$('#' + tableId +'_filter .form-control-sm').attr("placeholder","Search.....");	
-	$(".dataTables_scroll").addClass("key-scroll");
 
 	// Append Search Inputs	
 	var headerRowCount = $('.ssTable thead tr').length;
@@ -168,12 +155,26 @@ function ssDatatable(ele,tableHeaders,tableOptions,dataSet={}){
 			}
 			
 			if($.inArray(index, selectIndex)!= -1) {$(this).html( selectBox[i] );i++;}
-
-			$(this).removeClass("sorting sorting sorting_asc sorting_desc");
+					
+			$(this).removeClass("sorting sorting_asc sorting_desc");
 			$(this).addClass("sorting_disabled");
 			$(this).attr("data-orderable",false);
 		});
 	}
+	
+	$.extend( ssTableOptions, tableOptions );
+	ssTable = ele.DataTable(ssTableOptions);
+	ssTable.buttons().container().appendTo( '#' + tableId +'_wrapper toolbar' );
+	$('.dataTables_filter').css("text-align","left");
+	$('#' + tableId +'_filter label').css("display","block");
+	$('.btn-group>.btn:first-child').css("border-top-right-radius","0");
+	$('.btn-group>.btn:first-child').css("border-bottom-right-radius","0");
+	$('#' + tableId +'_filter label').attr("id","search-form");	
+	$('#' + tableId +'_filter .form-control-sm').css("width","97%");
+	$('#' + tableId +'_filter .form-control-sm').attr("placeholder","Search.....");	
+	$(".dataTables_scroll").addClass("key-scroll");
+
+	
     
 	/* $('.ssTable-cf thead tr:eq(1) th').each( function (i) {
 		$( 'input', this ).on( 'keyup', function () {
