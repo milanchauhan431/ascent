@@ -170,6 +170,7 @@ function ssDatatable(ele,tableHeaders,tableOptions,dataSet={}){
 			if($.inArray(index, selectIndex)!= -1) {$(this).html( selectBox[i] );i++;}
 
 			$(this).removeClass("sorting");
+			$(this).attr("data-orderable",false);
 		});
 	}
     
