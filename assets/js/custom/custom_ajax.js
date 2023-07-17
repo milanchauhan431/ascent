@@ -104,7 +104,7 @@ function ssDatatable(ele,tableHeaders,tableOptions,dataSet={}){
 		deferRender: true,
 		scroller: true,
 		destroy: true,
-		'stateSave':true,
+		//'stateSave':true,
 		"autoWidth" : false,
 		pageLength: 50,
 		language: { search: "" },

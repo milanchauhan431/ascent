@@ -510,7 +510,7 @@ function ssTableInit(){
 	var tableId = $('.ssTable').attr('id');
 	$("#"+tableId).data("hp_fn_name","");
     $("#"+tableId).data("page","");
-	var tableOptions = {pageLength: 25,'stateSave':false};
+	var tableOptions = {pageLength: 25,'stateSave':true};
     ssDatatable($('.ssTable'),tableHeaders,tableOptions);
 }
 
@@ -541,7 +541,7 @@ function initTable(postData = {}){
 			}
 		});
 	}else{
-		var tableOptions = {pageLength: 25,'stateSave':false};
+		var tableOptions = {pageLength: 25,'stateSave':true};
 		var tableHeaders = {'theads':'','textAlign':textAlign,'sortable':sortable,'reInit':'1'};
 		var dataSet = postData;
 		ssDatatable($('.ssTable'),tableHeaders,tableOptions,dataSet);
