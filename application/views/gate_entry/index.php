@@ -26,7 +26,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id='geTable' class="table table-bordered ssTable" data-url='/getDTRows'></table>
+                            <table id='geTable' class="table table-bordered ssTable ssTable-cf" data-ninput="[0,1]"  data-url='/getDTRows'></table>
                         </div>
                     </div>
                 </div>

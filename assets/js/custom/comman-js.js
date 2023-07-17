@@ -502,7 +502,7 @@ function statusTab(tableId,status,hp_fn_name="",page=""){
     $("#"+tableId).data("hp_fn_name",hp_fn_name);
     $("#"+tableId).data("page",page);
 
-    ssTable.state.clear();
+    //ssTable.state.clear();
 	initTable();
 }
 
@@ -528,7 +528,7 @@ function initTable(postData = {}){
 			data : {'hp_fn_name':hp_fn_name,'page':page},
 			dataType: 'json',
 			success: function(response) {
-				var tableOptions = {pageLength: 25,'stateSave':false};
+				var tableOptions = {pageLength: 25,'stateSave':true};
 				var dataSet = postData;
 				var tableHeaders = response.data;
 				tableHeaders.reInit = 1;

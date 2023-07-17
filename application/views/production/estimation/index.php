@@ -25,7 +25,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id='estimationTable' class="table table-bordered ssTable" data-url='/getEstimationDTRows'></table>
+                            <table id='estimationTable' class="table table-bordered ssTable ssTable-cf" data-ninput="[0,1]" data-url='/getEstimationDTRows'></table>
                         </div>
                     </div>
                 </div>

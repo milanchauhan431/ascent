@@ -34,7 +34,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id='itemTable' class="table table-bordered ssTable" data-url='/getDTRows/<?=$item_type?>'></table>
+                            <table id='itemTable' class="table table-bordered ssTable ssTable-cf" data-ninput="[0,1]"  data-url='/getDTRows/<?=$item_type?>'></table>
                         </div>
                     </div>
                 </div>

@@ -16,7 +16,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id='scrapGroupTable' class="table table-bordered ssTable" data-url='/getDTRows'></table>
+                            <table id='scrapGroupTable' class="table table-bordered ssTable ssTable-cf" data-ninput="[0,1]"  data-url='/getDTRows'></table>
                         </div>
                     </div>
                 </div>

@@ -27,12 +27,14 @@ class GateEntryModel extends MasterModel{
         $data['searchCol'][] = "";
         $data['searchCol'][] = "mir.trans_number";
 		$data['searchCol'][] = "DATE_FORMAT(mir.trans_date,'%d-%m-%Y')";
-		$data['searchCol'][] = "mir.driver_name";
-		$data['searchCol'][] = "mir.driver_contact";
-		$data['searchCol'][] = "mir.vehicle_no";
-		$data['searchCol'][] = "vehicle_types.vehicle_type";
 		$data['searchCol'][] = "transport_master.transport_name";
-        $data['searchCol'][] = "mir.qty";
+		$data['searchCol'][] = "mir.lr";
+		$data['searchCol'][] = "vehicle_types.vehicle_type";
+		$data['searchCol'][] = "mir.vehicle_no";
+		$data['searchCol'][] = "mir.inv_no";
+        $data['searchCol'][] = "IF(mir.inv_date IS NOT NULL,DATE_FORMAT(mir.inv_date,'%d-%m-%Y'),'')";
+        $data['searchCol'][] = "mir.doc_no";
+        $data['searchCol'][] = "IF(mir.doc_date IS NOT NULL,DATE_FORMAT(mir.doc_date,'%d-%m-%Y'),'')";
 
         $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
 		if (isset($data['order'])) {
