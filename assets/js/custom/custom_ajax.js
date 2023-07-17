@@ -87,6 +87,7 @@ function ssDatatable(ele,tableHeaders,tableOptions,dataSet={}){
 
 	var ssTableOptions = {
 		"paging": true,
+		//"processing": true,
 		"serverSide": true,
 		'ajax': {
 			url: base_url + controller + dataUrl,
@@ -103,7 +104,7 @@ function ssDatatable(ele,tableHeaders,tableOptions,dataSet={}){
 		deferRender: true,
 		scroller: true,
 		destroy: true,
-		//'stateSave':true,
+		'stateSave':true,
 		"autoWidth" : false,
 		pageLength: 50,
 		language: { search: "" },
@@ -134,25 +135,21 @@ function ssDatatable(ele,tableHeaders,tableOptions,dataSet={}){
 	};
 	
 	// Append Search Inputs
-	if (tableHeaders.hasOwnProperty('reInit')) {}
-	else{
+	if (tableHeaders.hasOwnProperty('reInit') == false) {
 		$('.ssTable-cf thead tr:eq(0)').clone(true).insertAfter( '.ssTable-cf thead tr:eq(0)' );
 		var ignorCols = $(".ssTable-cf").data('ninput');//.split(",");
 		var selectIndex = $(".ssTable-cf").data('selectindex');
 		var selectBox = $(".ssTable-cf").data('selectbox');
 		var lastIndex = $(".ssTable-cf thead").find("tr:first th").length - 1;var i=0;
 			
-		$(".ssTable-cf thead tr:eq(1) th").each( function (index,value) 
-		{
+		$(".ssTable-cf thead tr:eq(1) th").each( function (index,value) {
 			if(jQuery.inArray(index, ignorCols) != -1) {$(this).html( '' );}
-			else
-			{
+			else{
 				if((jQuery.inArray(-1, ignorCols) != -1) && index == lastIndex){$(this).html( '' );}
 				else{$(this).html( '<input type="text" style="width:100%;"/>' );}
 			}
 			
 		    if(jQuery.inArray(index, selectIndex)!= -1) {$(this).html( selectBox[i] );i++;}
-			    
 		});
 	}
 	
@@ -167,15 +164,6 @@ function ssDatatable(ele,tableHeaders,tableOptions,dataSet={}){
 	$('#' + tableId +'_filter .form-control-sm').css("width","97%");
 	$('#' + tableId +'_filter .form-control-sm').attr("placeholder","Search.....");	
 	$(".dataTables_scroll").addClass("key-scroll");
-	
-	/*setTimeout(function(){
-    	$('#' + tableId +' tbody tr').each( (tr_idx,tr) => {
-            $(tr).children('td').each( (td_idx, td) => {
-                console.log( '[' +tr_idx+ ',' +td_idx+ '] => ' + $(td).text());
-                if(($(td).text().length) > 35){$(td).addClass('bwa');}
-            });                 
-        });
-	}, 1000);*/
     
 	$('.ssTable-cf thead tr:eq(1) th').each( function (i) {
 		$( 'input', this ).on( 'keyup', function () {

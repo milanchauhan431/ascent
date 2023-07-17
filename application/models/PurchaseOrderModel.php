@@ -8,7 +8,7 @@ class PurchaseOrderModel extends MasterModel{
 
     public function getDTRows($data){
         $data['tableName'] = $this->transChild;
-        $data['select'] = "trans_child.id as trans_child_id,trans_child.item_code,trans_child.item_name,trans_child.qty,trans_child.item_remark,trans_main.id,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_name,trans_main.sales_type";
+        $data['select'] = "trans_child.id as trans_child_id,trans_child.item_code,trans_child.item_name,trans_child.qty,trans_child.dispatch_qty as received_qty,(trans_child.qty - trans_child.dispatch_qty) as pending_qty,trans_child.item_remark,trans_main.id,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_name,trans_main.sales_type";
 
         $data['leftJoin']['trans_main'] = "trans_main.id = trans_child.trans_main_id";
 
@@ -28,6 +28,8 @@ class PurchaseOrderModel extends MasterModel{
         $data['searchCol'][] = "trans_child.item_code";
         $data['searchCol'][] = "trans_child.item_name";
         $data['searchCol'][] = "trans_child.qty";
+        $data['searchCol'][] = "trans_child.dispatch_qty";
+        $data['searchCol'][] = "(trans_child.qty - trans_child.dispatch_qty)";
         $data['searchCol'][] = "trans_child.item_remark";
 
         $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
@@ -53,9 +55,8 @@ class PurchaseOrderModel extends MasterModel{
                         $setData['tableName'] = $this->purchseReq;
                         $setData['where']['id'] = $row->ref_id;
                         $setData['set']['po_qty'] = 'po_qty, - '.$row->qty;
+                        $setData['update']['order_status'] = 1;
                         $this->setValue($setData);
-    
-                        $this->edit($this->purchseReq,['id'=>$row->ref_id],['order_status'=>1]);
                     endif;
                     $this->trash($this->transChild,['id'=>$row->id]);
                 endforeach;
@@ -111,12 +112,8 @@ class PurchaseOrderModel extends MasterModel{
                     $setData['tableName'] = $this->purchseReq;
                     $setData['where']['id'] = $row['ref_id'];
                     $setData['set']['po_qty'] = 'po_qty, + '.$row['qty'];
+                    $setData['update']['order_status'] = "(CASE WHEN order_status >= po_qty THEN 2 ELSE 1 END)";
                     $this->setValue($setData);
-
-                    $reqData = $this->purchaseIndent->getRequestItem(['id'=>$row['ref_id']]);
-                    if($reqData->req_qty >= $reqData->po_qty):
-                        $this->edit($this->purchseReq,['id'=>$row['ref_id']],['order_status'=>2]);
-                    endif;
                 endif;
             endforeach;            
 
@@ -191,9 +188,8 @@ class PurchaseOrderModel extends MasterModel{
                     $setData['tableName'] = $this->purchseReq;
                     $setData['where']['id'] = $row->ref_id;
                     $setData['set']['po_qty'] = 'po_qty, - '.$row->qty;
+                    $setData['update']['order_status'] = 1;
                     $this->setValue($setData);
-
-                    $this->edit($this->purchseReq,['id'=>$row->ref_id],['order_status'=>1]);
                 endif;
                 $this->trash($this->transChild,['id'=>$row->id]);
             endforeach;

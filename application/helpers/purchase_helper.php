@@ -11,6 +11,8 @@ function getPurchaseDtHeader($page){
 	$data['purchaseOrders'][] = ["name"=>"CAT No."];
 	$data['purchaseOrders'][] = ["name"=>"Item Name"];
     $data['purchaseOrders'][] = ["name"=>"Order Qty"];
+    $data['purchaseOrders'][] = ["name"=>"Received Qty"];
+    $data['purchaseOrders'][] = ["name"=>"Pending Qty"];
     $data['purchaseOrders'][] = ["name"=>"Remark"];
 
     /* Purchase Indent Header */
@@ -42,7 +44,7 @@ function getPurchaseOrderData($data){
 
     $action = getActionButton($printBtn.$editButton.$deleteButton);
 
-    return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->item_code,$data->item_name,$data->qty,$data->item_remark];
+    return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->item_code,$data->item_name,$data->qty,$data->received_qty,$data->pending_qty,$data->item_remark];
 }
 
 /* Purchase Request Data  */
