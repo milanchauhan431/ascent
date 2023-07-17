@@ -314,6 +314,7 @@ class MasterModel extends CI_Model{
             if(isset($data['order_by'])):
                 if(!empty($data['order_by'])):
                     foreach($data['order_by'] as $key=>$value):
+                        $key = str_replace(["DATE_FORMAT","(",")",",","'%d-%m-%Y'"],"",$key);
                         $this->db->order_by($key,$value);
                     endforeach;
                 endif;
