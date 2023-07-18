@@ -230,21 +230,9 @@
                                     <?=getItemUnitListOption($unitList)?>
                                 </select>
                                 <input type="hidden" name="unit_name" id="unit_name" value="" />
-                            </div>
+                            </div>                            
 
-                            <div class="col-md-4 form-group">
-                                <label for="qty_kg">Conversion Qty</label>
-                                <div class="input-group">
-                                    <input type="text" name="qty_kg" id="qty_kg" class="form-control calQty floatOnly" value="" style="width:40%;">
-
-                                    <select name="sec_unit_id" id="sec_unit_id" class="form-control single-select" style="width:60%;">
-                                        <option value="0">--</option>
-                                        <?=getItemUnitListOption($unitList)?>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2 form-group">
+                            <div class="col-md-3 form-group">
                                 <label for="disc_per">Disc. (%)</label>
                                 <input type="text" name="disc_per" id="disc_per" class="form-control floatOnly" value="0">
                             </div>
@@ -252,7 +240,19 @@
                             <div class="col-md-3 form-group">
                                 <label for="price">Price</label>
                                 <input type="text" name="price" id="price" class="form-control floatOnly req" value="0" />
-                            </div>                            
+                            </div>    
+                            
+                            <div class="col-md-4 form-group">
+                                <label for="qty_kg">Conversion Qty</label>
+                                <div class="input-group">
+                                    <input type="text" name="qty_kg" id="qty_kg" class="form-control calQty floatOnly" value="" style="width:40%;">
+
+                                    <select name="sec_unit_id" id="sec_unit_id" class="form-control single-select" style="width:60%;" tabindex="11">
+                                        <option value="0">--</option>
+                                        <?=getItemUnitListOption($unitList)?>
+                                    </select>
+                                </div>
+                            </div>
 
 							<div class="col-md-3 form-group">
                                 <label for="hsn_code">HSN Code</label>
@@ -261,7 +261,8 @@
                                     <?=getHsnCodeListOption($hsnList)?>
                                 </select>
                             </div>
-                            <div class="col-md-3 form-group">
+
+                            <div class="col-md-2 form-group">
                                 <label for="gst_per">GST Per.(%)</label>
                                 <select name="gst_per" id="gst_per" class="form-control single-select">
                                     <?php

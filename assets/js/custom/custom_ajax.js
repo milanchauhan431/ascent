@@ -79,7 +79,7 @@ function ssDatatable(ele,tableHeaders,tableOptions,dataSet={}){
 	if(tableHeaders.textAlign!=""){var textAlign = JSON.parse(tableHeaders.textAlign);}
 	
 	var orderableTarget = [0,1]; 
-	if(tableHeaders.sortable != "[]"){var orderableTarget = JSON.parse(tableHeaders.sortable);}
+	if(tableHeaders.sortable != ""){var orderableTarget = JSON.parse(tableHeaders.sortable) || [0,1];}
 	
 	var dataUrl = ele.attr('data-url');
 	var tableId = ele.attr('id'); 

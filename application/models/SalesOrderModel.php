@@ -38,13 +38,17 @@ class SalesOrderModel extends MasterModel{
         $data['searchCol'][] = "";
         $data['searchCol'][] = "trans_main.trans_number";
         $data['searchCol'][] = "DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y')";
+        $data['searchCol'][] = "trans_child.job_number";
         $data['searchCol'][] = "trans_main.party_name";
         $data['searchCol'][] = "trans_child.item_name";
         $data['searchCol'][] = "trans_child.qty";
         $data['searchCol'][] = "trans_child.dispatch_qty";
         $data['searchCol'][] = "(trans_child.qty - trans_child.dispatch_qty)";
 
-        $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
+        $columns =array(); 
+        foreach($data['searchCol'] as $row): 
+            $columns[] = $row; 
+        endforeach;
         if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}
         
         return $this->pagingRows($data);
