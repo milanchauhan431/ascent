@@ -15,6 +15,7 @@ function getStoreDtHeader($page){
     $data['gateEntry'][] = ["name" => "#", "style" => "width:5%;", "textAlign" => "center"];
     $data['gateEntry'][] = ["name"=> "GE No.", "textAlign" => "center"];
     $data['gateEntry'][] = ["name" => "GE Date", "textAlign" => "center"];
+    $data['gateEntry'][] = ["name" => "Party Name"];
     $data['gateEntry'][] = ["name" => "Transport"];
     $data['gateEntry'][] = ["name" => "LR No."];
     $data['gateEntry'][] = ["name" => "Vehicle Type"];
@@ -85,7 +86,7 @@ function getGateEntryData($data){
 
     $action = getActionButton($editButton.$deleteButton);
 
-    return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->transport_name,$data->lr,$data->vehicle_type_name,$data->vehicle_no,$data->inv_no,((!empty($data->inv_date))?formatDate($data->inv_date):""),$data->doc_no,((!empty($data->doc_date))?formatDate($data->doc_date):"")];
+    return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->transport_name,$data->lr,$data->vehicle_type_name,$data->vehicle_no,$data->inv_no,((!empty($data->inv_date))?formatDate($data->inv_date):""),$data->doc_no,((!empty($data->doc_date))?formatDate($data->doc_date):"")];
 }
 
 /* GateInward Data Data  */

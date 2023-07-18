@@ -283,7 +283,13 @@
                                     ?>
                                 </select>
                             </div>  
-                            <div class="col-md-12 form-group">
+
+                            <div class="col-md-3 form-group">
+                                <label for="job_number">Job No.</label>
+                                <input type="text" name="job_number" id="job_number" class="form-control" value="">
+                            </div>
+
+                            <div class="col-md-9 form-group">
                                 <label for="item_remark">Remark</label>
                                 <input type="text" name="item_remark" id="item_remark" class="form-control" value="" />
                             </div>                            

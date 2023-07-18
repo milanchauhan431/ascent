@@ -170,6 +170,7 @@ function AddRow(data) {
     var stdQtyInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][std_qty]", value: data.std_qty });
     var qtyKgInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][qty_kg]", value: data.qty_kg });
     var secUnitIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][sec_unit_id]", value: data.sec_unit_id });
+    var jobNumberInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][job_number]", value: data.job_number });
     cell = $(row.insertCell(-1));
     cell.html(data.item_name);
     cell.append(idInput);
@@ -184,6 +185,7 @@ function AddRow(data) {
     cell.append(stdQtyInput);
     cell.append(qtyKgInput);
     cell.append(secUnitIdInput);
+    cell.append(jobNumberInput);
 
     var hsnCodeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][hsn_code]", value: data.hsn_code });
 	cell = $(row.insertCell(-1));
