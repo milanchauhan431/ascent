@@ -113,7 +113,7 @@ class PurchaseOrderModel extends MasterModel{
                     $setData['tableName'] = $this->purchseReq;
                     $setData['where']['id'] = $row['ref_id'];
                     $setData['set']['po_qty'] = 'po_qty, + '.$row['qty'];
-                    $setData['update']['order_status'] = "(CASE WHEN order_status >= po_qty THEN 2 ELSE 1 END)";
+                    $setData['update']['order_status'] = "(CASE WHEN req_qty >= po_qty THEN 2 ELSE 1 END)";
                     $this->setValue($setData);
                 endif;
             endforeach;            
