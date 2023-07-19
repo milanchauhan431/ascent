@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $("#party_id").trigger('change');
+    setTimeout(function(){$("#party_id").trigger('change');},500);
     $(document).on('change',"#party_id",function(){
         var party_id = $(this).val();
         getPoList(party_id);
