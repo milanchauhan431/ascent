@@ -19,8 +19,8 @@ function getProductionDtHeader($page){
 	$data['estimation'][] = ["name"=>"Customer Name"];
 	$data['estimation'][] = ["name"=>"Item Name"];
     $data['estimation'][] = ["name"=>"Order Qty"];
-    $data['estimation'][] = ["name"=>"Bom Status"];
-    $data['estimation'][] = ["name"=>"Priority"];
+    $data['estimation'][] = ["name"=>"Bom Status","textAlign"=>"center"];
+    $data['estimation'][] = ["name"=>"Priority","textAlign"=>"center"];
     $data['estimation'][] = ["name"=>"FAB. PRODUCTION NOTE"];
     $data['estimation'][] = ["name"=>"POWER COATING NOTE"];
     $data['estimation'][] = ["name"=>"ASSEMBALY NOTE"];
