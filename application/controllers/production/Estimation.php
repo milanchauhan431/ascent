@@ -189,7 +189,7 @@ class Estimation extends MY_Controller{
                 $imagePath = realpath(APPPATH . '../assets/uploads/production/');
                 $ext = pathinfo($_FILES['ga_file']['name'], PATHINFO_EXTENSION);
 
-                $config = ['file_name' => $_FILES['ga_file']['name'],'allowed_types' => '*','max_size' => 10240,'overwrite' => FALSE, 'upload_path' => $imagePath];
+                $config = ['file_name' => time()."_".$_FILES['ga_file']['name'],'allowed_types' => '*','max_size' => 10240,'overwrite' => FALSE, 'upload_path' => $imagePath];
 
                 if(file_exists($config['upload_path'].'/'.$config['file_name'])):
                     unlink($config['upload_path'].'/'.$config['file_name']);
@@ -214,7 +214,7 @@ class Estimation extends MY_Controller{
                 $imagePath = realpath(APPPATH . '../assets/uploads/production/');
                 $ext = pathinfo($_FILES['technical_specification_file']['name'], PATHINFO_EXTENSION);
 
-                $config = ['file_name' => $_FILES['technical_specification_file']['name'],'allowed_types' => '*','max_size' => 10240,'overwrite' => FALSE, 'upload_path' => $imagePath];
+                $config = ['file_name' => time()."_".$_FILES['technical_specification_file']['name'],'allowed_types' => '*','max_size' => 10240,'overwrite' => FALSE, 'upload_path' => $imagePath];
 
                 if(file_exists($config['upload_path'].'/'.$config['file_name'])): 
                     unlink($config['upload_path'].'/'.$config['file_name']);
@@ -239,7 +239,7 @@ class Estimation extends MY_Controller{
                 $imagePath = realpath(APPPATH . '../assets/uploads/production/');
                 $ext = pathinfo($_FILES['sld_file']['name'], PATHINFO_EXTENSION);
 
-                $config = ['file_name' => $_FILES['sld_file']['name'],'allowed_types' => '*','max_size' => 10240,'overwrite' => FALSE, 'upload_path' => $imagePath];
+                $config = ['file_name' => time()."_".$_FILES['sld_file']['name'],'allowed_types' => '*','max_size' => 10240,'overwrite' => FALSE, 'upload_path' => $imagePath];
 
                 if(file_exists($config['upload_path'].'/'.$config['file_name'])):
                     unlink($config['upload_path'].'/'.$config['file_name']);

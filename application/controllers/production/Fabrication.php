@@ -50,7 +50,7 @@ class Fabrication extends MY_Controller{
 
     public function save(){
         $data = $this->input->post();
-        
+
         $this->load->library('upload');
         if(!empty($_FILES['cutting_drawings']['name'])):
             $_FILES['userfile']['name']     = $_FILES['cutting_drawings']['name'];
@@ -62,7 +62,7 @@ class Fabrication extends MY_Controller{
             $imagePath = realpath(APPPATH . '../assets/uploads/production/');
             $ext = pathinfo($_FILES['cutting_drawings']['name'], PATHINFO_EXTENSION);
 
-            $config = ['file_name' => "CD_".$_FILES['cutting_drawings']['name'],'allowed_types' => '*','max_size' => 10240,'overwrite' => FALSE, 'upload_path' => $imagePath];
+            $config = ['file_name' => time()."_"."CD_".$_FILES['cutting_drawings']['name'],'allowed_types' => '*','max_size' => 10240,'overwrite' => FALSE, 'upload_path' => $imagePath];
 
             if(file_exists($config['upload_path'].'/'.$config['file_name'])):
                 unlink($config['upload_path'].'/'.$config['file_name']);
