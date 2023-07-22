@@ -124,17 +124,21 @@ class ProductionModel extends MasterModel{
 
         if($data['job_status'] == -1):
             $data['where']['production_master.id'] = null;
+            $data['order_by']['trans_main.trans_date'] = "DESC";
+            $data['order_by']['trans_main.id'] = "DESC";
         elseif($data['job_status'] >= 0):
             $data['where']['production_master.id >'] = 0;
             $data['where']['production_master.ref_id'] = 0;
             $data['where']['production_master.job_status'] = $data['job_status'];
+            $data['order_by']['production_master.priority'] = "ASC";
         endif;
         
-        $data['where']['trans_main.trans_date >='] = $this->startYearDate;
-        $data['where']['trans_main.trans_date <='] = $this->endYearDate;
-
-        $data['order_by']['trans_main.trans_date'] = "DESC";
-        $data['order_by']['trans_main.id'] = "DESC";
+        if($data['job_status'] == 2):
+            $data['where']['trans_main.trans_date >='] = $this->startYearDate;
+            $data['where']['trans_main.trans_date <='] = $this->endYearDate;       
+        else:
+            $data['where']['trans_main.trans_date <='] = $this->endYearDate;    
+        endif;
 
         $data['group_by'][] = "trans_child.id";
 
