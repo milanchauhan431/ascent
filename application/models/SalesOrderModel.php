@@ -147,7 +147,8 @@ class SalesOrderModel extends MasterModel{
                 $row['trans_main_id'] = $result['id'];
                 $row['is_delete'] = 0;
                 if(empty($row['id'])):
-                    $row['job_number'] = $jobPrefix.sprintf("%04d",$job_no)."-".$i;
+                    $row['job_no'] = $job_no;
+                    $row['job_number'] = $jobPrefix.sprintf("%04d",$row['job_no'])."-".$i;
                     if($data['order_type'] == "P"):
                         $row['job_char'] = $this->getNextJobChar();
                         $row['job_number'] = $row['job_number'].$row['job_char'];
