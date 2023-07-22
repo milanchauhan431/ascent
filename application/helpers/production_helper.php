@@ -35,7 +35,7 @@ function getProductionDtHeader($page){
     $data['mechanical_design'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
     $data['mechanical_design'][] = ["name"=>"FAB. PRODUCTION NOTE"];
     $data['mechanical_design'][] = ["name"=>"GENERAL NOTE"];
-    $data['mechanical_design'][] = ["name"=>"Accepted BY","sortable"=>"FALSE","textAlign"=>"center"];
+    //$data['mechanical_design'][] = ["name"=>"Accepted BY","sortable"=>"FALSE","textAlign"=>"center"];
 
     return tableHeader($data[$page]);
 }
@@ -104,7 +104,7 @@ function getFabricationData($data){
         $viewBomParam = "{'postData':{'trans_child_id':".$data->trans_child_id."},'modal_id' : 'modal-xl','fnedit':'viewOrderBom','title' : 'View Bom [Item Name : ".$data->item_name."]','button':'close','controller':'production/estimation'}";
         $viewBom = '<a class="btn btn-outline-info waves-effect waves-light" href="javascript:void(0)" onclick="edit('.$viewBomParam.');" datatip="View Item Bom" flow="down"><i class="fa fa-eye"></i></a>';
 
-        $accepted_by = ($data->entry_type == 30 && $data->accepted_by > 0)?$data->accepted_by_name."<br>".formatDate($data->accepted_at,'d-m-Y h:i:s A'):"";
+        //$accepted_by = ($data->entry_type == 30 && $data->accepted_by > 0)?$data->accepted_by_name."<br>".formatDate($data->accepted_at,'d-m-Y h:i:s A'):"";
 
         $completJob = $accptJob = '';
 
@@ -123,7 +123,7 @@ function getFabricationData($data){
 
         $action = getActionButton($accptJob.$completJob);
 
-        return [$action,$data->sr_no,$data->job_number,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark,$accepted_by];
+        return [$action,$data->sr_no,$data->job_number,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark/* ,$accepted_by */];
     endif;
 }
 ?>
