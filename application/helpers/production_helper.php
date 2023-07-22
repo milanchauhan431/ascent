@@ -29,13 +29,13 @@ function getProductionDtHeader($page){
     /* Mechanical Design Header */
     $data['mechanical_design'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
 	$data['mechanical_design'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
-	$data['mechanical_design'][] = ["name"=>"Job No."];
-    $data['mechanical_design'][] = ["name"=>"Priority"];
-    $data['mechanical_design'][] = ["name"=>"GA"];
-    $data['mechanical_design'][] = ["name"=>"Bom"];
+	$data['mechanical_design'][] = ["name"=>"Job No.","style"=>"width:12%;",];
+    $data['mechanical_design'][] = ["name"=>"Priority","style"=>"width:5%;","textAlign"=>"center"];
+    $data['mechanical_design'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['mechanical_design'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
     $data['mechanical_design'][] = ["name"=>"FAB. PRODUCTION NOTE"];
     $data['mechanical_design'][] = ["name"=>"GENERAL NOTE"];
-    $data['mechanical_design'][] = ["name"=>"Accepted BY"];
+    $data['mechanical_design'][] = ["name"=>"Accepted BY","sortable"=>"FALSE","textAlign"=>"center"];
 
     return tableHeader($data[$page]);
 }
