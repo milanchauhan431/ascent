@@ -133,25 +133,26 @@ class SalesOrderModel extends MasterModel{
             endif;
 
             $partyData = $this->party->getParty(['id'=>$data['party_id']]);
-            //$jobPrefix = "AE-".$data['order_type']."-".$partyData->party_code."-";
             if($data['order_type'] == "P"):
                 $jobPrefix = "AE/".$data['order_type']."-";
             else:
                 $jobPrefix = "AE-".$data['order_type']."-";
             endif;
 
+            $job_no = $this->getNextJobNo($data['order_type']);
+                    
             $i=1;
             foreach($itemData as $row):
                 $row['entry_type'] = $data['entry_type'];
                 $row['trans_main_id'] = $result['id'];
                 $row['is_delete'] = 0;
                 if(empty($row['id'])):
-                    $row['job_no'] = $this->getNextJobNo();
-                    $row['job_number'] = $jobPrefix.sprintf("%04d",$row['job_no']);
+                    $row['job_number'] = $jobPrefix.sprintf("%04d",$job_no)."-".$i;
                     if($data['order_type'] == "P"):
                         $row['job_char'] = $this->getNextJobChar();
-                        $row['job_number'] = $row['job_number']."-".$i++.$row['job_char'];
+                        $row['job_number'] = $row['job_number'].$row['job_char'];
                     endif;
+                    $i++;
                 endif;
                 $this->store($this->transChild,$row);
             endforeach;
