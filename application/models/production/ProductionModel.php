@@ -312,6 +312,8 @@ class ProductionModel extends MasterModel{
             $data['where']['production_master.entry_date <='] = $this->endYearDate;
         endif;
 
+        $data['order_by']['production_master.priority'] = "ASC";
+
         $data['searchCol'][] = "";
         $data['searchCol'][] = "";
         $data['searchCol'][] = "trans_child.job_number";
