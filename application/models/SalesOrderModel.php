@@ -56,8 +56,10 @@ class SalesOrderModel extends MasterModel{
 
     public function getNextJobChar(){
         $queryData['tableName'] = $this->transChild;
-        $queryData['select'] = "MAX(job_char) as job_char";
+        //$queryData['select'] = "MAX(job_char) as job_char";
+        $queryData['select'] = "job_char";
         $queryData['where']['entry_type'] = 20;
+        $queryData['order_by']['id'] = "DESC";
         $result =  $this->row($queryData)->job_char;
 
         $nextChar = (!empty($result) && $result != 'Z')? ++$result : 'A';        
