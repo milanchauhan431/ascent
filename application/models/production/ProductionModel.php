@@ -320,7 +320,7 @@ class ProductionModel extends MasterModel{
         $data['searchCol'][] = "";
         $data['searchCol'][] = "production_master.fab_dept_note";
         $data['searchCol'][] = "production_master.remark";
-        $data['searchCol'][] = "CONCAT(em.emp_name,' ',DATE_FORMAT(production_master.accepted_at,'%d-%m-%Y %h:%i:%s %A'))";
+        //$data['searchCol'][] = "CONCAT(em.emp_name,' ',DATE_FORMAT(production_master.accepted_at,'%d-%m-%Y %h:%i:%s %A'))";
 
         $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
         if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}
