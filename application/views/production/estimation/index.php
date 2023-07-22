@@ -6,20 +6,26 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <ul class="nav nav-pills">
                                     <li class="nav-item"> 
-                                        <button onclick="statusTab('estimationTable',0);" id="pending_ed" class="nav-tab btn waves-effect waves-light btn-outline-danger active" style="outline:0px" data-toggle="tab" aria-expanded="false">New Job</button> 
+                                        <button onclick="statusTab('estimationTable',-1);" id="pending_ed" class="nav-tab btn waves-effect waves-light btn-outline-danger active" style="outline:0px" data-toggle="tab" aria-expanded="false">Order List</button> 
                                     </li>
                                     <li class="nav-item"> 
-                                        <button onclick="statusTab('estimationTable',1);" id="list_ed" class="nav-tab btn waves-effect waves-light btn-outline-success" style="outline:0px" data-toggle="tab" aria-expanded="false">Job List</button> 
+                                        <button onclick="statusTab('estimationTable',0);" id="list_ed" class="nav-tab btn waves-effect waves-light btn-outline-info" style="outline:0px" data-toggle="tab" aria-expanded="false">Pending Job</button> 
+                                    </li>
+                                    <li class="nav-item"> 
+                                        <button onclick="statusTab('estimationTable',1);" id="list_ed" class="nav-tab btn waves-effect waves-light btn-outline-warning" style="outline:0px" data-toggle="tab" aria-expanded="false">In-Process Job</button> 
+                                    </li>
+                                    <li class="nav-item"> 
+                                        <button onclick="statusTab('estimationTable',2);" id="list_ed" class="nav-tab btn waves-effect waves-light btn-outline-success" style="outline:0px" data-toggle="tab" aria-expanded="false">Complete Job</button> 
                                     </li>
                                 </ul>
                             </div>
-                            <div class="col-md-4 text-center">
+                            <div class="col-md-3 text-left">
                                 <h4 class="card-title">Estimation & Design</h4>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                             </div>                             
                         </div>                                         
                     </div>

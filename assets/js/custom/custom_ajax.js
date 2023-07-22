@@ -82,6 +82,7 @@ function ssDatatable(ele,tableHeaders,tableOptions,dataSet={}){
 	if(tableHeaders.sortable != ""){var orderableTarget = JSON.parse(tableHeaders.sortable) || [0,1];}
 	
 	var dataUrl = ele.attr('data-url');
+	dataUrl += (ele.attr('data-default_status'))?'/'+ele.attr('data-default_status'):"";
 	var tableId = ele.attr('id'); 
 	if(tableHeaders.theads != ""){
 		$('#' + tableId).html("");		

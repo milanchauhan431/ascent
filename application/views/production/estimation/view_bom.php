@@ -27,14 +27,14 @@
 </div>
 
 <script>
-var bomTrans = {'postData':{'trans_child_id':$("#trans_child_id").val()},'table_id':"bomItems",'tbody_id':'bomItemsDetails','tfoot_id':'','fnget':'getOrderBomHtml'};
+var bomTrans = {'postData':{'trans_child_id':$("#trans_child_id").val()},'table_id':"bomItems",'tbody_id':'bomItemsDetails','tfoot_id':'','fnget':'getOrderBomHtml','controller':'production/estimation'};
 getTransHtml(bomTrans);
 
 function resDeleteBomItem(response){
     if(response.status==0){
         toastr.error(response.message, 'Sorry...!', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
     }else{
-        var bomTrans = {'postData':{'trans_child_id':$("#trans_child_id").val()},'table_id':"bomItems",'tbody_id':'bomItemsDetails','tfoot_id':'','fnget':'getOrderBomHtml'};
+        var bomTrans = {'postData':{'trans_child_id':$("#trans_child_id").val()},'table_id':"bomItems",'tbody_id':'bomItemsDetails','tfoot_id':'','fnget':'getOrderBomHtml','controller':'production/estimation'};
         getTransHtml(bomTrans);
 
         toastr.success(response.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });

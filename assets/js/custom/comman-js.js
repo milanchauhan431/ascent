@@ -494,7 +494,6 @@ function reInitMultiSelect(){
 }
 
 function statusTab(tableId,status,hp_fn_name="",page=""){
-
     $("#"+tableId).attr("data-url",$("#"+tableId).data('url')+'/'+status);
 
 	$("#"+tableId).data("hp_fn_name","");
@@ -641,7 +640,7 @@ function confirmStore(data){
 		var form = $('#'+formId)[0];
 		var fd = new FormData(form);
 		var resFunctionName = $("#"+formId).data('res_function') || "";
-		var msg = "Are you sure want to save this record ?";
+		var msg = $("#"+formId).data('confirm_message') || "Are you sure want to save this record ?";
 		var ajaxParam = {
 			url: base_url + controllerName + '/' + fnsave,
 			data:fd,
@@ -716,7 +715,7 @@ function edit(data){
 	var resFunction = data.res_function || "";
 	var jsStoreFn = data.js_store_fn || 'store';
 
-	var fnJson = "{'formId':'"+data.form_id+"','fnsave':'"+fnsave+"'}";
+	var fnJson = "{'formId':'"+data.form_id+"','fnsave':'"+fnsave+"','controller' : '"+controllerName+"'}";
 
 	$.ajax({ 
 		type: "POST",   

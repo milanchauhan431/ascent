@@ -7,29 +7,29 @@ class Estimation extends MY_Controller{
     private $estimationFrom = "production/estimation/estimation_form";
 
     private $departmentList = [
-        "28"=>"MECHENICAL DESIGN",
-        "29"=>"CUTTING",
-        "30"=>"BENDING",
-        "31"=>"FAB. ASSEMBELY",
-        "32"=>"POWER COATING",
-        "33"=>"ELETRICALS DESIGN",
-        "34"=>"ASSEMBELY PRODUCTION",
-        "35"=>"ASSEMBELY CONTACTOR",
-        "36"=>"QULITY CHECK",
-        "37"=>"TESTING",
-        "38"=>"DOCUMATION"
+        "30"=>"MECHENICAL DESIGN",
+        "31"=>"CUTTING",
+        "32"=>"BENDING",
+        "33"=>"FAB. ASSEMBELY",
+        "34"=>"POWER COATING",
+        "35"=>"ELETRICALS DESIGN",
+        "36"=>"ASSEMBELY PRODUCTION",
+        "37"=>"ASSEMBELY CONTACTOR",
+        "38"=>"QULITY CHECK",
+        "39"=>"TESTING",
+        "40"=>"DOCUMATION"
     ];
 
     public function __construct(){
         parent::__construct();
         $this->data['headData']->pageTitle = "Estimation & Design";
-		$this->data['headData']->controller = "estimation";
-        $this->data['headData']->pageUrl = "estimation";
-        $this->data['entry_type'] = $this->transMainModel->getEntryType(['controller'=>'estimation'])->id;
+		$this->data['headData']->controller = "production/estimation";
+        $this->data['headData']->pageUrl = "production/estimation";
+        $this->data['entry_type'] = $this->transMainModel->getEntryType(['controller'=>'production/estimation'])->id;
     }
 
     public function index(){
-        $this->data['tableHeader'] = getProductionDtHeader($this->data['headData']->controller);
+        $this->data['tableHeader'] = getProductionDtHeader("estimation");
         $this->load->view($this->index,$this->data);
     }
 

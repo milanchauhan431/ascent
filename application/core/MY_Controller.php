@@ -69,7 +69,7 @@ class MY_Controller extends CI_Controller{
 		$this->load->model('GateInwardModel','gateInward');
 
 		/* Production Model */
-		$this->load->model('ProductionModel','production');
+		$this->load->model('production/ProductionModel','production');
 
 		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry","gateInward","production","brandMaster"]);
 	}
