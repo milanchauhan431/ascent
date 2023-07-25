@@ -17,7 +17,7 @@
 
             <div class="<?=(!empty($dataRow->item_type) && $dataRow->item_type == 1 || !empty($item_type) && $item_type == 1)?"col-md-3":"col-md-2"?> form-group">
                 <label for="unit_id">Unit</label>
-                <select name="unit_id" id="unit_id" class="form-control single-select req">
+                <select name="unit_id" id="unit_id" class="form-control select2 req">
                     <option value="0">--</option>
                     <?=getItemUnitListOption($unitData,((!empty($dataRow->unit_id))?$dataRow->unit_id:""))?>
                 </select>
@@ -35,7 +35,7 @@
 
             <div class="col-md-3 form-group">
                 <label for="category_id">Category</label>
-                <select name="category_id" id="category_id" class="form-control single-select req">
+                <select name="category_id" id="category_id" class="form-control select2 req">
                     <option value="0">Select</option>
                     <?php
                         foreach ($categoryList as $row) :
@@ -48,7 +48,7 @@
 
             <div class="col-md-3 form-group">
                 <label for="make_brand">Make</label>
-                <select name="make_brand" id="make_brand" class="form-control single-select">
+                <select name="make_brand" id="make_brand" class="form-control select2">
                     <option value="">Select Make</option>
                     <?php
                         foreach ($brandList as $row) :
@@ -61,7 +61,7 @@
 
             <div class="col-md-2 form-group">
                 <label for="hsn_code">HSN Code</label>
-                <select name="hsn_code" id="hsn_code" class="form-control single-select">
+                <select name="hsn_code" id="hsn_code" class="form-control select2">
                     <option value="">Select HSN Code</option>
                     <?=getHsnCodeListOption($hsnData,((!empty($dataRow->hsn_code))?$dataRow->hsn_code:""))?>
                 </select>
@@ -69,7 +69,7 @@
 
             <div class="col-md-2 form-group">
                 <label for="gst_per">GST (%)</label>
-                <select name="gst_per" id="gst_per" class="form-control single-select">
+                <select name="gst_per" id="gst_per" class="form-control select2">
                     <?php
                         foreach($this->gstPer as $per=>$text):
                             $selected = (!empty($dataRow->gst_per) && floatVal($dataRow->gst_per) == $per)?"selected":"";
@@ -91,12 +91,16 @@
             <div class="col-md-3 form-group">
                 <label for="std_qty">Conversion Qty</label>
                 <div class="input-group">
-                    <input type="text" name="std_qty" id="std_qty" class="form-control floatOnly" value="<?=(!empty($dataRow->std_qty))?floatVal($dataRow->std_qty):""?>" style="width:40%;">
+                    <div class="input-group-append" style="width:40%!important;">
+                        <input type="text" name="std_qty" id="std_qty" class="form-control floatOnly" placeholder="Qty." value="<?=(!empty($dataRow->std_qty))?floatVal($dataRow->std_qty):""?>">
+                    </div>
 
-                    <select name="sec_unit_id" id="sec_unit_id" class="form-control single-select" style="width:60%;">
-                        <option value="0">--</option>
-                        <?=getItemUnitListOption($unitData,((!empty($dataRow->sec_unit_id))?$dataRow->sec_unit_id:""))?>
-                    </select>
+                    <div class="input-group-append"  style="width:60%!important;">
+                        <select name="sec_unit_id" id="sec_unit_id" class="form-control select2">
+                            <option value="0">--</option>
+                            <?=getItemUnitListOption($unitData,((!empty($dataRow->sec_unit_id))?$dataRow->sec_unit_id:""))?>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -121,7 +125,7 @@
 $(document).ready(function(){
     $(document).on('change','#hsn_code',function(){
         $("#gst_per").val(($(this).find(':selected').data('gst_per') || 0));
-        $("#gst_per").comboSelect();
+        $("#gst_per").select2({with:null});
     });
 });
 </script>

@@ -26,7 +26,7 @@
 
             <div class="col-md-4 form-group">
                 <label for="final_category">Final Category</label>
-                <select name="final_category" id="final_category" class="form-control single-select">
+                <select name="final_category" id="final_category" class="form-control select2">
                     <option value="0" <?=(!empty($dataRow) && $dataRow->final_category == 0) ? "selected" : "";?>>No</option>
                     <option value="1" <?=(!empty($dataRow) && $dataRow->final_category == 1) ? "selected" : "";?>>Yes</option>
                 </select>
@@ -34,7 +34,7 @@
 
             <div class="col-md-4 form-group returnable">
                 <label for="is_return">Returnable</label>
-                <select name="is_return" id="is_return" class="form-control single-select">
+                <select name="is_return" id="is_return" class="form-control select2">
                     <option value="0" <?=(!empty($dataRow) && $dataRow->is_return == 0) ? "selected" : "";?>>No</option>
                     <option value="1" <?=(!empty($dataRow) && $dataRow->is_return == 1) ? "selected" : "";?>>Yes</option>
                 </select>
@@ -79,8 +79,9 @@ $(document).ready(function(){
         $('#maincate_level').val(level);
 		$('#category_type').val(category_type);
 		
-		if(category_type == 6 || category_type == 7){$('.toolType').show();$('.returnable').hide();}
-		else{$('.returnable').show();$('.toolType').hide();}
+		if(category_type == 6 || category_type == 7){
+            $('.toolType').show();$('.returnable').hide();
+        }else{$('.returnable').show();$('.toolType').hide();}
 	});
 });
 </script>

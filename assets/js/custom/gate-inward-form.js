@@ -38,7 +38,7 @@ $(document).ready(function(){
         formData.location_id = $("#location_id").val();
         formData.location_name = $("#location_id :selected").text();
         formData.po_number = $("#po_id :selected").data('po_no');
-        formData.item_name = $("#item_idc").val();
+        formData.item_name = $("#item_name").val();
         formData.heat_no = $("#heat_no").val();
         formData.mill_heat_no = $("#mill_heat_no").val();
         formData.qty = $("#qty").val();
@@ -72,16 +72,16 @@ $(document).ready(function(){
            
             AddBatchRow(formData);
 
-            $("#location_id").val("");$("#location_id").select2({ dropdownParent: $('#location_id').parent() });
+            $("#location_id").val("");$("#location_id").select2({ with:null });
             $("#heat_no").val("");
             $("#mill_heat_no").val("");
             $("#qty").val("");
             $("#disc_per").val("");
             $("#item_stock_type").val("");
-            $("#item_id").val("");$("#item_id").comboSelect();
+            $("#item_id").val("");$("#item_id").select2({ with:null });//.comboSelect();
             $("#item_type").val("");
             $("#po_trans_id").val("");
-            $("#po_id").val("");$("#po_id").comboSelect();            
+            $("#po_id").val("");$("#po_id").select2({ with:null });//.comboSelect();            
             $("#price").val("");
         }
     });
@@ -90,6 +90,7 @@ $(document).ready(function(){
 function resItemDetail(response = ""){
     if(response != ""){
         var itemDetail = response.data.itemDetail;
+        $("#item_name").val((itemDetail.item_name || "")); 
         $("#item_type").val((itemDetail.item_type || 0)); 
         $("#item_stock_type").val((itemDetail.stock_type || 0));
         if($("#po_id").find(":selected").val() == ""){
@@ -102,6 +103,7 @@ function resItemDetail(response = ""){
             $("#po_trans_id").val(($("#item_id").find(":selected").data('po_trans_id') || 0));
         }        
     }else{
+        $("#item_name").val(""); 
         $("#item_type").val(""); 
         $("#item_stock_type").val("");
         $("#disc_per").val("");
@@ -119,11 +121,11 @@ function getPoList(party_id){
             dataType : 'json'
         }).done(function(response){
             $("#po_id").html(response.poOptions);
-            $("#po_id").comboSelect();
+            $("#po_id").select2({ with:null });//.comboSelect();
         });
     }else{
         $("#po_id").html('<option value="">Select Purchase Order</option>');
-        $("#po_id").comboSelect();
+        $("#po_id").select2({ with:null });//.comboSelect();
     }
 }
 
@@ -135,7 +137,7 @@ function getItemList(po_id){
         dataType : 'json'
     }).done(function(response){
         $("#item_id").html(response.itemOptions);
-        $("#item_id").comboSelect();
+        $("#item_id").select2({ with:null });//.comboSelect();
     });
 }
 

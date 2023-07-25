@@ -79,7 +79,7 @@ class ProductionModel extends MasterModel{
         $queryData['tableName'] = $this->paramMaster;
 
         if($data['param_type']):
-            $queryData['param_type'] = $data['param_type'];
+            $queryData['where']['param_type'] = $data['param_type'];
         endif;
 
         $queryData['order_by']['seq'] = "ASC";

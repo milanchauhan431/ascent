@@ -134,8 +134,8 @@ $(document).ready(function() {
         setTimeout(function(){
             $("#addItem #item_code").val(formData[3]);
             $("#addItem #item_name").val(formData[1]);
-            $("#addItem #make_brand").val(formData[2]);$("#addItem #make_brand").comboSelect();
-            $("#addItem #unit_id").val(25);$("#addItem #unit_id").comboSelect();
+            $("#addItem #make_brand").val(formData[2]);$("#addItem #make_brand").select2({ with:null });//.comboSelect();
+            $("#addItem #unit_id").val(25);$("#addItem #unit_id").select2({ with:null });//.comboSelect();
             $("#addItem #defualt_disc").val(formData[8]);
             $("#addItem #price").val(formData[6]);
         },1000);

@@ -11,7 +11,7 @@
 
             <div class="col-md-4 form-group">
                 <label for="final_location">Final Store</label>
-                <select name="final_location" id="final_location" class="form-control single-select">
+                <select name="final_location" id="final_location" class="form-control">
                     <option value="0" <?=(!empty($dataRow) && $dataRow->final_location == 0) ? "selected" : "";?>>No</option>
                     <option value="1" <?=(!empty($dataRow) && $dataRow->final_location == 1) ? "selected" : "";?>>Yes</option>
                 </select>
@@ -19,7 +19,7 @@
 
             <div class="col-md-12 form-group">
                 <label for="ref_id">Store Name</label>
-                <select name="ref_id" id="ref_id" class="form-control single-select req" tabindex="-1">
+                <select name="ref_id" id="ref_id" class="form-control single-select req">
                 <option value="">Select Store</option>
                     <?php
                         if(!empty($storeList)):
