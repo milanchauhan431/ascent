@@ -29,7 +29,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id='fabricationTable' class="table table-bordered ssTable ssTable-cf" data-ninput="[0,1,6,7]"  data-url='/getDTRows' data-default_status="27/30/0"></table>
+                            <table id='fabricationTable' class="table table-bordered ssTable ssTable-cf" data-ninput="[0,1,6,7]"  data-url='/getDTRows' data-default_status="27/30/1"></table>
                         </div>
                     </div>
                 </div>

@@ -343,9 +343,9 @@ class ProductionModel extends MasterModel{
         $data['leftJoin']['trans_child'] = "production_master.trans_child_id = trans_child.id";
         $data['leftJoin']['employee_master as em'] = "em.id = production_master.accepted_by";
 
-        if($data['from_entry_type'] != $data['to_entry_type'] && $data['job_status'] == 0):
+        if($data['from_entry_type'] != $data['to_entry_type'] && $data['from_entry_type'] == 27):
             $data['where']["SUBSTRING_INDEX(production_master.department_ids,',', 1) = "] = $data['to_entry_type'];
-        elseif($data['from_entry_type'] != $data['to_entry_type'] && $data['job_status'] == 1):
+        elseif($data['from_entry_type'] != $data['to_entry_type'] && $data['job_status'] == 2):
             $data['where']["SUBSTRING_INDEX(SUBSTRING_INDEX(production_master.department_ids, ',', FIND_IN_SET(".$data['from_entry_type'].", production_master.department_ids) + 1),',', -1) = "] = $data['to_entry_type'];
         else:
             $data['where']['production_master.entry_type'] = $data['to_entry_type'];
@@ -377,7 +377,7 @@ class ProductionModel extends MasterModel{
         $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
         if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}
         
-        return $this->pagingRows($data); $this->printQuery();
+        return $this->pagingRows($data); //$this->printQuery();
     }
 
     public function acceptJob($data){

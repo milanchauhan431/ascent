@@ -39,6 +39,18 @@ function getProductionDtHeader($page){
     $data['mechanical_design'][] = ["name"=>"GENERAL NOTE"];
     //$data['mechanical_design'][] = ["name"=>"Accepted BY","sortable"=>"FALSE","textAlign"=>"center"];
 
+    /* Cutting Header */
+    $data['cutting'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['cutting'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['cutting'][] = ["name"=>"Job No.","style"=>"width:12%;"];
+    $data['cutting'][] = ["name"=>"Item Name"];
+    $data['cutting'][] = ["name"=>"Order Qty"];
+    $data['cutting'][] = ["name"=>"Priority","style"=>"width:5%;","textAlign"=>"center"];
+    $data['cutting'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['cutting'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['cutting'][] = ["name"=>"FAB. PRODUCTION NOTE"];
+    $data['cutting'][] = ["name"=>"GENERAL NOTE"];
+
     return tableHeader($data[$page]);
 }
 
@@ -95,7 +107,7 @@ function getEstimationData($data){
 
 /* Fabrication Table Data */
 function getFabricationData($data){
-    if(in_array($data->entry_type,[27,30])): // Mechanical Design Table Data
+    if(in_array($data->entry_type,[27,30,31])): // Mechanical Design Table Data
         if($data->priority == 1):
             $data->priority_status = '<span class="badge badge-pill badge-danger m-1">'.$data->priority_status.'</span>';
         elseif($data->priority == 2):

@@ -12,7 +12,8 @@ class Fabrication extends MY_Controller{
         $this->data['headData']->pageUrl = "production/fabrication/list/".$department;
         $this->data['headData']->pageTitle = ucwords(str_replace("_"," ",$department));
         $this->data['tableHeader'] = getProductionDtHeader($department);
-        $this->load->view($this->indexPage,$this->data);
+        $indexPage = "production/fabrication/".$department."_index";
+        $this->load->view($indexPage,$this->data);
     }
 
     public function getDTRows($from_entry_type,$to_entry_type,$job_status){
