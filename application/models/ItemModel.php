@@ -110,6 +110,41 @@ class ItemModel extends MasterModel{
         }
     }
 
+    public function saveBulkItems($itemData){
+        try{
+            $this->db->trans_begin();
+
+            $i=0;$itemResult = array();
+            if(!empty($itemData)):
+                foreach($itemData as $row):
+                    $fname = Array();
+                    if(!empty($row['item_code'])){$fname[] = $row['item_code'];}
+                    if(!empty($row['item_name'])){$fname[] = $row['item_name'];}
+                    if(!empty($row['part_no'])){$fname[] = $row['part_no'];}
+                    $row['full_name'] = (!empty($fname)) ? implode(' - ',$fname) : '';			
+                    
+                    if(!empty($row['hsn_code'])):
+                        $hsnData = $this->hsnModel->getHSNDetail(['hsn'=>$row['hsn_code']]);
+                        $row['gst_per'] = $hsnData->gst_per;
+                    endif;
+
+                    $itemResult[] = $this->store($this->itemMaster,$row,"Item");         
+                    $i++;
+                endforeach;
+            endif;
+            
+            $result = ['status' => 1, 'message' => $i . ' Record import successfully.','itemResult'=>$itemResult];
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
+    }
+
     public function checkDuplicate($data){
         $queryData['tableName'] = $this->itemMaster;
 

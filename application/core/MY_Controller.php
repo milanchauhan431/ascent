@@ -180,7 +180,7 @@ class MY_Controller extends CI_Controller{
 			$_FILES['userfile']['size']     = $file['size'];
 			
 			$imagePath = realpath(APPPATH . '../assets/uploads/'.$path);
-			$config = ['file_name' => "".$_FILES['userfile']['name'],'allowed_types' => '*','max_size' => 10240,'overwrite' => FALSE, 'upload_path' =>$imagePath];
+			$config = ['file_name' => $_FILES['userfile']['name'],'allowed_types' => '*','max_size' => 10240,'overwrite' => FALSE, 'upload_path' =>$imagePath];
 
 			$this->upload->initialize($config);
 			if (!$this->upload->do_upload()):

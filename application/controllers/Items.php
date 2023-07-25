@@ -236,14 +236,14 @@ class Items extends MY_Controller{
 
         $fileData = $this->importExcelFile($_FILES['item_excel'], 'item_master', 'Item');
         $row = 0;$errorMessage = array();$itemData = array();
-        if (isset($fileData['status'])):
+        if(isset($fileData['status'])):
             $this->printJson($fileData);
         else:
             $fieldArray = $fileData[0][1];
             for ($i = 2; $i <= count($fileData[0]); $i++):
                 $rowData = array();$c = 'A';
                 foreach ($fileData[0][$i] as $key => $colData) :
-                    $rowData[strtolower($fieldArray[$c])] = $colData;
+                    $rowData[strtolower($fieldArray[$c])] = (!empty($colData))?$colData:"";
                     $c++;
                 endforeach;
                 $rowData['item_type'] = $item_type;
@@ -267,7 +267,7 @@ class Items extends MY_Controller{
                     $errorMessage['item_name'] = "Item Name is duplicate at row no. : ".$i;
 
                 if(!empty($errorMessage)):
-                    $this->printJson(['status'=>0,'message'=>$errorMessage]);
+                    $this->printJson(['status'=>0,'message'=>$errorMessage]); break; exit;
                 else:
                     $rowData['defualt_disc'] = (!empty($rowData['defualt_disc']))?$rowData['defualt_disc']:0;
                     $rowData['price'] = (!empty($rowData['price']))?$rowData['price']:0;
@@ -283,14 +283,9 @@ class Items extends MY_Controller{
             endfor;
         endif;
 
-        $i=0;
-        if(!empty($itemData)):
-            foreach($itemData as $row):
-                $this->save($row); $i++;
-            endforeach;
-        endif;
-
-        $this->printJson(['status' => 1, 'message' => $i . ' Record import successfully.']);
+        $filePath = realpath(APPPATH . '../assets/uploads/item_master/');
+        unlink($filePath."/".$_FILES['item_excel']['name']);
+        $this->printJson($this->item->saveBulkItems($itemData));
     }
 
 }

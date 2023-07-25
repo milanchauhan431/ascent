@@ -135,9 +135,9 @@ class ProductionModel extends MasterModel{
         
         if($data['job_status'] == 2):
             $data['where']['trans_main.trans_date >='] = $this->startYearDate;
-            $data['where']['trans_main.trans_date <='] = $this->endYearDate;       
+            $data['where']['trans_main.trans_date <='] = $this->endYearDate;
         else:
-            $data['where']['trans_main.trans_date <='] = $this->endYearDate;    
+            $data['where']['trans_main.trans_date <='] = $this->endYearDate;
         endif;
 
         $data['group_by'][] = "trans_child.id";
