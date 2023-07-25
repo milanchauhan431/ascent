@@ -134,6 +134,14 @@ $(document).ready(function(){
 		$("#itemForm .select2").select2({ with:null });
 	});   
 
+	$(document).on('change','#unit_id',function(){
+		$("#unit_name").val($("#unit_id :selected").text());
+	});
+
+	$(document).on('change','#hsn_code',function(){
+		$("#gst_per").val(($("#hsn_code :selected").data('gst_per') || 0));
+		$("#gst_per").select2({ with:null });//.comboSelect();
+	});
 });
 
 function AddRow(data) {
