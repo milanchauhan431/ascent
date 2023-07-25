@@ -512,7 +512,8 @@ function reInitMultiSelect(){
 }
 
 function statusTab(tableId,status,hp_fn_name="",page=""){
-    $("#"+tableId).attr("data-url",$("#"+tableId).data('url')+'/'+status);
+	var url = $("#"+tableId).data('default_url') || $("#"+tableId).data('url');
+    $("#"+tableId).attr("data-url",url+'/'+status);
 
 	$("#"+tableId).data("hp_fn_name","");
     $("#"+tableId).data("page","");

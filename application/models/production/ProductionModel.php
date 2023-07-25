@@ -129,11 +129,11 @@ class ProductionModel extends MasterModel{
         elseif($data['job_status'] >= 0):
             $data['where']['production_master.id >'] = 0;
             $data['where']['production_master.ref_id'] = 0;
-            $data['where']['production_master.job_status'] = $data['job_status'];
+            $data['where_in']['production_master.job_status'] = ($data['job_status'] == 1)?[1,2]:$data['job_status'];
             $data['order_by']['production_master.priority'] = "ASC";
         endif;
         
-        if($data['job_status'] == 2):
+        if($data['job_status'] >= 2):
             $data['where']['trans_main.trans_date >='] = $this->startYearDate;
             $data['where']['trans_main.trans_date <='] = $this->endYearDate;
         else:
@@ -338,20 +338,25 @@ class ProductionModel extends MasterModel{
     public function getFabricationDTRows($data){
 
         $data['tableName'] = $this->productionMaster;
-        $data['select'] = "production_master.id,production_master.entry_type,production_master.ref_id,production_master.pm_id,production_master.trans_child_id,production_master.trans_main_id,trans_child.job_number,trans_child.item_name,trans_child.qty as order_qty,(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' ELSE '' END) as priority_status,production_master.ga_file,production_master.priority,production_master.fab_dept_note,production_master.remark,production_master.accepted_by,em.emp_name as accepted_by_name,production_master.accepted_at,production_master.job_status, (CASE WHEN production_master.ref_id = 0 THEN SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), 1) ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(production_master.department_ids, ',', FIND_IN_SET('".$data['from_entry_type']."', production_master.department_ids) + 1), REPLACE(', ', ' ', ''), -1) END) as next_dept_id";
+        $data['select'] = "production_master.id,production_master.entry_type,production_master.ref_id,production_master.pm_id,production_master.trans_child_id,production_master.trans_main_id,trans_child.job_number,trans_child.item_name,trans_child.qty as order_qty,(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' ELSE '' END) as priority_status,production_master.ga_file,production_master.priority,production_master.fab_dept_note,production_master.remark,production_master.accepted_by,em.emp_name as accepted_by_name,production_master.accepted_at,production_master.job_status, (CASE WHEN production_master.ref_id = 0 THEN SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), 1) ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), FIND_IN_SET('".$data['from_entry_type']."', production_master.department_ids) + 1), REPLACE(', ', ' ', ''), -1) END) as next_dept_id";
 
         $data['leftJoin']['trans_child'] = "production_master.trans_child_id = trans_child.id";
         $data['leftJoin']['employee_master as em'] = "em.id = production_master.accepted_by";
 
         if($data['from_entry_type'] != $data['to_entry_type'] && $data['from_entry_type'] == 27):
             $data['where']["SUBSTRING_INDEX(production_master.department_ids,',', 1) = "] = $data['to_entry_type'];
+            $data['where']['production_master.entry_type'] = $data['from_entry_type'];
+            $data['where_in']['production_master.job_status'] = 1;
         elseif($data['from_entry_type'] != $data['to_entry_type'] && $data['job_status'] == 2):
             $data['where']["SUBSTRING_INDEX(SUBSTRING_INDEX(production_master.department_ids, ',', FIND_IN_SET(".$data['from_entry_type'].", production_master.department_ids) + 1),',', -1) = "] = $data['to_entry_type'];
+            $data['where']['production_master.entry_type'] = $data['from_entry_type'];
+            $data['where_in']['production_master.job_status'] = 2;
         else:
             $data['where']['production_master.entry_type'] = $data['to_entry_type'];
+            $data['where_in']['production_master.job_status'] = ($data['job_status'] != 2)?$data['job_status']:[2,3];
         endif;
 
-        $data['where']['production_master.job_status'] = $data['job_status'];
+        
 
         if(in_array($data['job_status'],[0,1])):
             $data['where']['production_master.entry_date <='] = $this->endYearDate;
@@ -377,7 +382,7 @@ class ProductionModel extends MasterModel{
         $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
         if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}
         
-        return $this->pagingRows($data); //$this->printQuery();
+        return $this->pagingRows($data); $this->printQuery();
     }
 
     public function acceptJob($data){
@@ -396,6 +401,7 @@ class ProductionModel extends MasterModel{
             if(empty($jobData['pm_id'])):
                 $jobData['pm_id'] = $data['id'];
             endif;
+            $jobData['job_status'] = 1;
             $jobData['entry_date'] = date("Y-m-d");
             $jobData['accepted_by'] = $this->loginId;
             $jobData['accepted_at'] = date("Y-m-d H:i:s");

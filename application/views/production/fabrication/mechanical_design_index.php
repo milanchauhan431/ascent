@@ -19,17 +19,14 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="col-md-4 text-center">
+                            <div class="col-md-8 text-left">
                                 <h4 class="card-title"><?=$headData->pageTitle?></h4>
-                            </div>
-                            <div class="col-md-4">
-                                <!-- <button type="button" class="btn waves-effect waves-light btn-outline-primary float-right permission-write addNew press-add-btn" data-button="both" data-modal_id="modal-xl" data-function="addGateInward" data-form_title="Gate Inward"><i class="fa fa-plus"></i> Add GI</button> -->
-                            </div>                             
+                            </div>                     
                         </div>                                         
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id='fabricationTable' class="table table-bordered ssTable ssTable-cf" data-ninput="[0,1,6,7]"  data-url='/getDTRows' data-default_status="27/30/1"></table>
+                            <table id='fabricationTable' class="table table-bordered ssTable ssTable-cf" data-ninput="[0,1,6,7]"  data-url='/getDTRows/27/30/1' data-default_url="/getDTRows" data-default_status="27/30/1"></table>
                         </div>
                     </div>
                 </div>
