@@ -7,12 +7,12 @@ function getSalesDtHeader($page){
 	$data['salesOrders'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
 	$data['salesOrders'][] = ["name"=>"SO. No."];
 	$data['salesOrders'][] = ["name"=>"SO. Date"];
-	$data['salesOrders'][] = ["name"=>"Job No."];
+	$data['salesOrders'][] = ["name"=>"Job No.","style"=>"width:12%;"];
 	$data['salesOrders'][] = ["name"=>"Customer Name"];
 	$data['salesOrders'][] = ["name"=>"Item Name"];
-    $data['salesOrders'][] = ["name"=>"Order Qty"];
-    $data['salesOrders'][] = ["name"=>"Dispatch Qty"];
-    $data['salesOrders'][] = ["name"=>"Pending Qty"];
+    $data['salesOrders'][] = ["name"=>"Order Qty","style"=>"width:6%;"];
+    $data['salesOrders'][] = ["name"=>"Dispatch Qty","style"=>"width:6%;"];
+    $data['salesOrders'][] = ["name"=>"Pending Qty","style"=>"width:6%;"];
 
     return tableHeader($data[$page]);
 }

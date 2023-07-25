@@ -29,7 +29,9 @@ function getProductionDtHeader($page){
     /* Mechanical Design Header */
     $data['mechanical_design'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
 	$data['mechanical_design'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
-	$data['mechanical_design'][] = ["name"=>"Job No.","style"=>"width:12%;",];
+	$data['mechanical_design'][] = ["name"=>"Job No.","style"=>"width:12%;"];
+    $data['mechanical_design'][] = ["name"=>"Item Name"];
+    $data['mechanical_design'][] = ["name"=>"Order Qty"];
     $data['mechanical_design'][] = ["name"=>"Priority","style"=>"width:5%;","textAlign"=>"center"];
     $data['mechanical_design'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
     $data['mechanical_design'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
@@ -60,7 +62,7 @@ function getEstimationData($data){
     $soBomParam = "{'postData':{'trans_main_id' : ".$data->trans_main_id.",'trans_child_id':".$data->trans_child_id."},'modal_id' : 'modal-xxl', 'form_id' : 'addOrderBom', 'fnedit':'orderBom', 'fnsave':'saveOrderBom','title' : 'Order Bom','res_function':'resSaveOrderBom','js_store_fn':'customStore'}";
     $soBom = '<a class="btn btn-info btn-delete permission-write" href="javascript:void(0)" onclick="edit('.$soBomParam.');" datatip="SO Bom" flow="down"><i class="fa fa-database"></i></a>';
 
-    $viewBomParam = "{'postData':{'trans_child_id':".$data->trans_child_id."},'modal_id' : 'modal-xl','fnedit':'viewOrderBom','title' : 'View Bom [Item Name : ".$data->item_name."]','button':'close'}";
+    $viewBomParam = "{'postData':{'trans_child_id':".$data->trans_child_id.",'trans_main_id':'".$data->trans_main_id."'},'modal_id' : 'modal-xl','fnedit':'viewOrderBom','title' : 'View Bom [Item Name : ".$data->item_name."]','button':'close'}";
     $viewBom = '<a class="btn btn-primary permission-read" href="javascript:void(0)" onclick="edit('.$viewBomParam.');" datatip="View Item Bom" flow="down"><i class="fa fa-eye"></i></a>';
 
     $reqParam = "{'postData':{'trans_child_id':".$data->trans_child_id.",'trans_number':'".$data->trans_number."','item_name':'".$data->item_name."'},'modal_id' : 'modal-xl', 'form_id' : 'addOrderBom', 'fnedit':'purchaseRequest', 'fnsave':'savePurchaseRequest','title' : 'Send Purchase Request'}";
@@ -68,6 +70,9 @@ function getEstimationData($data){
 
     $estimationParam = "{'postData':{'id':'".$data->id."','trans_child_id':".$data->trans_child_id.",'trans_main_id':'".$data->trans_main_id."'},'modal_id' : 'modal-xl', 'form_id' : 'estimation', 'fnedit':'addEstimation', 'fnsave':'saveEstimation','title' : 'Estimation & Design'}";
     $estimationButton = '<a class="btn btn-success permission-write" href="javascript:void(0)" onclick="edit('.$estimationParam.');" datatip="Estimation" flow="down"><i class="fa fa-plus"></i></a>';
+
+    $startJobParam = "{'postData':{'job_status' : 1, 'id' : ".$data->id."},'fnsave':'startJob','message':'Are you sure want to start this Job?'}";
+    $startJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Start Job" flow="down" onclick="confirmStore('.$startJobParam.');"><i class="fa fa-play"></i></a>';
 
     if($data->priority == 1):
         $data->priority_status = '<span class="badge badge-pill badge-danger m-1">'.$data->priority_status.'</span>';
@@ -83,7 +88,7 @@ function getEstimationData($data){
         $soBom = $estimationButton = '';
     endif;
 
-    $action = getActionButton($soBom.$viewBom.$reqButton.$estimationButton);
+    $action = getActionButton($soBom.$viewBom.$reqButton.$estimationButton.$startJob);
 
     return [$action,$data->sr_no,$data->job_number,$data->trans_date,$data->party_name,$data->item_name,$data->qty,$data->bom_status,$data->priority_status,$data->fab_dept_note,$data->pc_dept_note,$data->ass_dept_note,$data->remark];
 }
@@ -101,7 +106,7 @@ function getFabricationData($data){
 
         $data->ga_file = (!empty($data->ga_file))?'<a href="'.base_url('assets/uploads/production/'.$data->ga_file).'" class="btn btn-outline-info waves-effect waves-light" target="_blank"><i class="fa fa-eye"></i></a>':'';
 
-        $viewBomParam = "{'postData':{'trans_child_id':".$data->trans_child_id."},'modal_id' : 'modal-xl','fnedit':'viewOrderBom','title' : 'View Bom [Item Name : ".$data->item_name."]','button':'close','controller':'production/estimation'}";
+        $viewBomParam = "{'postData':{'trans_child_id':".$data->trans_child_id."},'modal_id' : 'modal-xl','fnedit':'viewProductionBom','title' : 'View Bom [Item Name : ".$data->item_name."]','button':'close','controller':'production/estimation'}";
         $viewBom = '<a class="btn btn-outline-info waves-effect waves-light" href="javascript:void(0)" onclick="edit('.$viewBomParam.');" datatip="View Item Bom" flow="down"><i class="fa fa-eye"></i></a>';
 
         //$accepted_by = ($data->entry_type == 30 && $data->accepted_by > 0)?$data->accepted_by_name."<br>".formatDate($data->accepted_at,'d-m-Y h:i:s A'):"";
@@ -123,7 +128,7 @@ function getFabricationData($data){
 
         $action = getActionButton($accptJob.$completJob);
 
-        return [$action,$data->sr_no,$data->job_number,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark/* ,$accepted_by */];
+        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark/* ,$accepted_by */];
     endif;
 }
 ?>

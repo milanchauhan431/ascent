@@ -3,6 +3,7 @@ class Estimation extends MY_Controller{
     private $index = "production/estimation/index";
     private $orderBom = "production/estimation/order_bom";
     private $viewBom = "production/estimation/view_bom";
+    private $viewProdBom = "production/estimation/view_production_bom";
     private $requestFrom = "production/estimation/pur_request_form";
     private $estimationFrom = "production/estimation/estimation_form";
 
@@ -79,7 +80,32 @@ class Estimation extends MY_Controller{
     public function viewOrderBom(){
         $data = $this->input->post();
         $this->data['postData'] = (object) $data;
+        $this->data['itemList'] = $this->item->getItemList(['item_type'=>"2,3"]);
+        $this->data['unitList'] = $this->item->itemUnits();
+        $this->data['brandList'] = $this->brandMaster->getBrandList();
         $this->load->view($this->viewBom,$this->data);
+    }
+
+    public function saveOrderBomItem(){
+        $data = $this->input->post();
+        $errorMessage = array();
+
+        if(empty($data['item_id']))
+            $errorMessage['item_id'] = "Item Name is required.";
+        if(empty($data['qty']))
+            $errorMessage['qty'] = "Qty is required.";
+        if(empty($data['uom']))
+            $errorMessage['uom'] = "Unit Name is required.";
+        if(empty($data['price']))
+            $errorMessage['price'] = "Price is required.";
+        if(empty($data['make']))
+            $errorMessage['make'] = "Make is required.";
+
+        if(!empty($errorMessage)):
+            $this->printJson(['status'=>0,'message'=>$errorMessage]);
+        else:
+            $this->printJson($this->production->saveOrderBomItem($data));
+        endif;
     }
 
     public function getOrderBomHtml(){
@@ -111,6 +137,35 @@ class Estimation extends MY_Controller{
             endforeach;
         else:
             $tbodyData.= '<tr><td colspan="11" class="text-center">No data available in table</td></tr>';
+        endif;
+
+        $this->printJson(['status'=>1,"tbodyData"=>$tbodyData]);
+    }
+
+    public function viewProductionBom(){
+        $data = $this->input->post();
+        $this->data['postData'] = (object) $data;
+        $this->load->view($this->viewProdBom,$this->data);
+    }
+
+    public function getProductionBomHtml(){
+        $data = $this->input->post();
+        $dataRow = $this->production->getOrderBomItems($data);
+        $i=1;$tbodyData = "";
+        if(!empty($dataRow)):
+            foreach($dataRow as $row):
+
+                $tbodyData .=  '<tr>
+                    <td>'.$i++.'</td>
+                    <td>'.$row->item_name.'</td>
+                    <td>'.$row->make.'</td>
+                    <td>'.$row->item_code.'</td>
+                    <td>'.$row->uom.'</td>
+                    <td>'.$row->qty.'</td>
+                </tr>';
+            endforeach;
+        else:
+            $tbodyData.= '<tr><td colspan="6" class="text-center">No data available in table</td></tr>';
         endif;
 
         $this->printJson(['status'=>1,"tbodyData"=>$tbodyData]);
@@ -257,6 +312,11 @@ class Estimation extends MY_Controller{
             unset($data['ga_file_name']);
             $this->printJson($this->production->saveEstimation($data));
         endif;
+    }
+
+    public function startJob(){
+        $data = $this->input->post();
+        $this->printJson($this->production->startJob($data));
     }
 }
 ?>

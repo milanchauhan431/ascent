@@ -183,6 +183,33 @@ class ProductionModel extends MasterModel{
         }
     }
 
+    public function saveOrderBomItem($data){
+        try{
+            $this->db->trans_begin();
+            
+            $itemData = $this->item->getItem(['id',$data['item_id']]);
+            $data['item_code'] = $itemData->item_code;
+            $data['material_description'] = $itemData->item_name;
+            $data['net_amount'] = $data['amount'] = round(($data['qty'] * $data['price']),2);
+
+            $discAmount = 0;
+            if(!empty($data['disc_per'])):
+                $discAmount = round((($data['amount'] * $data['disc_per']) / 100),2);
+                $data['net_amount'] = $data['net_amount'] - $discAmount;
+            endif;
+
+            $result = $this->store($this->orderBom,$data,'Bom Item');
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
+    }
+
     public function getOrderBomItems($data){
         $queryData['tableName'] = $this->orderBom;
         $queryData['select'] = "order_bom.*,item_master.item_name,(trans_child.qty * order_bom.qty) as reqired_qty,ifnull(SUM(stock_transaction.qty * stock_transaction.p_or_m),0) as stock_qty,trans_child.trans_status";
@@ -288,13 +315,30 @@ class ProductionModel extends MasterModel{
             return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
         } 
     }
+
+    public function startJob($data){
+        try{
+            $this->db->trans_begin();
+
+            $result = $this->store($this->productionMaster,$data);
+            $result['message'] = "Job Started successfully.";
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
+    }
     /* Estomation & Design End */
 
     /* Fabrication [Mechanical Design] Start */
     public function getFabricationDTRows($data){
 
         $data['tableName'] = $this->productionMaster;
-        $data['select'] = "production_master.id,production_master.entry_type,production_master.ref_id,production_master.pm_id,production_master.trans_child_id,production_master.trans_main_id,trans_child.job_number,trans_child.item_name,(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' ELSE '' END) as priority_status,production_master.ga_file,production_master.priority,production_master.fab_dept_note,production_master.remark,production_master.accepted_by,em.emp_name as accepted_by_name,production_master.accepted_at,production_master.job_status, (CASE WHEN production_master.ref_id = 0 THEN SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), 1) ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(production_master.department_ids, ',', FIND_IN_SET('".$data['from_entry_type']."', production_master.department_ids) + 1), REPLACE(', ', ' ', ''), -1) END) as next_dept_id";
+        $data['select'] = "production_master.id,production_master.entry_type,production_master.ref_id,production_master.pm_id,production_master.trans_child_id,production_master.trans_main_id,trans_child.job_number,trans_child.item_name,trans_child.qty as order_qty,(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' ELSE '' END) as priority_status,production_master.ga_file,production_master.priority,production_master.fab_dept_note,production_master.remark,production_master.accepted_by,em.emp_name as accepted_by_name,production_master.accepted_at,production_master.job_status, (CASE WHEN production_master.ref_id = 0 THEN SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), 1) ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(production_master.department_ids, ',', FIND_IN_SET('".$data['from_entry_type']."', production_master.department_ids) + 1), REPLACE(', ', ' ', ''), -1) END) as next_dept_id";
 
         $data['leftJoin']['trans_child'] = "production_master.trans_child_id = trans_child.id";
         $data['leftJoin']['employee_master as em'] = "em.id = production_master.accepted_by";
@@ -321,6 +365,8 @@ class ProductionModel extends MasterModel{
         $data['searchCol'][] = "";
         $data['searchCol'][] = "";
         $data['searchCol'][] = "trans_child.job_number";
+        $data['searchCol'][] = "trans_child.item_name";
+        $data['searchCol'][] = "trans_child.qty";
         $data['searchCol'][] = "(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' END)";
         $data['searchCol'][] = "";
         $data['searchCol'][] = "";

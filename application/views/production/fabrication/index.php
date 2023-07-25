@@ -9,7 +9,7 @@
                             <div class="col-md-4">
                                 <ul class="nav nav-pills">
                                     <li class="nav-item"> 
-                                        <button onclick="statusTab('fabricationTable','27/30/0');" class="nav-tab btn waves-effect waves-light btn-outline-danger active" id="fab_pending" style="outline:0px" data-toggle="tab" aria-expanded="false">Pending</button> 
+                                        <button onclick="statusTab('fabricationTable','27/30/1');" class="nav-tab btn waves-effect waves-light btn-outline-danger active" id="fab_pending" style="outline:0px" data-toggle="tab" aria-expanded="false">Pending</button> 
                                     </li>
                                     <li class="nav-item">
                                         <button onclick="statusTab('fabricationTable','30/30/1');" class="nav-tab btn waves-effect waves-light btn-outline-warning" id="fab_inprocess" style="outline:0px" data-toggle="tab" aria-expanded="false">In-Process</button>
@@ -29,7 +29,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id='fabricationTable' class="table table-bordered ssTable ssTable-cf" data-ninput="[0,1,4,5]"  data-url='/getDTRows' data-default_status="27/30/0"></table>
+                            <table id='fabricationTable' class="table table-bordered ssTable ssTable-cf" data-ninput="[0,1,6,7]"  data-url='/getDTRows' data-default_status="27/30/0"></table>
                         </div>
                     </div>
                 </div>
