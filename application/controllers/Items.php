@@ -43,8 +43,8 @@ class Items extends MY_Controller{
         $this->load->view($this->form,$this->data);
     }
 
-    public function save($excel_data = array()){
-        $data = (!empty($excel_data))?$excel_data:$this->input->post();
+    public function save(){
+        $data = $this->input->post();
         $errorMessage = array();
         
         if(empty($data['item_code']))
@@ -69,12 +69,8 @@ class Items extends MY_Controller{
 			    $hsnData = $this->hsnModel->getHSNDetail(['hsn'=>$data['hsn_code']]);
 				$data['gst_per'] = $hsnData->gst_per;
 			endif;
-
-            if(!empty($excel_data)):
-                return $this->item->save($data);
-            else:
-                $this->printJson($this->item->save($data));
-            endif;
+            
+            $this->printJson($this->item->save($data));
         endif;
     }
 
