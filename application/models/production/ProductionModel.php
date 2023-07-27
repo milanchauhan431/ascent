@@ -334,7 +334,7 @@ class ProductionModel extends MasterModel{
     }
     /* Estomation & Design End */
 
-    /* Fabrication [Mechanical Design] Start */
+    /* Fabrication Department Start */
     public function getFabricationDTRows($data){
 
         $data['tableName'] = $this->productionMaster;
@@ -355,8 +355,6 @@ class ProductionModel extends MasterModel{
             $data['where']['production_master.entry_type'] = $data['to_entry_type'];
             $data['where_in']['production_master.job_status'] = ($data['job_status'] != 2)?$data['job_status']:[2,3];
         endif;
-
-        
 
         if(in_array($data['job_status'],[0,1])):
             $data['where']['production_master.entry_date <='] = $this->endYearDate;
@@ -417,13 +415,29 @@ class ProductionModel extends MasterModel{
         }
     }
 
+    public function getFabricationData($data){
+        $queryData['tableName'] = $this->productionTrans;
+        if(!empty($data['ref_id'])):
+            $queryData['where']['ref_id'] = $data['ref_id'];
+        endif;
+        if(!empty($data['pm_id'])):
+            $queryData['where']['main_pm_id'] = $data['pm_id'];
+        endif;
+        $queryData['where']['entry_type'] = $data['entry_type'];
+        $result = $this->rows($queryData);
+        return $result;
+    }
+    /* Fabrication Department End */
+
+    /* Fabrication [Mechanical Design, Cutting] Start */
     public function saveProductionTrans($data){
         try{
             $this->db->trans_begin();
 
             foreach($data['transData'] as $row):
                 $row['entry_type'] = $data['entry_type'];
-                $row['pm_id'] = $data['ref_id'];
+                $row['ref_id'] = $data['ref_id'];
+                $row['main_pm_id'] = $data['pm_id'];
                 $row['entry_date'] = date("Y-m-d");
 
                 if($row['param_key'] == "cutting_drawings"):
@@ -458,6 +472,38 @@ class ProductionModel extends MasterModel{
             return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
         }
     }
-    /* Fabrication [Mechanical Design] End */
+    /* Fabrication [Mechanical Design, Cutting] End */
+
+    /* Fabrication [Bending] Start */
+    public function completeProductionTrans($data){
+        try{
+            $this->db->trans_begin();
+
+            //Current Job Status Update
+            $setData = Array();
+            $setData['tableName'] = $this->productionMaster;
+            $setData['where']['id'] = $data['ref_id'];
+            $setData['update']['job_status'] = "2";
+            $result = $this->setValue($setData);
+
+            //Manage Main Job Record Status
+            $setData = Array();
+            $setData['tableName'] = $this->productionMaster;
+            $setData['where']['id'] = $data['pm_id'];
+            $setData['update']['job_status'] = "(CASE WHEN REVERSE(SUBSTRING_INDEX(REVERSE(department_ids), ',', 1)) = ".$data['entry_type']." THEN 2 ELSE job_status END)";
+            $this->setValue($setData);
+
+            $result['message'] = "Job Completed Successfully.";
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
+    }
+    /* Fabrication [Bending] End */
 }
 ?>

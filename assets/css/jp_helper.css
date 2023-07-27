@@ -2715,3 +2715,9 @@ span.multiselect-native-select select {
     border-radius: 2px !important;
 }
 .modal-open .select2-container--open { z-index: 999999 !important; width:100% !important; }
+
+.select2-container .select2-selection--single .select2-selection__rendered {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: break-spaces !important;
+}
