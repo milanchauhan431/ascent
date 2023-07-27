@@ -37,6 +37,8 @@ $(document).ready(function(){
 			if((parseFloat(qty_kg) > 0) && parseFloat(std_qty) > 0){
 				var qty = parseFloat(parseFloat(qty_kg) / parseFloat(std_qty)).toFixed(3);
 				$("#itemForm #qty").val(qty);
+			}else{
+				$("#itemForm #qty").val(0);
 			}
 		}
 	});
