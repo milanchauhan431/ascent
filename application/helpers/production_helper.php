@@ -124,7 +124,7 @@ function getEstimationData($data){
     $data->bom_status = '<span class="badge badge-pill badge-'.(($data->bom_status == "Generated")?"success":"danger").' m-1">'.$data->bom_status.'</span>';
 
     if(!empty($data->job_status)):
-        $soBom = $estimationButton = '';
+        $startJob = $soBom = $estimationButton = '';
     endif;
 
     $action = getActionButton($soBom.$viewBom.$reqButton.$estimationButton.$startJob);
