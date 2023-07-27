@@ -33,8 +33,8 @@ $(document).ready(function(){
 			var qty_kg = parseFloat(parseFloat(qty) * parseFloat(std_qty)).toFixed(3);
 			$("#itemForm #qty_kg").val(qty_kg);
 		}else{
-			var qty_kg = $(this).val() || 0;			
-			if((parseFloat(qty) > 0) && parseFloat(std_qty) > 0){
+			var qty_kg = $(this).val() || 0;
+			if((parseFloat(qty_kg) > 0) && parseFloat(std_qty) > 0){
 				var qty = parseFloat(parseFloat(qty_kg) / parseFloat(std_qty)).toFixed(3);
 				$("#itemForm #qty").val(qty);
 			}
