@@ -53,7 +53,7 @@
                 <div class="error po_trans_id"></div>
                 <input type="hidden" id="po_id" value=""> -->
                 <label for="po_id">Purchase Order</label>
-                <select id="po_id" class="form-control select2">
+                <select id="po_id" class="form-control req select2">
                     <option value="">Select Purchase Order</option>
                 </select>
                 <div class="error po_id"></div>
@@ -62,7 +62,7 @@
 
             <div class="col-md-4 form-group">
                 <label for="item_id">Item Name</label>
-                <select id="item_id" class="form-control itemDetails select2" data-res_function="resItemDetail">
+                <select id="item_id" class="form-control itemDetails req select2" data-res_function="resItemDetail">
                     <option value="">Select Item Name</option>
                     <?=getItemListOption($itemList)?>
                 </select>
@@ -89,7 +89,7 @@
 
             <div class="col-md-4 form-group">
                 <label for="location_id">Location</label>
-                <select id="location_id" class="form-control select2">
+                <select id="location_id" class="form-control req select2">
                     <option value="">Select Location</option>
                     <?php
                         if(!empty($locationList)):

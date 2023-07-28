@@ -56,6 +56,9 @@ $(document).ready(function(){
         if(formData.po_id == ""){ 
             $('.po_id').html("PO is required.");
         }
+        if(formData.item_id == ""){ 
+            $('.item_id').html("Item Name is required.");
+        }
         if(formData.qty == "" || parseFloat(formData.qty) == 0){ 
             $('.qty').html("Qty is required.");
         }
