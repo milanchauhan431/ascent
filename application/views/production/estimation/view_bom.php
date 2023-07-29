@@ -1,13 +1,15 @@
 <form id="orderBomForm" data-res_function="resSaveOrderBomItem">
     <div class="col-md-12">
         <div class="row">
+            <input type="hidden" name="id" id="id" value="">
             <input type="hidden" name="trans_child_id" id="trans_child_id" value="<?=$postData->trans_child_id?>">
             <input type="hidden" name="trans_main_id" id="trans_main_id" value="<?=$postData->trans_main_id?>">
-            <input type="hidden" name="id" id="id" value="">
+            <input type="hidden" name="item_code" id="item_code" value="">
+            <input type="hidden" name="material_description" id="item_name" value="">
 
             <div class="col-md-4 form-group">
                 <label for="item_id">Product Name</label>
-                <select name="item_id" id="item_id" class="form-control select2 req itemDetails2" data-res_function="resItemDetail">
+                <select name="item_id" id="item_id" class="form-control select2 req itemDetails" data-res_function="resItemDetail">
                     <option value="">Select Product Name</option>
                     <?=getItemListOption($itemList)?>
                 </select>
@@ -92,9 +94,54 @@
 var bomTrans = {'postData':{'trans_child_id':$("#trans_child_id").val()},'table_id':"bomItems",'tbody_id':'bomItemsDetails','tfoot_id':'','fnget':'getOrderBomHtml','controller':'production/estimation'};
 getTransHtml(bomTrans);
 
+function resItemDetail(response = ""){
+    if(response != ""){
+        var itemDetail = response.data.itemDetail;
+        $("#orderBomForm #item_code").val(itemDetail.item_code);
+        $("#orderBomForm #item_name").val(itemDetail.item_name);
+
+        $("#orderBomForm #uom").val(itemDetail.unit_name);
+		$("#orderBomForm #uom").select2({ with:null });
+
+        $("#orderBomForm #disc_per").val(itemDetail.defualt_disc);
+        $("#orderBomForm #price").val(itemDetail.price);
+
+        $("#orderBomForm #make").val(itemDetail.make_brand);
+		$("#orderBomForm #make").select2({ with:null });	
+    }else{
+        $("#orderBomForm #item_code").val("");
+        $("#orderBomForm #item_name").val("");
+
+        $("#orderBomForm #uom").val("");
+		$("#orderBomForm #uom").select2({ with:null });
+
+		$("#orderBomForm #disc_per").val("");
+        $("#orderBomForm #price").val("");
+
+		$("#orderBomForm #make").val("");
+		$("#orderBomForm #make").select2({ with:null });
+    }
+}
+
 function resSaveOrderBomItem(data,formId){
     if(data.status==1){
-        $('#'+formId)[0].reset();
+        $("#orderBomForm #item_id").val("");
+        $("#orderBomForm #item_id").select2({ with:null });
+        
+        $("#orderBomForm #item_code").val("");
+        $("#orderBomForm #item_name").val("");
+
+        $("#orderBomForm #qty").val("");
+
+        $("#orderBomForm #uom").val("");
+		$("#orderBomForm #uom").select2({ with:null });
+
+		$("#orderBomForm #disc_per").val("");
+        $("#orderBomForm #price").val("");
+
+		$("#orderBomForm #make").val("");
+		$("#orderBomForm #make").select2({ with:null });
+
         toastr.success(data.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
 
         var bomTrans = {'postData':{'trans_child_id':$("#trans_child_id").val()},'table_id':"bomItems",'tbody_id':'bomItemsDetails','tfoot_id':'','fnget':'getOrderBomHtml','controller':'production/estimation'};

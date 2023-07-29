@@ -187,9 +187,6 @@ class ProductionModel extends MasterModel{
         try{
             $this->db->trans_begin();
             
-            $itemData = $this->item->getItem(['id',$data['item_id']]);
-            $data['item_code'] = $itemData->item_code;
-            $data['material_description'] = $itemData->item_name;
             $data['net_amount'] = $data['amount'] = round(($data['qty'] * $data['price']),2);
 
             $discAmount = 0;
