@@ -42,6 +42,7 @@ function getStoreDtHeader($page){
     $data['gateInward'][] = ["name"=> "GI No.", "textAlign" => "center"];
     $data['gateInward'][] = ["name" => "GI Date", "textAlign" => "center"];
     $data['gateInward'][] = ["name" => "Party Name"];
+    $data['gateInward'][] = ["name" => "CAT No."];
     $data['gateInward'][] = ["name" => "Item Name"];
     $data['gateInward'][] = ["name" => "Qty"];
     $data['gateInward'][] = ["name" => "PO. NO."];   
@@ -121,7 +122,7 @@ function getGateInwardData($data){
 
 	    $action = getActionButton($iirPrint.$inspection.$editButton.$deleteButton);
 
-        return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->item_name,$data->qty,$data->po_number];
+        return [$action,$data->sr_no,$data->trans_number,formatDate($data->trans_date),$data->party_name,$data->item_code,$data->item_name,$data->qty,$data->po_number];
     endif;
 }
 
