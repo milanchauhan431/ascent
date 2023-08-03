@@ -39,13 +39,14 @@
                                 $i=1;
                                 foreach($dataRow as $row):
                                     $requestQty = 0;
-                                    if(!empty($row->stock_qty)):
+                                    /* if(!empty($row->stock_qty)):
                                         if($row->stock_qty < $row->reqired_qty):
                                             $requestQty = abs($row->stock_qty - $row->reqired_qty) - $row->req_qty;
                                         endif;
                                     else:
                                         $requestQty = $row->reqired_qty - $row->req_qty;
-                                    endif;
+                                    endif; */
+                                    $requestQty = $row->reqired_qty - $row->req_qty;
 
                                     $requestQty = ($requestQty > 0)?$requestQty:0;
                             ?>
