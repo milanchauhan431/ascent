@@ -6,6 +6,7 @@ class Estimation extends MY_Controller{
     private $viewProdBom = "production/estimation/view_production_bom";
     private $requestFrom = "production/estimation/pur_request_form";
     private $estimationFrom = "production/estimation/estimation_form";
+    private $changeJobPriorityFrom = "production/estimation/change_job_priority_form";
 
     private $departmentList = [
         "30"=>"MECHENICAL DESIGN",
@@ -311,6 +312,26 @@ class Estimation extends MY_Controller{
 
             unset($data['ga_file_name']);
             $this->printJson($this->production->saveEstimation($data));
+        endif;
+    }
+
+    public function changeJobPriority(){
+        $data = $this->input->post();
+        $this->data['dataRow'] = $this->production->getProductionMaster(['id'=>$data['id']]);
+        $this->load->view($this->changeJobPriorityFrom,$this->data);
+    }
+
+    public function saveJobPriority(){
+        $data = $this->input->post();
+        $errorMessage = array();
+
+        if(empty($data['priority']))
+            $errorMessage['priority'] = "Priority is required.";
+
+        if(!empty($errorMessage)):
+            $this->printJson(['status'=>0,'message'=>$errorMessage]);
+        else:
+            $this->printJson($this->production->changeJobPriority($data));
         endif;
     }
 

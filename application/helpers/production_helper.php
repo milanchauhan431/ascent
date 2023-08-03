@@ -123,11 +123,16 @@ function getEstimationData($data){
 
     $data->bom_status = '<span class="badge badge-pill badge-'.(($data->bom_status == "Generated")?"success":"danger").' m-1">'.$data->bom_status.'</span>';
 
+    $changePriority = '';
     if(!empty($data->job_status)):
         $startJob = $soBom = $estimationButton = '';
+        if($data->job_status == 1):
+            $changePriorityParam = "{'postData':{'id' : ".$data->id."},'fnsave':'saveJobPriority','title':'Change Job Priority','form_id':'changeJobPriority','js_store_fn':'confirmStore','controller':'production/estimation','fnedit':'changeJobPriority','modal_id':'modal-md'}";
+            $changePriority = '<a class="btn btn-success" href="javascript:void(0)" datatip="Change Job Priority" flow="down" onclick="edit('.$changePriorityParam.');"><i class="fa fa-sync"></i></a>';
+        endif;
     endif;
 
-    $action = getActionButton($soBom.$viewBom.$reqButton.$estimationButton.$startJob);
+    $action = getActionButton($soBom.$viewBom.$reqButton.$estimationButton.$changePriority.$startJob);
 
     return [$action,$data->sr_no,$data->job_number,$data->trans_date,$data->party_name,$data->item_name,$data->qty,$data->bom_status,$data->priority_status,$data->fab_dept_note,$data->pc_dept_note,$data->ass_dept_note,$data->remark];
 }

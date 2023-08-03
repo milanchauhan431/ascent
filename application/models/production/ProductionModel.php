@@ -313,6 +313,25 @@ class ProductionModel extends MasterModel{
         } 
     }
 
+    public function changeJobPriority($data){
+        try{
+            $this->db->trans_begin();
+
+            $result = $this->store($this->productionMaster,$data,"Estimation");
+            $jobData['priority'] = $data['priority'];
+            $this->edit($this->productionMaster,['pm_id'=>$data['id']],$jobData);
+            $result['message'] = "Job Priority Change Successfully.";
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        } 
+    }
+
     public function startJob($data){
         try{
             $this->db->trans_begin();
