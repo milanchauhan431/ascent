@@ -1,9 +1,64 @@
 <form>
     <div class="col-md-12">
+    <div class="row" id="input_excel_column">
+            <div class="col-md-3 form-group">
+                <label for="material_description_column">Material Desc. Column No.</label>
+                <input type="text" id="material_description_column" class="form-control numericOnly" value="1">
+            </div>
+
+            <div class="col-md-3 form-group">
+                <label for="make_column">Make Column No.</label>
+                <input type="text" id="make_column" class="form-control numericOnly" value="2">
+            </div>
+
+            <div class="col-md-3 form-group">
+                <label for="item_code_column">Cat No. Column No.</label>
+                <input type="text" id="item_code_column" class="form-control numericOnly" value="3">
+            </div>
+
+            <div class="col-md-3 form-group">
+                <label for="uom_column">UOM Column No.</label>
+                <input type="text" id="uom_column" class="form-control numericOnly" value="4">
+            </div>
+
+            <div class="col-md-3 form-group">
+                <label for="qty_column">Qty Column No.</label>
+                <input type="text" id="qty_column" class="form-control numericOnly" value="5">
+            </div>
+
+            <div class="col-md-3 form-group">
+                <label for="price_column">Other MRP Column No.</label>
+                <input type="text" id="price_column" class="form-control numericOnly" value="6">
+            </div>
+
+            <div class="col-md-3 form-group">
+                <label for="amount_column">OTHER AMOUNT Column No.</label>
+                <input type="text" id="amount_column" class="form-control numericOnly" value="7">
+            </div>
+
+            <div class="col-md-3 form-group">
+                <label for="disc_per_column">DISC. Column No.</label>
+                <input type="text" id="disc_per_column" class="form-control numericOnly" value="8">
+            </div>
+
+            <div class="col-md-3 form-group">
+                <label for="net_amount_column">FINAL OTHER AMOUNT Column No.</label>
+                <input type="text" id="net_amount_column" class="form-control numericOnly" value="9">
+            </div>
+
+            <div class="col-md-3 form-group">
+                <label for="start_row">Start Reading (Row No.)</label>
+                <input type="text" id="start_row" class="form-control numericOnly" value="4">
+            </div>
+        </div>
+
+        <hr>
+
         <div class="row">
             <input type="hidden" id="trans_main_id" value="<?=(!empty($dataRow->trans_main_id))?$dataRow->trans_main_id:""?>">
             <input type="hidden" id="trans_child_id" value="<?=(!empty($dataRow->trans_child_id))?$dataRow->trans_child_id:""?>">
             <div class="col-md-6 form-group">
+                <label for="">Select File</label>
                 <div class="input-group">
                     <a href="<?=base_url("assets/uploads/defualt/so_bom.xlsx")?>" class="btn btn-outline-info" title="Download Example File" download><i class="fa fa-download"></i></a>
                     <div class="input-group-append">
@@ -67,61 +122,101 @@ $(document).ready(function() {
     }); */
 
     $(document).on("click",'#readButton',function() {
+        var inputArray = [
+            "material_description",
+            "make",
+            "item_code",
+            "uom",
+            "qty",
+            "price",
+            "amount",
+            "disc_per",
+            "net_amount"
+        ];
+        var start_row = $("#input_excel_column #start_row").val();
+
+        $("#input_excel_column .error").html("");
+
+        $.each(inputArray,function(key,column){
+            var input_val = $("#"+column+"_column").val();
+            if(input_val == ""){ $("#input_excel_column ."+column+"_column").html("Please input column no."); }
+
+            if(input_val == 0){ $("#input_excel_column ."+column+"_column").html("Please input column no."); }
+        });
+
+        if(start_row == ""){ $("#input_excel_column .start_row").html("Please input row no."); }
+        if(start_row < 2){ $("#input_excel_column .start_row").html("Please input minimum row no. 2"); }
+
         var fileInput = document.getElementById('excelFile');
         var file = fileInput.files[0];
         $(".excel_file").html("");
+        
         if(file){
-            var columnCount = $('table#salesOrderBomItems thead tr').first().children().length;
-            $("table#salesOrderBomItems > TBODY").html('<tr><td id="noData" colspan="'+columnCount+'" class="text-center">Loading...</td></tr>'); 
+            var errorCount = $('#input_excel_column .error:not(:empty)').length;
 
-            setTimeout(function(){
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    var data = new Uint8Array(e.target.result);
-                    var workbook = XLSX.read(data, { type: 'array' });
+            if(errorCount == 0){
+                var columnCount = $('table#salesOrderBomItems thead tr').first().children().length;
+                $("table#salesOrderBomItems > TBODY").html('<tr><td id="noData" colspan="'+columnCount+'" class="text-center">Loading...</td></tr>'); 
 
-                    var sheetName = workbook.SheetNames[0]; // Assuming the first sheet
-                    var worksheet = workbook.Sheets[sheetName];
+                setTimeout(function(){
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        var data = new Uint8Array(e.target.result);
+                        var workbook = XLSX.read(data, { type: 'array' });
 
-                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-                    var fileData = [];
-                    // Process the data or display it in the table
+                        var sheetName = workbook.SheetNames[0]; // Assuming the first sheet
+                        var worksheet = workbook.Sheets[sheetName];
 
-                    //Remove blank line.
-                    $('table#salesOrderBomItems > TBODY').html("");              
+                        var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                        var fileData = [];
+                        // Process the data or display it in the table
 
-                    $.each(jsonData,function(ind,row){ 
-                        if(ind > 0){
-                            var item_id = "";
-                            if(row[1]){
-                                row[3] = row[3] || -1;
-                                $.ajax({
-                                    url : base_url + '/items/getItemDetails',
-                                    type : 'post',
-                                    data : { item_code : row[3], item_types : "2,3"},
-                                    global:false,
-                                    async:false,
-                                    dataType:'json'
-                                }).done(function(res){
-                                    item_id = "";
-                                    if(res != ""){
-                                        var itemDetail = res.data.itemDetail;
-                                        if(itemDetail != null){
-                                            item_id = itemDetail.id;
-                                            row[2] = itemDetail.make_brand;
-                                        }                            
-                                    }
-                                    row[3] = (row[3] != -1)?row[3]:"";
-                                    row.push(item_id);
-                                    AddRow(row);
-                                }); 
+                        //Remove blank line.
+                        $('table#salesOrderBomItems > TBODY').html("");              
+
+                        var postData = [];
+                        $.each(jsonData,function(ind,row){ 
+                            postData = [];
+                            if(ind >= (start_row - 1)){
+                                var item_id = "";
+                                if(row[1]){
+                                    row[3] = row[3] || -1;
+                                    $.ajax({
+                                        url : base_url + '/items/getItemDetails',
+                                        type : 'post',
+                                        data : { item_code : row[3], item_types : "2,3"},
+                                        global:false,
+                                        async:false,
+                                        dataType:'json'
+                                    }).done(function(res){
+                                        item_id = "";
+                                        if(res != ""){
+                                            var itemDetail = res.data.itemDetail;
+                                            if(itemDetail != null){
+                                                item_id = itemDetail.id;
+                                                row[2] = itemDetail.make_brand;
+                                            }                            
+                                        }
+                                        row[3] = (row[3] != -1)?row[3]:"";
+                                        
+                                        $.each(inputArray,function(key,column){
+                                            var input_val = $("#"+column+"_column").val();
+                                            if(input_val != ""){ 
+                                                postData[column] = row[input_val]  || "";
+                                            }
+                                        });
+                                        postData['item_id'] = item_id;
+                                        //console.log(postData['item_code']);
+                                        AddRow(postData);
+                                    }); 
+                                } 
                             } 
-                        } 
-                    });
-                };
+                        });
+                    };
 
-                reader.readAsArrayBuffer(file); 
-            },200);
+                    reader.readAsArrayBuffer(file); 
+                },200);
+            }
         }else{
             $(".excel_file").html("Please Select File.");
         }         
@@ -154,11 +249,11 @@ function AddRow(data){
 
     var ind = -1 ;
 	row = tBody.insertRow(ind);
-    $(row).attr('style',((data[10] == "")?"background:#f7b4b4;":"background:#8ce1d3;"));
-    $(row).attr('class',((data[10] == "")?"none":"success"));
+    $(row).attr('style',((data['item_id'] == "")?"background:#f7b4b4;":"background:#8ce1d3;"));
+    $(row).attr('class',((data['item_id'] == "")?"none":"success"));
     
 
-    var disable = ((data[10] == "")?true:false);
+    var disable = ((data['item_id'] == "")?true:false);
     
     //Add index cell
 	var countRow = ($('#' + tblName + ' tbody tr:last').index() + 1);
@@ -170,53 +265,53 @@ function AddRow(data){
 
     var transMainIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][trans_main_id]",  value: $("#trans_main_id").val(), disabled:disable });
     var transChildInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][trans_child_id]",  value: $("#trans_child_id").val(), disabled:disable });
-    var materialInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][material_description]",  value: data[1], disabled:disable });
+    var materialInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][material_description]",  value: data['material_description'], disabled:disable });
     cell = $(row.insertCell(-1));
-    cell.html(data[1]);
+    cell.html(data['material_description']);
     cell.append(materialInput);
     cell.append(transMainIdInput);
     cell.append(transChildInput);
 
-    var makeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][make]",  value: data[2], disabled:disable });
+    var makeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][make]",  value: data['make'], disabled:disable });
     cell = $(row.insertCell(-1));
-    cell.html(data[2]);
+    cell.html(data['make']);
     cell.append(makeInput);
 
-    var itemCodeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_code]",  value: data[3], disabled:disable });
-    var itemIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_id]",id:'item_id_'+countRow,  value: data[10], disabled:disable });
+    var itemCodeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_code]",  value: data['item_code'], disabled:disable });
+    var itemIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_id]",id:'item_id_'+countRow,  value: data['item_id'], disabled:disable });
     cell = $(row.insertCell(-1));
-    cell.html(data[3]);
+    cell.html(data['item_code']);
     cell.append(itemCodeInput);
     cell.append(itemIdInput);
 
-    var unitInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][uom]",  value: data[4], disabled:disable });
+    var unitInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][uom]",  value: data['uom'], disabled:disable });
     cell = $(row.insertCell(-1));
-    cell.html(data[4]);
+    cell.html(data['uom']);
     cell.append(unitInput);
 
-    var qtyInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][qty]",  value: data[5], disabled:disable });
+    var qtyInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][qty]",  value: data['qty'], disabled:disable });
     cell = $(row.insertCell(-1));
-    cell.html(data[5]);
+    cell.html(data['qty']);
     cell.append(qtyInput);
 
-    var priceInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][price]",  value: data[6], disabled:disable });
+    var priceInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][price]",  value: data['price'], disabled:disable });
     cell = $(row.insertCell(-1));
-    cell.html(data[6]);
+    cell.html(data['price']);
     cell.append(priceInput);
 
-    var amountInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][amount]",  value: data[7], disabled:disable });
+    var amountInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][amount]",  value: data['amount'], disabled:disable });
     cell = $(row.insertCell(-1));
-    cell.html(data[7]);
+    cell.html(data['amount']);
     cell.append(amountInput);
 
-    var discPerInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][disc_per]",  value: data[8], disabled:disable });
+    var discPerInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][disc_per]",  value: data['disc_per'], disabled:disable });
     cell = $(row.insertCell(-1));
-    cell.html(data[8]);
+    cell.html(data['disc_per']);
     cell.append(discPerInput);
 
-    var netAmtInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][net_amount]",  value: data[9], disabled:disable });
+    var netAmtInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][net_amount]",  value: data['net_amount'], disabled:disable });
     cell = $(row.insertCell(-1));
-    cell.html(data[9]);
+    cell.html(data['net_amount']);
     cell.append(netAmtInput);
 
     var addNewItem = $('<button><i class="fa fa-plus"></i></button>');
@@ -236,7 +331,7 @@ function AddRow(data){
 	addNewItem.attr("data-form_data", JSON.stringify(data));
 
     cell = $(row.insertCell(-1));
-    cell.append(((data[10] == "")?addNewItem:""));
+    cell.append(((data['item_id'] == "")?addNewItem:""));
     cell.attr('id','cell-'+countRow)
 }
 
