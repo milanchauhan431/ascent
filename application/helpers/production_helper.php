@@ -12,8 +12,8 @@ function getProductionDtHeader($page){
 	$data['parameters'][] = ["name"=>"Remark"];
 
     /* Estimation & Design Header */
-    $data['estimation'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
-	$data['estimation'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+    $data['estimation'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['estimation'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
 	$data['estimation'][] = ["name"=>"Job No."];
 	$data['estimation'][] = ["name"=>"Job Date"];
 	$data['estimation'][] = ["name"=>"Customer Name"];
@@ -56,12 +56,12 @@ function getProductionDtHeader($page){
     $data['cutting'][] = ["name"=>"GENERAL NOTE"];
 
     /* Bending Header */
-    $data['bending'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
-	$data['bending'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+    $data['bending'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['bending'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
 	$data['bending'][] = ["name"=>"Job No.","style"=>"width:12%;"];
     $data['bending'][] = ["name"=>"Item Name"];
     $data['bending'][] = ["name"=>"Order Qty"];
-    $data['bending'][] = ["name"=>"Priority","style"=>"width:5%;","textAlign"=>"center"];
+    $data['bending'][] = ["name"=>"Priority","textAlign"=>"center"];
     $data['bending'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
     $data['bending'][] = ["name"=>"T.S.","sortable"=>"FALSE","textAlign"=>"center"];
     $data['bending'][] = ["name"=>"SLD","sortable"=>"FALSE","textAlign"=>"center"];
@@ -70,12 +70,12 @@ function getProductionDtHeader($page){
     $data['bending'][] = ["name"=>"GENERAL NOTE"];
 
     /* Fab. Assembely Header */
-    $data['fab_assembely'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
-	$data['fab_assembely'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
-	$data['fab_assembely'][] = ["name"=>"Job No.","style"=>"width:12%;"];
+    $data['fab_assembely'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['fab_assembely'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['fab_assembely'][] = ["name"=>"Job No."];
     $data['fab_assembely'][] = ["name"=>"Item Name"];
     $data['fab_assembely'][] = ["name"=>"Order Qty"];
-    $data['fab_assembely'][] = ["name"=>"Priority","style"=>"width:5%;","textAlign"=>"center"];
+    $data['fab_assembely'][] = ["name"=>"Priority","textAlign"=>"center"];
     $data['fab_assembely'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
     $data['fab_assembely'][] = ["name"=>"T.S.","sortable"=>"FALSE","textAlign"=>"center"];
     $data['fab_assembely'][] = ["name"=>"SLD","sortable"=>"FALSE","textAlign"=>"center"];
