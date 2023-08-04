@@ -26,7 +26,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id='cuttingTable' class="table table-bordered ssTable ssTable-cf" data-ninput="[0,1,6,7]"  data-url='/getDTRows/30/31/2' data-default_url="/getDTRows" data-default_status="30/31/2"></table>
+                            <table id='cuttingTable' class="table table-bordered ssTable ssTable-cf" data-ninput="[0,1,6,7,8,9]"  data-url='/getDTRows/30/31/2' data-default_url="/getDTRows" data-default_status="30/31/2"></table>
                         </div>
                     </div>
                 </div>

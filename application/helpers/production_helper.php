@@ -34,6 +34,8 @@ function getProductionDtHeader($page){
     $data['mechanical_design'][] = ["name"=>"Order Qty"];
     $data['mechanical_design'][] = ["name"=>"Priority","style"=>"width:5%;","textAlign"=>"center"];
     $data['mechanical_design'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['mechanical_design'][] = ["name"=>"T.S.","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['mechanical_design'][] = ["name"=>"SLD","sortable"=>"FALSE","textAlign"=>"center"];
     $data['mechanical_design'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
     $data['mechanical_design'][] = ["name"=>"FAB. PRODUCTION NOTE"];
     $data['mechanical_design'][] = ["name"=>"GENERAL NOTE"];
@@ -47,6 +49,8 @@ function getProductionDtHeader($page){
     $data['cutting'][] = ["name"=>"Order Qty"];
     $data['cutting'][] = ["name"=>"Priority","style"=>"width:5%;","textAlign"=>"center"];
     $data['cutting'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['cutting'][] = ["name"=>"T.S.","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['cutting'][] = ["name"=>"SLD","sortable"=>"FALSE","textAlign"=>"center"];
     $data['cutting'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
     $data['cutting'][] = ["name"=>"FAB. PRODUCTION NOTE"];
     $data['cutting'][] = ["name"=>"GENERAL NOTE"];
@@ -59,6 +63,8 @@ function getProductionDtHeader($page){
     $data['bending'][] = ["name"=>"Order Qty"];
     $data['bending'][] = ["name"=>"Priority","style"=>"width:5%;","textAlign"=>"center"];
     $data['bending'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['bending'][] = ["name"=>"T.S.","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['bending'][] = ["name"=>"SLD","sortable"=>"FALSE","textAlign"=>"center"];
     $data['bending'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
     $data['bending'][] = ["name"=>"FAB. PRODUCTION NOTE"];
     $data['bending'][] = ["name"=>"GENERAL NOTE"];
@@ -71,6 +77,8 @@ function getProductionDtHeader($page){
     $data['fab_assembely'][] = ["name"=>"Order Qty"];
     $data['fab_assembely'][] = ["name"=>"Priority","style"=>"width:5%;","textAlign"=>"center"];
     $data['fab_assembely'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['fab_assembely'][] = ["name"=>"T.S.","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['fab_assembely'][] = ["name"=>"SLD","sortable"=>"FALSE","textAlign"=>"center"];
     $data['fab_assembely'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
     $data['fab_assembely'][] = ["name"=>"FAB. PRODUCTION NOTE"];
     $data['fab_assembely'][] = ["name"=>"GENERAL NOTE"];
@@ -148,6 +156,8 @@ function getFabricationData($data){
     endif;
 
     $data->ga_file = (!empty($data->ga_file))?'<a href="'.base_url('assets/uploads/production/'.$data->ga_file).'" class="btn btn-outline-info waves-effect waves-light" target="_blank"><i class="fa fa-eye"></i></a>':'';
+    $data->technical_specification_file = (!empty($data->technical_specification_file))?'<a href="'.base_url('assets/uploads/production/'.$data->technical_specification_file).'" class="btn btn-outline-info waves-effect waves-light" target="_blank"><i class="fa fa-eye"></i></a>':'';
+    $data->sld_file = (!empty($data->sld_file))?'<a href="'.base_url('assets/uploads/production/'.$data->sld_file).'" class="btn btn-outline-info waves-effect waves-light" target="_blank"><i class="fa fa-eye"></i></a>':'';
 
     $viewBomParam = "{'postData':{'trans_child_id':".$data->trans_child_id."},'modal_id' : 'modal-xl','fnedit':'viewProductionBom','title' : 'View Bom [Item Name : ".$data->item_name."]','button':'close','controller':'production/estimation'}";
     $viewBom = '<a class="btn btn-outline-info waves-effect waves-light" href="javascript:void(0)" onclick="edit('.$viewBomParam.');" datatip="View Item Bom" flow="down"><i class="fa fa-eye"></i></a>';
@@ -176,7 +186,7 @@ function getFabricationData($data){
 
         $action = getActionButton($accptJob.$completJob.$viewComplete);
 
-        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark/* ,$accepted_by */];
+        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->fab_dept_note,$data->remark/* ,$accepted_by */];
     endif;
 
     if($data->to_entry_type == 31): // Cutting Table Data
@@ -198,13 +208,13 @@ function getFabricationData($data){
             $viewComplete = '<a class="btn btn-info" href="javascript:void(0)" datatip="View Complet Job" flow="down" onclick="edit('.$viewParam.');"><i class="fa fa-eye"></i></a>';
         endif;
 
-        $viewMacDesParam = "{'postData':{'main_pm_id' : ".$data->pm_id.",'entry_type': '30'},'controller' : 'production/fabrication','fnedit':'viewMechanicalDesign','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Mechanical Design','button':'close'}";
+        $viewMacDesParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '30'},'controller' : 'production/fabrication','fnedit':'viewMechanicalDesign','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Mechanical Design','button':'close'}";
 
         $viewMacDes = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Mechanical Design" flow="down" onclick="edit('.$viewMacDesParam.');"><i class="fa fa-eye"></i></a>';
 
         $action = getActionButton($accptJob.$viewMacDes.$completJob.$viewComplete);
 
-        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark];
+        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->fab_dept_note,$data->remark];
     endif;
 
     if($data->to_entry_type == 32): // Bending Table Data
@@ -224,18 +234,18 @@ function getFabricationData($data){
             $completJob = $accptJob = '';
         endif;
 
-        $viewMacDesParam = "{'postData':{'main_pm_id' : ".$data->pm_id.",'entry_type': '30'},'controller' : 'production/fabrication','fnedit':'viewMechanicalDesign','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Mechanical Design','button':'close'}";
+        $viewMacDesParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '30'},'controller' : 'production/fabrication','fnedit':'viewMechanicalDesign','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Mechanical Design','button':'close'}";
 
         $viewMacDes = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Mechanical Design" flow="down" onclick="edit('.$viewMacDesParam.');"><i class="fa fa-eye"></i></a>';
 
         $action = getActionButton($accptJob.$viewMacDes.$completJob);
 
-        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark];
+        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->fab_dept_note,$data->remark];
     endif;
 
     if($data->to_entry_type == 33):       
 
-        $completJob = $accptJob = '';
+        $viewComplete = $completJob = $accptJob = '';
 
         if($data->entry_type == $data->from_entry_type):
             $acceptParam = "{'postData':{'job_status' : 3, id : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'controllerName' : 'production/fabrication','fnsave':'acceptJob','message':'Are you sure want to accept this Job?'}";
@@ -253,13 +263,13 @@ function getFabricationData($data){
             $viewComplete = '<a class="btn btn-info" href="javascript:void(0)" datatip="View Complet Job" flow="down" onclick="edit('.$viewParam.');"><i class="fa fa-eye"></i></a>';
         endif;
 
-        $viewMacDesParam = "{'postData':{'main_pm_id' : ".$data->pm_id.",'entry_type': '30'},'controller' : 'production/fabrication','fnedit':'viewMechanicalDesign','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Mechanical Design','button':'close'}";
+        $viewMacDesParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '30'},'controller' : 'production/fabrication','fnedit':'viewMechanicalDesign','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Mechanical Design','button':'close'}";
 
         $viewMacDes = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Mechanical Design" flow="down" onclick="edit('.$viewMacDesParam.');"><i class="fa fa-eye"></i></a>';
 
         $action = getActionButton($accptJob.$viewMacDes.$completJob.$viewComplete);
 
-        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark];
+        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->fab_dept_note,$data->remark];
     endif;
 }
 ?>
