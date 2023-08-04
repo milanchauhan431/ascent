@@ -173,8 +173,6 @@ function ssDatatable(ele,tableHeaders,tableOptions,dataSet={}){
 	$('#' + tableId +'_filter .form-control-sm').css("width","97%");
 	$('#' + tableId +'_filter .form-control-sm').attr("placeholder","Search.....");	
 	$(".dataTables_scroll").addClass("key-scroll");
-
-	
     
 	/* $('.ssTable-cf thead tr:eq(1) th').each( function (i) {
 		$( 'input', this ).on( 'keyup', function () {
@@ -194,7 +192,7 @@ function ssDatatable(ele,tableHeaders,tableOptions,dataSet={}){
 		$( 'input', this ).on( 'keyup change', function () {
 			if ( ssTable.column(i).search() !== this.value ) {ssTable.column(i).search( this.value ).draw();}
 		});
-	} );
+	});
 	
 	// if(tableId){initSpeechRecognitation();}
 }
