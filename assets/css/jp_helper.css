@@ -2721,3 +2721,14 @@ span.multiselect-native-select select {
     text-overflow: ellipsis !important;
     white-space: break-spaces !important;
 }
+
+/*** Excel Like Table ***/
+.excelTable{width:100%;}
+.excelTable{border:1px solid #555;border-collapse:collapse;}
+.excelTable th,.excelTable th input{font-weight:bold;}
+.excelTable th,.excelTable td{border:1px solid #555;border-collapse:collapse;padding:3px;color:#000000;font-size:0.8rem;}
+.excelTable tr:nth-child(even){background:#eee;}
+.excelTable tr:nth-child(odd){background:#fff;}
+
+/** Data table Auto Content Fit Column **/
+.dataTable th, .dataTable td { white-space: nowrap; font-size:0.8rem;}
