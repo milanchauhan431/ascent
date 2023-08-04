@@ -4,22 +4,22 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 /* get Pagewise Table Header */
 function getConfigDtHeader($page){
     /* terms header */
-    $data['terms'][] = ["name"=>"Action","style"=>"width:5%;",'textAlign'=>'center'];
-	$data['terms'][] = ["name"=>"#","style"=>"width:5%;",'textAlign'=>'center']; 
+    $data['terms'][] = ["name"=>"Action",'textAlign'=>'center'];
+	$data['terms'][] = ["name"=>"#",'textAlign'=>'center']; 
     $data['terms'][] = ["name"=>"Title"];
     $data['terms'][] = ["name"=>"Type"];
     $data['terms'][] = ["name"=>"Conditions"];
 
     /* Transport Header*/
-    $data['transport'][] = ["name"=>"Action","style"=>"width:5%;",'textAlign'=>'center'];
-    $data['transport'][] = ["name"=>"#","style"=>"width:5%;",'textAlign'=>'center'];
+    $data['transport'][] = ["name"=>"Action",'textAlign'=>'center'];
+    $data['transport'][] = ["name"=>"#",'textAlign'=>'center'];
     $data['transport'][] = ["name"=>"Transport Name"];
     $data['transport'][] = ["name"=>"Transport ID"];
     $data['transport'][] = ["name"=>"Address"];
 
     /* HSN Master header */
-    $data['hsnMaster'][] = ["name"=>"Action","style"=>"width:5%;",'textAlign'=>'center'];
-    $data['hsnMaster'][] = ["name"=>"#","style"=>"width:5%;",'textAlign'=>'center']; 
+    $data['hsnMaster'][] = ["name"=>"Action",'textAlign'=>'center'];
+    $data['hsnMaster'][] = ["name"=>"#",'textAlign'=>'center']; 
     $data['hsnMaster'][] = ["name"=>"HSN"];
     $data['hsnMaster'][] = ["name"=>"CGST"];
     $data['hsnMaster'][] = ["name"=>"SGST"];
@@ -27,22 +27,22 @@ function getConfigDtHeader($page){
     $data['hsnMaster'][] = ["name"=>"Description"];
 
     /* Material Grade header */
-    $data['materialGrade'][] = ["name"=>"Action","style"=>"width:5%;",'textAlign'=>'center'];
-    $data['materialGrade'][] = ["name"=>"#","style"=>"width:5%;",'textAlign'=>'center']; 
+    $data['materialGrade'][] = ["name"=>"Action",'textAlign'=>'center'];
+    $data['materialGrade'][] = ["name"=>"#",'textAlign'=>'center']; 
     $data['materialGrade'][] = ["name"=>"Material Grade"];
     $data['materialGrade'][] = ["name"=>"Standard"];
     $data['materialGrade'][] = ["name"=>"Scrap Group"];
     $data['materialGrade'][] = ["name"=>"Colour Code"];
 
     /* Scrap Group Header*/
-    $data['scrapGroup'][] = ["name"=>"Action","style"=>"width:5%;",'textAlign'=>'center'];
-    $data['scrapGroup'][] = ["name"=>"#","style"=>"width:5%;",'textAlign'=>'center'];
+    $data['scrapGroup'][] = ["name"=>"Action",'textAlign'=>'center'];
+    $data['scrapGroup'][] = ["name"=>"#",'textAlign'=>'center'];
     $data['scrapGroup'][] = ["name"=>"Scrap Group Name"];
     $data['scrapGroup'][] = ["name"=>"Unit Name"];
 
     /* Vehicle Type header */
-    $data['vehicleType'][] = ["name"=>"Action","style"=>"width:5%;",'textAlign'=>'center'];
-    $data['vehicleType'][] = ["name"=>"#","style"=>"width:5%;",'textAlign'=>'center']; 
+    $data['vehicleType'][] = ["name"=>"Action",'textAlign'=>'center'];
+    $data['vehicleType'][] = ["name"=>"#",'textAlign'=>'center']; 
     $data['vehicleType'][] = ["name"=>"Vehicle Type"];
     $data['vehicleType'][] = ["name"=>"Remark"];
 

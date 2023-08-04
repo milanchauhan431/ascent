@@ -4,26 +4,26 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 /* get Pagewise Table Header */
 function getHrDtHeader($page){
     /* Department Header */
-    $data['departments'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
-    $data['departments'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['departments'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['departments'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"];
     $data['departments'][] = ["name"=>"Department Name"];
     $data['departments'][] = ["name"=>"Category"];
 
     /* Designation Header */
-    $data['designation'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
-	$data['designation'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['designation'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['designation'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"];
     $data['designation'][] = ["name"=>"Designation Name"];
     $data['designation'][] = ["name"=>"Remark"];
 
     /* Employee Category Header */
-    $data['employeeCategory'][] = ["name"=>"Action","style"=>"width:5%;"];
-    $data['employeeCategory'][] = ["name"=>"#","style"=>"width:5%;"];
+    $data['employeeCategory'][] = ["name"=>"Action"];
+    $data['employeeCategory'][] = ["name"=>"#"];
     $data['employeeCategory'][] = ["name"=>"Category Name"];
     $data['employeeCategory'][] = ["name"=>"Over Time"];
 
     /* Shift Header */
-    $data['shift'][] = ["name"=>"Action","style"=>"width:5%;"];
-	$data['shift'][] = ["name"=>"#","style"=>"width:5%;"];
+    $data['shift'][] = ["name"=>"Action"];
+	$data['shift'][] = ["name"=>"#"];
 	$data['shift'][] = ["name"=>"Shift Name"];
 	$data['shift'][] = ["name"=>"Start Time"];
 	$data['shift'][] = ["name"=>"End Time"];
@@ -32,8 +32,8 @@ function getHrDtHeader($page){
 	$data['shift'][] = ["name"=>"Shift Hour"];
 
     /* Employee Header */
-    $data['employees'][] = ["name"=>"Action","style"=>"width:5%;"];
-	$data['employees'][] = ["name"=>"#","style"=>"width:5%;","textAlign"=>'center']; 
+    $data['employees'][] = ["name"=>"Action"];
+	$data['employees'][] = ["name"=>"#","textAlign"=>'center']; 
     $data['employees'][] = ["name"=>"Employee Name"];
     $data['employees'][] = ["name"=>"Emp Code","textAlign"=>'center'];
     $data['employees'][] = ["name"=>"Department"];

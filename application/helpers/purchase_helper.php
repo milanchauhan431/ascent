@@ -3,8 +3,8 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 function getPurchaseDtHeader($page){
     /* Sales Order Header */
-    $data['purchaseOrders'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
-	$data['purchaseOrders'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+    $data['purchaseOrders'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['purchaseOrders'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
 	$data['purchaseOrders'][] = ["name"=>"PO. No."];
 	$data['purchaseOrders'][] = ["name"=>"PO. Date"];
 	$data['purchaseOrders'][] = ["name"=>"Party Name"];
@@ -19,9 +19,9 @@ function getPurchaseDtHeader($page){
     /* Purchase Indent Header */
     $masterCheckBox = '<input type="checkbox" id="masterSelect" class="filled-in chk-col-success BulkRequest" value=""><label for="masterSelect">ALL</label>';
 
-    $data['purchaseIndent'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
-	$data['purchaseIndent'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
-    $data['purchaseIndent'][] = ["name"=>$masterCheckBox,"style"=>"width:10%;","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['purchaseIndent'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['purchaseIndent'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['purchaseIndent'][] = ["name"=>$masterCheckBox,"sortable"=>"FALSE","textAlign"=>"center"];
     $data['purchaseIndent'][] = ["name"=>"Indent Date"];
     $data['purchaseIndent'][] = ["name"=>"Indent No"];
     $data['purchaseIndent'][] = ["name"=>"Job No"];

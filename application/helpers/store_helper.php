@@ -4,15 +4,15 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 /* get Pagewise Table Header */
 function getStoreDtHeader($page){
     /* Location Master header */
-    $data['storeLocation'][] = ["name"=>"Action","style"=>"width:5%;",'textAlign'=>'center'];
-    $data['storeLocation'][] = ["name"=>"#","style"=>"width:5%;",'textAlign'=>'center']; 
+    $data['storeLocation'][] = ["name"=>"Action",'textAlign'=>'center'];
+    $data['storeLocation'][] = ["name"=>"#",'textAlign'=>'center']; 
     $data['storeLocation'][] = ["name"=>"Store Name"];
     $data['storeLocation'][] = ["name"=>"Location"];
     $data['storeLocation'][] = ["name"=>"Remark"];
 
     /* Gate Entry */
-    $data['gateEntry'][] = ["name" => "Action", "style" => "width:5%;", "textAlign" => "center"];
-    $data['gateEntry'][] = ["name" => "#", "style" => "width:5%;", "textAlign" => "center"];
+    $data['gateEntry'][] = ["name" => "Action", "textAlign" => "center"];
+    $data['gateEntry'][] = ["name" => "#", "textAlign" => "center"];
     $data['gateEntry'][] = ["name"=> "GE No.", "textAlign" => "center"];
     $data['gateEntry'][] = ["name" => "GE Date", "textAlign" => "center"];
     $data['gateEntry'][] = ["name" => "Party Name"];
@@ -26,8 +26,8 @@ function getStoreDtHeader($page){
     $data['gateEntry'][] = ['name' => "Challan Date"];
 
     /* Gate Inward Pending GE Tab Header */
-    $data['pendingGE'][] = ["name" => "Action", "style" => "width:5%;", "textAlign" => "center"];
-    $data['pendingGE'][] = ["name" => "#", "style" => "width:5%;", "textAlign" => "center"];
+    $data['pendingGE'][] = ["name" => "Action", "textAlign" => "center"];
+    $data['pendingGE'][] = ["name" => "#", "textAlign" => "center"];
     $data['pendingGE'][] = ["name"=> "GE No.", "textAlign" => "center"];
     $data['pendingGE'][] = ["name" => "GE Date", "textAlign" => "center"];
     $data['pendingGE'][] = ["name" => "Party Name"];
@@ -37,8 +37,8 @@ function getStoreDtHeader($page){
     $data['pendingGE'][] = ['name' => "CH. Date"];
 
     /* Gate Inward Pending/Compeleted Tab Header */
-    $data['gateInward'][] = ["name" => "Action", "style" => "width:5%;", "textAlign" => "center"];
-    $data['gateInward'][] = ["name" => "#", "style" => "width:5%;", "textAlign" => "center"];
+    $data['gateInward'][] = ["name" => "Action", "textAlign" => "center"];
+    $data['gateInward'][] = ["name" => "#", "textAlign" => "center"];
     $data['gateInward'][] = ["name"=> "GI No.", "textAlign" => "center"];
     $data['gateInward'][] = ["name" => "GI Date", "textAlign" => "center"];
     $data['gateInward'][] = ["name" => "Party Name"];

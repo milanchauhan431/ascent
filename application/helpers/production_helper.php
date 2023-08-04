@@ -3,8 +3,8 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 function getProductionDtHeader($page){
     /* Parameter Master */
-    $data['parameters'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
-	$data['parameters'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+    $data['parameters'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['parameters'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
 	$data['parameters'][] = ["name"=>"Type"];
 	$data['parameters'][] = ["name"=>"Name"];
 	$data['parameters'][] = ["name"=>"Seq."];
@@ -27,12 +27,12 @@ function getProductionDtHeader($page){
     $data['estimation'][] = ["name"=>"GENERAL NOTE"];
 
     /* Mechanical Design Header */
-    $data['mechanical_design'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
-	$data['mechanical_design'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
-	$data['mechanical_design'][] = ["name"=>"Job No.","style"=>"width:12%;"];
+    $data['mechanical_design'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['mechanical_design'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['mechanical_design'][] = ["name"=>"Job No."];
     $data['mechanical_design'][] = ["name"=>"Item Name"];
     $data['mechanical_design'][] = ["name"=>"Order Qty"];
-    $data['mechanical_design'][] = ["name"=>"Priority","style"=>"width:5%;","textAlign"=>"center"];
+    $data['mechanical_design'][] = ["name"=>"Priority","textAlign"=>"center"];
     $data['mechanical_design'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
     $data['mechanical_design'][] = ["name"=>"T.S.","sortable"=>"FALSE","textAlign"=>"center"];
     $data['mechanical_design'][] = ["name"=>"SLD","sortable"=>"FALSE","textAlign"=>"center"];
@@ -42,12 +42,12 @@ function getProductionDtHeader($page){
     //$data['mechanical_design'][] = ["name"=>"Accepted BY","sortable"=>"FALSE","textAlign"=>"center"];
 
     /* Cutting Header */
-    $data['cutting'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
-	$data['cutting'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
-	$data['cutting'][] = ["name"=>"Job No.","style"=>"width:12%;"];
+    $data['cutting'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['cutting'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['cutting'][] = ["name"=>"Job No."];
     $data['cutting'][] = ["name"=>"Item Name"];
     $data['cutting'][] = ["name"=>"Order Qty"];
-    $data['cutting'][] = ["name"=>"Priority","style"=>"width:5%;","textAlign"=>"center"];
+    $data['cutting'][] = ["name"=>"Priority","textAlign"=>"center"];
     $data['cutting'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
     $data['cutting'][] = ["name"=>"T.S.","sortable"=>"FALSE","textAlign"=>"center"];
     $data['cutting'][] = ["name"=>"SLD","sortable"=>"FALSE","textAlign"=>"center"];
@@ -58,7 +58,7 @@ function getProductionDtHeader($page){
     /* Bending Header */
     $data['bending'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
 	$data['bending'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
-	$data['bending'][] = ["name"=>"Job No.","style"=>"width:12%;"];
+	$data['bending'][] = ["name"=>"Job No."];
     $data['bending'][] = ["name"=>"Item Name"];
     $data['bending'][] = ["name"=>"Order Qty"];
     $data['bending'][] = ["name"=>"Priority","textAlign"=>"center"];

@@ -4,8 +4,8 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 /* get Pagewise Table Header */
 function getMasterDtHeader($page){
     /* Customer Header */
-    $data['customer'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
-	$data['customer'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+    $data['customer'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['customer'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
 	$data['customer'][] = ["name"=>"Company Name"];
 	$data['customer'][] = ["name"=>"Contact Person"];
     $data['customer'][] = ["name"=>"Contact No."];
@@ -13,24 +13,24 @@ function getMasterDtHeader($page){
     $data['customer'][] = ["name"=>"Currency"];
 
     /* Supplier Header */
-    $data['supplier'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
-	$data['supplier'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+    $data['supplier'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['supplier'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
 	$data['supplier'][] = ["name"=>"Company Name"];
 	$data['supplier'][] = ["name"=>"Contact Person"];
     $data['supplier'][] = ["name"=>"Contact No."];
     $data['supplier'][] = ["name"=>"Party Code"];
 
     /* Vendor Header */
-    $data['vendor'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
-    $data['vendor'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+    $data['vendor'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['vendor'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
     $data['vendor'][] = ["name"=>"Company Name"];
     $data['vendor'][] = ["name"=>"Contact Person"];
     $data['vendor'][] = ["name"=>"Contact No."];
     $data['vendor'][] = ["name"=>"Address"];
 
     /* Item Category Header */
-    $data['itemCategory'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
-    $data['itemCategory'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+    $data['itemCategory'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['itemCategory'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
     $data['itemCategory'][] = ["name"=>"Category Name"];
     $data['itemCategory'][] = ["name"=>"Parent Category"];
     $data['itemCategory'][] = ["name"=>"Is Final ?"];
@@ -39,14 +39,14 @@ function getMasterDtHeader($page){
     $data['itemCategory'][] = ["name"=>"Remark"];
 
     /* Brand Master Header */
-    $data['brandMaster'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
-    $data['brandMaster'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+    $data['brandMaster'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['brandMaster'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
     $data['brandMaster'][] = ["name"=>"Make"];
     $data['brandMaster'][] = ["name"=>"Remark"];
 
     /* Finish Goods Header */
-    $data['finish_goods'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
-    $data['finish_goods'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+    $data['finish_goods'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['finish_goods'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
     $data['finish_goods'][] = ["name"=>"CAT No."];
     $data['finish_goods'][] = ["name"=>"Item Name"];
     $data['finish_goods'][] = ["name"=>"Category Name"];
@@ -56,8 +56,8 @@ function getMasterDtHeader($page){
     $data['finish_goods'][] = ["name"=>"Price"];
 
     /* Row Material Header */
-    $data['raw_material'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
-    $data['raw_material'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+    $data['raw_material'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['raw_material'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
     $data['raw_material'][] = ["name"=>"CAT No."];
     $data['raw_material'][] = ["name"=>"Item Name"];
     $data['raw_material'][] = ["name"=>"Category Name"];
@@ -67,8 +67,8 @@ function getMasterDtHeader($page){
     $data['raw_material'][] = ["name"=>"Price"];
 
     /* Consumable Header */
-    $data['consumable'][] = ["name"=>"Action","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"];
-    $data['consumable'][] = ["name"=>"#","style"=>"width:5%;","sortable"=>"FALSE","textAlign"=>"center"]; 
+    $data['consumable'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['consumable'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
     $data['consumable'][] = ["name"=>"CAT No."];
     $data['consumable'][] = ["name"=>"Item Name"];
     $data['consumable'][] = ["name"=>"Category Name"];
