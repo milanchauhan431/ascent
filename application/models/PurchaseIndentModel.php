@@ -31,8 +31,9 @@ class PurchaseIndentModel extends MasterModel{
 
         $data['searchCol'][] = "";
         $data['searchCol'][] = "";
+        $data['searchCol'][] = "";
         $data['searchCol'][] = "DATE_FORMAT(purchase_request.req_date,'%d-%m-%Y')";
-        $data['searchCol'][] = "CONCAT('IND',LPAD(purchase_request.req_no, 5, '0'))";
+        $data['searchCol'][] = "CONCAT('IND',LPAD(purchase_request.req_no, 3, '0'))";
         $data['searchCol'][] = "trans_child.job_number";
         $data['searchCol'][] = "order_bom.make";
         $data['searchCol'][] = "item_master.item_name";
