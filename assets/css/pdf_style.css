@@ -255,10 +255,14 @@
 		color:#000000;font-size:14px !important;font-family:'Calibri';
 	}
 	table, .table{width:100% !important;}
+	
 	.pad5,.pad5 th,.pad5 td{padding:5px !important;}
 	
 	.outerDiv{padding:2px;}
-	.table-bordered{border: 1px solid #000000 !important;border-collapse:collapse !important;font-size:1rem;}
+	.table-terms{border: 1px solid #545454 !important;border-collapse:collapse !important;font-size:1.2rem;}
+	.table-terms th,.table-terms td{padding:2px 5px;}
+	.table-bordered{border: 1px solid #545454 !important;border-collapse:collapse !important;font-size:1rem;}
+	.table-bordered th,.table-bordered td{border: 1px solid #545454;font-size:1rem;padding:5px;border-collapse:collapse !important;}
 	.border-dark{border: 1px solid #000000 !important;border-collapse:collapse !important;}
 	.th-head th{font-size:1rem;color:#dc3545;background-color:#f3f6f6;padding:2px 3px;}
 	
@@ -293,6 +297,11 @@
 	
 	.table-bordered-pad5{border: 1px solid #000000 !important;border-collapse:collapse !important;font-size:1rem;}
 	.table-bordered-pad5 th, .table-bordered-pad5 td{border: 1px solid #000000 !important;border-collapse:collapse !important;font-size:12px;padding:2px 3px;}
+
+	.border-top{border-top: 1px solid #545454 !important;}
+	.border-bottom{border-bottom: 1px solid #545454 !important;}
+	.border-left{border-left: 1px solid #545454 !important;}
+	.border-right{border-right: 1px solid #545454 !important;}
 
 	.itemList th, .itemList td{border: 1px solid #000000 !important;border-collapse:collapse !important;font-size:12px;padding:2px;}	
 	.itemList th{font-weight:bold;}

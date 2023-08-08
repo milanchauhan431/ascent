@@ -156,8 +156,7 @@ class PurchaseOrders extends MY_Controller{
 		$mpdf->SetDisplayMode('fullpage');
 		$mpdf->SetWatermarkImage($logo,0.03,array(120,45));
 		$mpdf->showWatermarkImage = true;
-		$mpdf->SetProtection(array('print'));
-		
+		$mpdf->SetProtection(array('print'));		
 		//$mpdf->SetHTMLHeader($htmlHeader);
 		$mpdf->SetHTMLFooter($htmlFooter);
 		$mpdf->AddPage('P','','','','',5,5,5,5,5,5,'','','','','','','','','','A4-P');

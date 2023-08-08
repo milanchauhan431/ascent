@@ -1,12 +1,16 @@
 <div class="row">
 	<div class="col-12">
 		<table class="table">
-		<tr><td><img src="<?=$letter_head?>" class="img"></td></tr>
+			<tr><td><img src="<?=$letter_head?>" class="img"></td></tr>
 		</table>
 
-		<table class="table"><tr><td class="fs-18 text-center" style="letter-spacing: 2px;font-weight:bold;padding:0px !important; border-bottom:1px solid #000000;">PURCHASE ORDER</td></tr></table>
+		<table class="table table-bordered">
+			<tr>
+				<td class="fs-20 text-center" style="letter-spacing: 0px;font-size:1.5rem;font-weight:bold;padding:0px !important;">PURCHASE ORDER</td>
+			</tr>
+		</table>
 		
-		<table class="table" style="margin-top:2px;">
+		<table class="table table-bordered" style="margin-top:0px;">			
 			<tr>
 				<th class="text-left" style="width:50%;vertical-align:top;">PO No. : <?=$poData->trans_number?></th>
 				<th class="text-right" style="width:50%;vertical-align:top;">PO Date : <?=formatDate($poData->trans_date)?></th>
@@ -22,7 +26,7 @@
 				</td>
 				<td style="width:50%;vertical-align:top;">
 					<small><br>
-						Contact Person : <?=$partyData->contact_person?><br>
+						Contact Person : <?=ucwords($partyData->contact_person)?><br>
 						Contact No. : <?=$partyData->party_mobile?><br>
 						Email : <?=$partyData->party_email?><br>
 					</small><br><br>
@@ -31,8 +35,8 @@
 			
 			<tr>
 				<td style="width:50%;vertical-align:top;">
-					<b>Billing Address: </b><br>
-					<?=$companyData->company_name?> <br>
+					Billing Address: <br>
+					<b><?=$companyData->company_name?></b> <br>
 					<small>
 						<?=$companyData->company_address?><br>
 						Contact No. : <?=$companyData->company_contact?><br>
@@ -40,29 +44,30 @@
 					</small><br><br>
 				</td>
 				<td style="width:50%;vertical-align:top;">
-					<b>Delivery/Booking Address: </b><br>
-					<?=$companyData->company_name?> <br>
+					Delivery/Booking Address: <br>
+					<b><?=$companyData->company_name?></b> <br>
 					<small>
 						<?=$poData->delivery_address." ".$partyData->delivery_state_name.", ".$partyData->delivery_city_name." - ".$partyData->delivery_pincode?></br><br>
 						Transport Name : <?=$poData->transport_name?><br>
-						Contact Person : <?=$poData->contact_person?><br>
+						Contact Person : <?=ucwords($poData->contact_person)?><br>
 						Contact No. : <?=$poData->contact_no?><br>
 					</small><br><br>
 				</td>
 			</tr>
 			<tr>
-				<th colspan="2" class="text-left">Sub:- Purchase order for Supply of following material</th>
+				<th colspan="2" class="text-center">Sub:- Purchase order for Supply of following material</th>
 			</tr>
-			<tr>
+			
+			<!-- <tr>
 				<td colspan="2">
 					Dear Sir,<br>
 					We are pleased to issue this Purchase Order for supply of goods as per our discussion
 					Schedule of Quantities and Prices 
 				</td>
-			</tr>
+			</tr> -->
 		</table>
 		
-		<table class="table item-list-bb" style="margin-top:10px;">
+		<table class="table item-list-bb" style="margin-top:0px;">
 			<?php
 				$thead = '<thead>
 					<tr>
@@ -154,6 +159,8 @@
 							$rwspan++;
 						endif;
 					endforeach;
+
+					$fixRwSpan = (!empty($rwspan))?$rwspan:0;
 				?>
 			</tbody>
 			<tfoot>
@@ -161,21 +168,30 @@
 					<th colspan="4" class="text-right">Total Qty.</th>
 					<th class="text-right"><?=sprintf('%.3f',$totalQty)?></th>
 					<th></th>
-					<th colspan="2" class="text-right">Sub Total</th>
+					<th colspan="2" class="text-right border-bottom-none">Sub Total</th>
 					<th class="text-right"><?=sprintf('%.2f',$poData->taxable_amount)?></th>
 				</tr>
 				<tr>
 					<th class="text-left" colspan="6" rowspan="<?=$rwspan?>">
 						Notes : <br><?=$poData->remark?>
-					</th>				
+					</th>		
+					<?php if(empty($rwspan)): ?>		
+						<th colspan="2" class="text-right">Round Off</th>
+						<td class="text-right"><?=sprintf('%.2f',$poData->round_off_amount)?></td>
+					<?php endif; ?>
 				</tr>
 				<?=$beforExp.$taxHtml.$afterExp?>
 				<tr>
-					<th class="text-left" colspan="6" rowspan="3">
+					<th class="text-left" colspan="6" rowspan="<?=$fixRwSpan?>">
 						Amount In Words : <br><?=numToWordEnglish($poData->net_amount)?>
-					</th>				
+					</th>		
+					<?php if(empty($rwspan)): ?>		
+						<th colspan="2" class="text-right">Grand Total</th>
+						<th class="text-right"><?=sprintf('%.2f',$poData->net_amount)?></th>
+					<?php endif; ?>		
 				</tr>
 				
+				<?php if(!empty($rwspan)): ?>
 				<tr>
 					<th colspan="2" class="text-right">Round Off</th>
 					<td class="text-right"><?=sprintf('%.2f',$poData->round_off_amount)?></td>
@@ -184,10 +200,14 @@
 					<th colspan="2" class="text-right">Grand Total</th>
 					<th class="text-right"><?=sprintf('%.2f',$poData->net_amount)?></th>
 				</tr>
+				<?php endif; ?>
 			</tfoot>
 		</table>
-		<h4>Terms & Conditions :-</h4>
-		<table class="table top-table" style="margin-top:10px;">
+		
+		<table class="table table-terms" style="margin-top:0px;">
+			<tr>
+				<th colspan="2" class="text-left border-bottom">Terms & Conditions :</th>
+			</tr>
 			<?php
 				if(!empty($poData->termsConditions)):
 					foreach($poData->termsConditions as $row):
@@ -200,19 +220,29 @@
 			?>
 		</table>
 		
-		<table class="table top-table" style="margin-top:10px;border-top:1px solid #545454;border-bottom:1px solid #000000;">
-			<tr>
-				<td style="width:50%;" rowspan="3"></td>
-				<th colspan="2">For, <?=$companyData->company_name?></th>
-			</tr>
-			<tr>
-				<td style="width:25%;" class="text-center"><?=$prepareBy?></td>
-				<td style="width:25%;" class="text-center"><?=$approveBy?></td>
-			</tr>
-			<tr>
-				<td style="width:25%;" class="text-center">Prepared By</td>
-				<td style="width:25%;" class="text-center">Authorised By</td>
-			</tr>
-		</table>
+		<htmlpagefooter name="lastpage">
+			<table class="table top-table" style="margin-top:10px;border-top:1px solid #545454;">
+				<tr>
+					<td style="width:50%;" rowspan="3"></td>
+					<th colspan="2">For, <?=$companyData->company_name?></th>
+				</tr>
+				<tr>
+					<td style="width:25%;" class="text-center"><?=$prepareBy?></td>
+					<td style="width:25%;" class="text-center"><?=$approveBy?></td>
+				</tr>
+				<tr>
+					<td style="width:25%;" class="text-center">Prepared By</td>
+					<td style="width:25%;" class="text-center">Authorised By</td>
+				</tr>
+			</table>
+			<table class="table top-table" style="margin-top:10px;border-top:1px solid #545454;">
+				<tr>
+					<td style="width:25%;">PO No. & Date : <?=$poData->trans_number.' ['.formatDate($poData->trans_date).']'?></td>
+					<td style="width:25%;"></td>
+					<td style="width:25%;text-align:right;">Page No. {PAGENO}/{nbpg}</td>
+				</tr>
+			</table>
+		</htmlpagefooter>
+		<sethtmlpagefooter name="lastpage" value="on" />
 	</div>
 </div>
