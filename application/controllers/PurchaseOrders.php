@@ -138,7 +138,7 @@ class PurchaseOrders extends MY_Controller{
 
 		$htmlHeader = "";//'<img src="'.$this->data['letter_head'].'" class="img">';
 		$htmlFooter = '
-            <table class="table top-table" style="margin-top:10px;">
+            <table class="table top-table" style="margin-top:10px;border-top:1px solid #545454;">
                 <tr>
                     <td style="width:25%;">PO No. & Date : '.$poData->trans_number.' ['.formatDate($poData->trans_date).']</td>
                     <td style="width:25%;"></td>
