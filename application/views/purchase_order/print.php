@@ -167,7 +167,7 @@
 								<td class="text-right">'.sprintf('%.2f',$taxAmt).'</td>';
 							else:
 								$taxHtml .= '<tr>
-									<th colspan="2" class="text-right">' . $taxRow->name . ' @'.(($poData->gst_type == 1)?floatVal($migst/2):$migst).'%</th>
+									<th colspan="2" class="text-right">' . $taxRow->name .'</th>
 									<td class="text-right">'.sprintf('%.2f',$taxAmt).'</td>
 								</tr>';
 							endif;
