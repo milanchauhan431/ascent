@@ -73,7 +73,7 @@
 					<tr>
 						<th style="width:40px;">No.</th>
 						<th>MAKE</th>
-						<th>CAT No.</th>
+						<th style="width:15%;">CAT No.</th>
 						<th class="text-left">PRODUCT NAME</th>
 						<th style="width:80px;">Qty</th>
 						<th style="width:50px;">Rate<br><small>(INR)</small></th>
