@@ -120,7 +120,7 @@
 						endforeach;
 					endif;
 					
-					$rwspan= 1; $srwspan = '';
+					$rwspan= 0; $srwspan = '';
 					$beforExp = "";
 					$afterExp = "";
 					$invExpenseData = (!empty($poData->expenseData)) ? $poData->expenseData : array();
@@ -133,15 +133,25 @@
 
 						if(!empty($expAmt)):
 							if ($row->position == 1) :
-								$beforExp .= '<tr>
-									<th colspan="2" class="text-right">' . $row->exp_name . '</th>
-									<td class="text-right">'.sprintf('%.2f',$expAmt).'</td>
-								</tr>';
+								if($rwspan == 0):
+									$beforExp .= '<th class="text-right" colspan="2">'.$row->exp_name.'</th>
+									<td class="text-right">'.sprintf('%.2f',$expAmt).'</td>';
+								else:
+									$beforExp .= '<tr>
+										<th colspan="2" class="text-right">' . $row->exp_name . '</th>
+										<td class="text-right">'.sprintf('%.2f',$expAmt).'</td>
+									</tr>';
+								endif;
 							else:
-								$afterExp .= '<tr>
-									<th colspan="2" class="text-right">' . $row->exp_name . '</th>
-									<td class="text-right">'.sprintf('%.2f',$expAmt).'</td>
-								</tr>';
+								if($rwspan == 0):
+									$afterExp .= '<th class="text-right" colspan="2">'.$row->exp_name.'</th>
+									<td class="text-right">'.sprintf('%.2f',$expAmt).'</td>';
+								else:
+									$afterExp .= '<tr>
+										<th colspan="2" class="text-right">' . $row->exp_name . '</th>
+										<td class="text-right">'.sprintf('%.2f',$expAmt).'</td>
+									</tr>';
+								endif;
 							endif;
 							$rwspan++;
 						endif;
@@ -152,15 +162,20 @@
 						$taxAmt = 0;
 						$taxAmt = floatVal($poData->{$taxRow->map_code . '_amount'});
 						if(!empty($taxAmt)):
-							$taxHtml .= '<tr>
-								<th colspan="2" class="text-right">' . $taxRow->name . ' @'.(($poData->gst_type == 1)?floatVal($migst/2):$migst).'%</th>
-								<td class="text-right">'.sprintf('%.2f',$taxAmt).'</td>
-							</tr>';
+							if($rwspan == 0):
+								$taxHtml .= '<th colspan="2" class="text-right">'.$taxRow->name.'</th>
+								<td class="text-right">'.sprintf('%.2f',$taxAmt).'</td>';
+							else:
+								$taxHtml .= '<tr>
+									<th colspan="2" class="text-right">' . $taxRow->name . ' @'.(($poData->gst_type == 1)?floatVal($migst/2):$migst).'%</th>
+									<td class="text-right">'.sprintf('%.2f',$taxAmt).'</td>
+								</tr>';
+							endif;
 							$rwspan++;
 						endif;
 					endforeach;
 
-					$fixRwSpan = (!empty($rwspan))?$rwspan:0;
+					$fixRwSpan = (!empty($rwspan))?3:0;
 				?>
 			</tbody>
 			<tfoot>
