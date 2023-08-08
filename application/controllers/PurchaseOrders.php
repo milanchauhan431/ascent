@@ -159,7 +159,7 @@ class PurchaseOrders extends MY_Controller{
 		$mpdf->SetProtection(array('print'));		
 		//$mpdf->SetHTMLHeader($htmlHeader);
 		$mpdf->SetHTMLFooter($htmlFooter);
-		$mpdf->AddPage('P','','','','',10,5,5,25,5,5,'','','','','','','','','','A4-P');
+		$mpdf->AddPage('P','','','','',10,5,5,30,5,5,'','','','','','','','','','A4-P');
 		$mpdf->WriteHTML($pdfData);
 		$mpdf->Output($pdfFileName,'I');
 	}

@@ -102,7 +102,7 @@
 								echo '<td class="text-right">'.sprintf('%.2f',$row->taxable_amount).'</td>';
 							echo '</tr>';
 
-							if(($rowCount == 10 && $pageCount == 1) || ($rowCount == 25 && $pageCount != 1)): 
+							if(($rowCount == 9 && $pageCount == 1) || ($rowCount == 25 && $pageCount != 1)): 
 								echo '
 									</tbody></table>
 									<div class="text-right"><i>Continue to Next Page</i></div>
