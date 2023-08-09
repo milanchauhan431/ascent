@@ -102,7 +102,7 @@
 								echo '<td class="text-right">'.sprintf('%.2f',$row->taxable_amount).'</td>';
 							echo '</tr>';
 
-							if(($rowCount == 9 && $pageCount == 1) || ($rowCount == 25 && $pageCount != 1)): 
+							/* if(($rowCount == 9 && $pageCount == 1) || ($rowCount == 25 && $pageCount != 1)): 
 								echo '
 									</tbody></table>
 									<div class="text-right"><i>Continue to Next Page</i></div>
@@ -113,7 +113,7 @@
 								$rowCount = 0; // Reset the row count
 								$pageCount++; // Increment the page count
 							endif;
-							$rowCount++;
+							$rowCount++; */
 
 							$totalQty += $row->qty;
 							if($row->gst_per > $migst){$migst=$row->gst_per;$mcgst=$row->cgst_per;$msgst=$row->sgst_per;}
