@@ -121,6 +121,7 @@ class ProductionModel extends MasterModel{
         $data['leftJoin']['production_master'] = "production_master.trans_child_id = trans_child.id";
 
         $data['where']['trans_child.entry_type'] = $data['entry_type'];
+        $data['where']['trans_child.trans_status !='] = 3;
 
         if($data['job_status'] == -1):
             $data['where']['production_master.id'] = null;
@@ -358,6 +359,8 @@ class ProductionModel extends MasterModel{
 
         $data['leftJoin']['trans_child'] = "production_master.trans_child_id = trans_child.id";
         $data['leftJoin']['employee_master as em'] = "em.id = production_master.accepted_by";
+
+        $data['where']['trans_child.trans_status !='] = 3;
 
         if($data['from_entry_type'] != $data['to_entry_type'] && $data['from_entry_type'] == 27):
             $data['where']["SUBSTRING_INDEX(production_master.department_ids,',', 1) = "] = $data['to_entry_type'];
