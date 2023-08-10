@@ -262,7 +262,7 @@ function AddRow(data) {
 	btnEdit.attr("class", "btn btn-outline-warning waves-effect waves-light");
 
 	cell.append(btnEdit);
-	cell.append(((data.bom_items == 0)?btnRemove:""));
+	cell.append(((data.job_status == 0)?btnRemove:""));
 	cell.attr("class", "text-center");
 	cell.attr("style", "width:10%;");
 

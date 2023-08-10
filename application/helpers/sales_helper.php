@@ -26,17 +26,24 @@ function getSalesOrderData($data){
     /* $soBomParam = "{'postData':{'trans_main_id' : ".$data->id.",'trans_child_id':".$data->trans_child_id."},'modal_id' : 'modal-xxl', 'form_id' : 'addOrderBom', 'fnedit':'orderBom', 'fnsave':'saveOrderBom','title' : 'Order Bom','res_function':'resSaveOrderBom','js_store_fn':'customStore'}";
     $soBom = '<a class="btn btn-info btn-delete permission-write" href="javascript:void(0)" onclick="edit('.$soBomParam.');" datatip="SO Bom" flow="down"><i class="fa fa-database"></i></a>'; */
 
-    $viewBomParam = "{'postData':{'trans_child_id':".$data->trans_child_id."},'modal_id' : 'modal-xl','fnedit':'viewOrderBom','title' : 'View Bom [Item Name : ".$data->item_name."]','button':'close'}";
-    $viewBom = '<a class="btn btn-primary permission-read" href="javascript:void(0)" onclick="edit('.$viewBomParam.');" datatip="View Item Bom" flow="down"><i class="fa fa-eye"></i></a>';
+    $viewBomParam = "{'postData':{'trans_child_id':".$data->trans_child_id.",'trans_main_id':'".$data->id."'},'modal_id' : 'modal-xl','controller':'production/estimation','fnedit':'viewOrderBom','title' : 'View Bom [Item Name : ".$data->item_name."]','button':'close'}";
+    $viewBom = '<a class="btn btn-primary permission-read" href="javascript:void(0)" onclick="edit('.$viewBomParam.');" datatip="View Item Bom" flow="down"><i class="fa fa-eye"></i></a>';$viewBom = '';
 
     /* $reqParam = "{'postData':{'trans_child_id':".$data->trans_child_id.",'trans_number':'".$data->trans_number."','item_name':'".$data->item_name."'},'modal_id' : 'modal-xl', 'form_id' : 'addOrderBom', 'fnedit':'purchaseRequest', 'fnsave':'savePurchaseRequest','title' : 'Send Purchase Request'}";
     $reqButton = '<a class="btn btn-info btn-delete permission-write" href="javascript:void(0)" onclick="edit('.$reqParam.');" datatip="Purchase Request" flow="down"><i class="fa fa-paper-plane"></i></a>'; */
 
-    if($data->bom_items > 0):
-        $deleteButton = "";
+    $cancelParam = "{'postData':{'id':".$data->id.",'trans_child_id' : ".$data->trans_child_id."},'fnsave':'cancelSO','message' : 'Are you sure want to cancel this order item ?'}";
+    $cancelButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="confirmStore('.$cancelParam.');" datatip="Cancel Item" flow="down"><i class="ti-close"></i></a>';
+
+    if($data->job_status != null):
+        $cancelButton = $editButton = "";
     endif;
 
-    $action = getActionButton($viewBom.$editButton.$deleteButton);
+    if($data->trans_status == 3):
+        $cancelButton = $editButton = $deleteButton = "";
+    endif;
+
+    $action = getActionButton($viewBom.$editButton.$cancelButton);
 
     return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->job_number,$data->party_name,$data->item_name,$data->qty,$data->dispatch_qty,$data->pending_qty];
 }

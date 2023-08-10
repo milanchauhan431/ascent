@@ -52,12 +52,24 @@ class PurchaseOrderModel extends MasterModel{
                 $itemList = $this->getPurchaseOrderItems(['id'=>$data['id']]);
                 foreach($itemList as $row):
                     if(!empty($row->ref_id)):
-                        $setData = Array();
-                        $setData['tableName'] = $this->purchseReq;
-                        $setData['where']['id'] = $row->ref_id;
-                        $setData['set']['po_qty'] = 'po_qty, - '.$row->qty;
-                        $setData['update']['order_status'] = 1;
-                        $this->setValue($setData);
+                        if(!empty($row->feasible_remark)):
+                            $piDetails = json_decode($row->feasible_remark,false);
+                            foreach($piDetails as $jrow):
+                                $setData = Array();
+                                $setData['tableName'] = $this->purchseReq;
+                                $setData['where']['id'] = $jrow->id;
+                                $setData['set']['po_qty'] = 'po_qty, - '.$jrow->qty;
+                                $setData['update']['order_status'] = 1;
+                                $this->setValue($setData);
+                            endforeach;
+                        else:                        
+                            $setData = Array();
+                            $setData['tableName'] = $this->purchseReq;
+                            $setData['where']['id'] = $row->ref_id;
+                            $setData['set']['po_qty'] = 'po_qty, - '.$row->qty;
+                            $setData['update']['order_status'] = 1;
+                            $this->setValue($setData);
+                        endif;
                     endif;
                     $this->trash($this->transChild,['id'=>$row->id]);
                 endforeach;
@@ -106,16 +118,40 @@ class PurchaseOrderModel extends MasterModel{
                 $row['entry_type'] = $data['entry_type'];
                 $row['trans_main_id'] = $result['id'];
                 $row['is_delete'] = 0;
-                $this->store($this->transChild,$row);
-
+                
+                $reqItemDetails = array();
                 if(!empty($row['ref_id'])):
-                    $setData = Array();
-                    $setData['tableName'] = $this->purchseReq;
-                    $setData['where']['id'] = $row['ref_id'];
-                    $setData['set']['po_qty'] = 'po_qty, + '.$row['qty'];
-                    $setData['update']['order_status'] = "(CASE WHEN req_qty >= po_qty THEN 2 ELSE 1 END)";
-                    $this->setValue($setData);
+                    if(!empty($row['feasible_remark'])):
+                        $piDetails = json_decode($row['feasible_remark'],false);
+                        $poQty = $row['qty'];
+                        foreach($piDetails as $jrow):
+                            if($poQty > 0):
+                                $qty = 0;
+                                $qty = ($poQty > $jrow->qty)?$jrow->qty:$poQty;
+                                $poQty -= $qty;
+
+                                $setData = Array();
+                                $setData['tableName'] = $this->purchseReq;
+                                $setData['where']['id'] = $jrow->id;
+                                $setData['set']['po_qty'] = 'po_qty, + '.$qty;
+                                $setData['update']['order_status'] = "(CASE WHEN req_qty >= po_qty THEN 2 ELSE 1 END)";
+                                $this->setValue($setData);
+
+                                $reqItemDetails[] = ['id'=>$jrow->id,'qty'=>$qty,'req_qty'=>$jrow->qty];
+                            endif;
+                        endforeach;
+                        $row['feasible_remark'] = json_encode($reqItemDetails);
+                    else:                        
+                        $setData = Array();
+                        $setData['tableName'] = $this->purchseReq;
+                        $setData['where']['id'] = $row['ref_id'];
+                        $setData['set']['po_qty'] = 'po_qty, + '.$row['qty'];
+                        $setData['update']['order_status'] = "(CASE WHEN req_qty >= po_qty THEN 2 ELSE 1 END)";
+                        $this->setValue($setData);
+                    endif;                    
                 endif;
+
+                $this->store($this->transChild,$row);
             endforeach;            
 
             if ($this->db->trans_status() !== FALSE):
@@ -182,9 +218,19 @@ class PurchaseOrderModel extends MasterModel{
         try{
             $this->db->trans_begin();
 
-            $itemList = $this->getPurchaseOrderItems(['id'=>$data['id']]);
+            $itemList = $this->getPurchaseOrderItems(['id'=>$id]);
             foreach($itemList as $row):
-                if(!empty($row->ref_id)):
+                if(!empty($row->feasible_remark)):
+                    $piDetails = json_decode($row->feasible_remark,false);
+                    foreach($piDetails as $jrow):
+                        $setData = Array();
+                        $setData['tableName'] = $this->purchseReq;
+                        $setData['where']['id'] = $jrow->id;
+                        $setData['set']['po_qty'] = 'po_qty, - '.$jrow->qty;
+                        $setData['update']['order_status'] = 1;
+                        $this->setValue($setData);
+                    endforeach;
+                else:                        
                     $setData = Array();
                     $setData['tableName'] = $this->purchseReq;
                     $setData['where']['id'] = $row->ref_id;
@@ -198,6 +244,29 @@ class PurchaseOrderModel extends MasterModel{
             $this->trash($this->transExpense,['trans_main_id'=>$id]);
             $this->remove($this->transDetails,['main_ref_id'=>$id,'table_name'=>$this->transMain,'description'=>"PO TERMS"]);
             $result = $this->trash($this->transMain,['id'=>$id],'Purchase Order');
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
+    }
+
+    public function cancelPO($data){
+        try{
+            $this->db->trans_begin();
+
+            $this->edit($this->transChild,['id'=>$data['trans_child_id']],['trans_status'=>3]);
+
+            $setData = Array();
+            $setData['tableName'] = $this->transMain;
+            $setData['where']['id'] = $data['id'];
+            $setData['update']['trans_status'] = "(SELECT IF( COUNT(id) = SUM(IF(trans_status = 3, 1, 0)) ,3 , 0 ) as trans_status FROM trans_child WHERE trans_main_id = ".$data['id']." AND is_delete = 0)";
+            $result = $this->setValue($setData);
+            $result["message"] = "Order item canceled successfully.";
 
             if ($this->db->trans_status() !== FALSE):
                 $this->db->trans_commit();

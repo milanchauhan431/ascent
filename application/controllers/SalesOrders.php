@@ -123,5 +123,14 @@ class SalesOrders extends MY_Controller{
             $this->printJson($this->salesOrder->delete($id));
         endif;
     }
+
+    public function cancelSO(){
+        $data = $this->input->post();
+        if(empty($data['trans_child_id'])):
+            $this->printJson(['status'=>0,'message'=>'Somthing went wrong...Please try again.']);
+        else:
+            $this->printJson($this->salesOrder->cancelSO($data));
+        endif;
+    }
 }
 ?>

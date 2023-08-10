@@ -9,19 +9,24 @@ class SalesOrderModel extends MasterModel{
 
     public function getDTRows($data){
         $data['tableName'] = $this->transChild;
-        $data['select'] = "trans_child.id as trans_child_id,trans_child.item_name,trans_child.qty,trans_child.dispatch_qty,(trans_child.qty - trans_child.dispatch_qty) as pending_qty,trans_child.job_number,trans_main.id,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_name,trans_main.sales_type,COUNT(order_bom.id) as bom_items";
+        $data['select'] = "trans_child.id as trans_child_id,trans_child.item_name,trans_child.qty,trans_child.dispatch_qty,(trans_child.qty - trans_child.dispatch_qty) as pending_qty,trans_child.job_number,trans_child.trans_status,trans_main.id,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_name,trans_main.sales_type,COUNT(order_bom.id) as bom_items,production_master.job_status";
 
         $data['leftJoin']['trans_main'] = "trans_main.id = trans_child.trans_main_id";
         $data['leftJoin']['order_bom'] = "order_bom.trans_child_id = trans_child.id";
+        $data['leftJoin']['production_master'] = "production_master.trans_child_id = trans_child.id";
 
         $data['where']['trans_child.entry_type'] = $data['entry_type'];
 
         if($data['status'] == 0):
             $data['where']['trans_child.trans_status'] = 0;
-            $data['having'][] = 'COUNT(order_bom.id) <= 0';
+            $data['where']['production_master.job_status'] = null;
+            //$data['having'][] = 'COUNT(order_bom.id) <= 0';
         elseif($data['status'] == 1):
             $data['where']['trans_child.trans_status'] = 0;
-            $data['having'][] = 'COUNT(order_bom.id) > 0';
+            $data['where_in']['production_master.job_status'] = [0,1];
+            //$data['having'][] = 'COUNT(order_bom.id) > 0';
+        elseif($data['status'] == 3):
+            $data['where']['trans_child.trans_status'] = 3;
         else:
             $data['where']['trans_child.trans_status'] = 1;
         endif;
@@ -213,8 +218,8 @@ class SalesOrderModel extends MasterModel{
     public function getSalesOrderItems($data){
         $queryData = array();
         $queryData['tableName'] = $this->transChild;
-        $queryData['select'] = "trans_child.*,COUNT(order_bom.id) as bom_items";
-        $queryData['leftJoin']['order_bom'] = "order_bom.trans_child_id = trans_child.id";
+        $queryData['select'] = "trans_child.*,if(production_master.job_status IS NULL,0,production_master.job_status) as job_status";
+        $queryData['leftJoin']['production_master'] = "production_master.trans_child_id = trans_child.id";
         $queryData['where']['trans_child.trans_main_id'] = $data['id'];
         $result = $this->rows($queryData);
         return $result;
@@ -237,6 +242,31 @@ class SalesOrderModel extends MasterModel{
             $this->remove($this->transDetails,['main_ref_id'=>$id,'table_name'=>$this->transMain,'description'=>"SO TERMS"]);
             $this->remove($this->transDetails,['main_ref_id'=>$id,'table_name'=>$this->transMain,'description'=>"SO MASTER DETAILS"]);
             $result = $this->trash($this->transMain,['id'=>$id],'Sales Order');
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
+    }
+
+    public function cancelSO($data){
+        try{
+            $this->db->trans_begin();
+
+            $soData = $this->getSalesOrder(['id'=>$data['id'],'itemList'=>0]);
+
+            $this->edit($this->transChild,['id'=>$data['trans_child_id']],['trans_status'=>3]);
+
+            $setData = Array();
+            $setData['tableName'] = $this->transMain;
+            $setData['where']['id'] = $data['id'];
+            $setData['update']['trans_status'] = "(SELECT IF( COUNT(id) = SUM(IF(trans_status = 3, 1, 0)) ,3 , ".$soData->trans_status." ) as trans_status FROM trans_child WHERE trans_main_id = ".$data['id']." AND is_delete = 0)";
+            $result = $this->setValue($setData);
+            $result["message"] = "Order item canceled successfully.";
 
             if ($this->db->trans_status() !== FALSE):
                 $this->db->trans_commit();
