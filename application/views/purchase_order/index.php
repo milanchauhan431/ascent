@@ -9,10 +9,13 @@
                             <div class="col-md-4">
                                 <ul class="nav nav-pills">
                                     <li class="nav-item"> 
-                                        <button onclick="statusTab('purchaseOrderTable',0);" id="pending_so" class="nav-tab btn waves-effect waves-light btn-outline-danger active" style="outline:0px" data-toggle="tab" aria-expanded="false">Pending</button> 
+                                        <button onclick="statusTab('purchaseOrderTable',0);" id="pending_po" class="nav-tab btn waves-effect waves-light btn-outline-danger active" style="outline:0px" data-toggle="tab" aria-expanded="false">Pending</button> 
                                     </li>
                                     <li class="nav-item"> 
-                                        <button onclick="statusTab('purchaseOrderTable',1);" id="complete_so" class="nav-tab btn waves-effect waves-light btn-outline-success" style="outline:0px" data-toggle="tab" aria-expanded="false">Completed</button> 
+                                        <button onclick="statusTab('purchaseOrderTable',1);" id="complete_po" class="nav-tab btn waves-effect waves-light btn-outline-success" style="outline:0px" data-toggle="tab" aria-expanded="false">Completed</button> 
+                                    </li>
+                                    <li class="nav-item"> 
+                                        <button onclick="statusTab('purchaseOrderTable',3);" id="canceled_po" class="nav-tab btn waves-effect waves-light btn-outline-dark" style="outline:0px" data-toggle="tab" aria-expanded="false">Canceled</button> 
                                     </li>
                                 </ul>
                             </div>

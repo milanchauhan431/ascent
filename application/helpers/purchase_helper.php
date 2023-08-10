@@ -41,10 +41,13 @@ function getPurchaseOrderData($data){
     $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Purchase Order'}";
     $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
 
+    $cancelParam = "{'postData':{'id':".$data->id.",'trans_child_id' : ".$data->trans_child_id."},'fnsave':'cancelPO','message' : 'Are you sure want to cancel this order item ?'}";
+    $cancelButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="confirmStore('.$cancelParam.');" datatip="Cancel Item" flow="down"><i class="ti-close"></i></a>';
+
     $printBtn = '<a class="btn btn-success btn-info permission-approve" href="'.base_url('purchaseOrders/printPO/'.$data->id).'" target="_blank" datatip="Print" flow="down"><i class="fas fa-print" ></i></a>';
 
-    if($data->trans_status > 0): $editButton = $deleteButton = ""; endif;
-    $action = getActionButton($printBtn.$editButton.$deleteButton);
+    if($data->trans_status > 0): $editButton = $cancelButton = $deleteButton = ""; endif;
+    $action = getActionButton($printBtn.$editButton.$cancelButton);
 
     return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->job_number,$data->item_code,$data->item_name,$data->qty,$data->received_qty,$data->pending_qty,$data->item_remark];
 }

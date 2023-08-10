@@ -2,6 +2,29 @@ $(document).ready(function(){
 	$(".ledgerColumn").hide();
 	$(".summary_desc").attr('style','width: 60%;');
 
+	$(document).on('click','.getPendingRequest',function(){
+		var party_id = $('#party_id').val();
+		$('.party_id').html("");
+
+		if (party_id != "" || party_id != 0) {
+			$.ajax({
+				url: base_url + 'purchaseOrders/getRequestItemsForPo',
+				type: 'post',
+				success: function (response) {
+					$("#modal-xl").modal();
+					$('#modal-xl .modal-body').html('');
+					$('#modal-xl .modal-title').html("Carete Invoice");
+					$('#modal-xl .modal-body').html(response);
+					$('#modal-xl .modal-body form').attr('id',"createInvoiceForm");
+					$('#modal-xl .modal-footer .btn-save').html('<i class="fa fa-check"></i> Create Invoice');
+					$("#modal-xl .modal-footer .btn-save").attr('onclick',"createInvoice();");
+				}
+			});
+		} else {
+			$('.party_id').html("Party is required.");
+		}	
+	});
+
 
     $(document).on('click', '.add-item', function () {
 		$('#itemForm')[0].reset();
@@ -43,8 +66,7 @@ $(document).ready(function(){
 		}
 	});
 
-    $(document).on('click', '.saveItem', function () {
-        
+    $(document).on('click', '.saveItem', function () {        
 		var fd = $('#itemForm').serializeArray();
 		var formData = {};
 		$.each(fd, function (i, v) {
@@ -146,6 +168,61 @@ $(document).ready(function(){
 	});
 });
 
+function createInvoice(){
+	$(".orderItem:checked").map(function() {
+		row = $(this).data('row');
+		row.id = "";
+		row.qty_kg = parseFloat(parseFloat(row.qty) * parseFloat(row.std_qty)).toFixed(3);
+		row.amount = parseFloat(parseFloat(row.qty) * parseFloat(row.price)).toFixed(2);
+		row.gst_per = parseFloat(row.gst_per);
+		row.org_price = row.price;
+
+		row.disc_per = (parseFloat(row.disc_per) > 0)?row.disc_per:0;
+		var amount = 0; var taxable_amount = 0; var disc_amt = 0; var net_amount = 0; 
+		var cgst_amt = 0; var sgst_amt = 0; var igst_amt = 0;
+		var cgst_per = 0; var sgst_per = 0; var igst_per = 0;
+
+		if (row.disc_per == "" && row.disc_per == "0") {
+			taxable_amount = amount = parseFloat(parseFloat(row.qty) * parseFloat(row.price)).toFixed(2);
+		} else {
+			amount = parseFloat(parseFloat(row.qty) * parseFloat(row.price)).toFixed(2);
+			disc_amt = parseFloat((amount * parseFloat(row.disc_per)) / 100).toFixed(2);
+			taxable_amount = parseFloat(amount - disc_amt).toFixed(2);
+		}
+
+		row.gst_per = igst_per = parseFloat(row.gst_per).toFixed(0);
+		row.gst_amount = igst_amt = parseFloat((igst_per * taxable_amount) / 100).toFixed(2);
+
+		cgst_per = parseFloat(parseFloat(igst_per) / 2).toFixed(2);
+		sgst_per = parseFloat(parseFloat(igst_per) / 2).toFixed(2);
+
+		cgst_amt = parseFloat((cgst_per * taxable_amount) / 100).toFixed(2);
+		sgst_amt = parseFloat((sgst_per * taxable_amount) / 100).toFixed(2);
+
+		net_amount = parseFloat(parseFloat(taxable_amount) + parseFloat(igst_amt)).toFixed(2);
+
+		row.qty = parseFloat(row.qty).toFixed(3);
+		row.cgst_per = cgst_per;
+		row.cgst_amount = cgst_amt;
+		row.sgst_per = sgst_per;
+		row.sgst_amount = sgst_amt;
+		row.igst_per = igst_per;
+		row.igst_amount = igst_amt;
+		row.disc_amount = disc_amt;
+		row.amount = amount;
+		row.taxable_amount = taxable_amount;
+		row.net_amount = net_amount;
+
+		row.req_ref_list = JSON.parse(row.req_ref_list);
+		row.feasible_remark = JSON.stringify(row.req_ref_list);
+
+		AddRow(row);
+	}).get();
+
+	$("#modal-xl").modal('hide');
+	$('#modal-xl .modal-body').html('');
+}
+
 function AddRow(data) {
     var tblName = "purchaseOrderItems";
 
@@ -183,7 +260,8 @@ function AddRow(data) {
     var qtyKgInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][qty_kg]", value: data.qty_kg });
     var secUnitIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][sec_unit_id]", value: data.sec_unit_id });
     var jobNumberInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][job_number]", value: data.job_number });
-    cell = $(row.insertCell(-1));
+    var reqRefListInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][feasible_remark]", value: data.feasible_remark });
+    cell = $(row.insertCell(-1));//feasible_remark
     cell.html(data.item_name);
     cell.append(idInput);
     cell.append(itemIdInput);
@@ -198,6 +276,7 @@ function AddRow(data) {
     cell.append(qtyKgInput);
     cell.append(secUnitIdInput);
     cell.append(jobNumberInput);
+    cell.append(reqRefListInput);
 
     var hsnCodeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][hsn_code]", value: data.hsn_code });
 	cell = $(row.insertCell(-1));

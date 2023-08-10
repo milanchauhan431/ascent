@@ -2,6 +2,7 @@
 class PurchaseOrders extends MY_Controller{
     private $indexPage = "purchase_order/index";
     private $form = "purchase_order/form";
+    private $createInvoice = "purchase_order/create_invoice";
 
     public function __construct(){
 		parent::__construct();
@@ -39,7 +40,7 @@ class PurchaseOrders extends MY_Controller{
         $this->data['hsnList'] = $this->hsnModel->getHSNList();
 		$this->data['taxList'] = $this->taxMaster->getActiveTaxList(1);
         $this->data['expenseList'] = $this->expenseMaster->getActiveExpenseList(1);
-        $this->data['orderItemList'] = $this->purchaseIndent->getRequestItems($ids);
+        $this->data['orderItemList'] = $this->purchaseIndent->getRequestItemsForPo($ids);
         $this->data['termsList'] = $this->terms->getTermsList(['type'=>'Purchase']);
         //$this->data['companyInfo'] = $this->masterModel->getCompanyInfo();
         $this->data['unitList'] = $this->item->itemUnits();
@@ -80,7 +81,7 @@ class PurchaseOrders extends MY_Controller{
                     if(floor($boxQty) != $boxQty):
                         $errorMessage['qty'.$key] = "Invalid qty against packing standard.";
                     endif;
-                endif;
+                endif;                
             endforeach;
         endif;
         
@@ -112,6 +113,15 @@ class PurchaseOrders extends MY_Controller{
             $this->printJson(['status'=>0,'message'=>'Somthing went wrong...Please try again.']);
         else:
             $this->printJson($this->purchaseOrder->delete($id));
+        endif;
+    }
+
+    public function cancelPO(){
+        $data = $this->input->post();
+        if(empty($data['trans_child_id'])):
+            $this->printJson(['status'=>0,'message'=>'Somthing went wrong...Please try again.']);
+        else:
+            $this->printJson($this->purchaseOrder->cancelPO($data));
         endif;
     }
 
@@ -164,5 +174,9 @@ class PurchaseOrders extends MY_Controller{
 		$mpdf->Output($pdfFileName,'I');
 	}
 
+    public function getRequestItemsForPo(){
+        $this->data['reqItemList'] = $this->purchaseIndent->getRequestItemsForPo();
+        $this->load->view($this->createInvoice,$this->data);
+    }
 }
 ?>

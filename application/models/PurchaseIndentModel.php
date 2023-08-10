@@ -97,5 +97,24 @@ class PurchaseIndentModel extends MasterModel{
         $queryData['where_in']['purchase_request.id'] = str_replace("~",",",$ids);
         return $this->rows($queryData);
     }
+
+    public function getRequestItemsForPo($ids=""){
+        $queryData['tableName'] = $this->purchaseReq;
+        $queryData['select']  = "GROUP_CONCAT(purchase_request.id) as ref_id,order_bom.item_id,purchase_request.req_qty,SUM(purchase_request.req_qty - purchase_request.po_qty) as qty,order_bom.uom,order_bom.make,item_master.item_code,item_master.item_name,item_master.hsn_code,item_master.gst_per,item_master.std_pck_qty,item_master.std_qty,item_master.sec_unit_id,order_bom.price,order_bom.disc_per,item_master.unit_id,unit_master.unit_name,GROUP_CONCAT(DISTINCT(trans_child.job_number) SEPARATOR ',') as job_number,CONCAT('[',GROUP_CONCAT(json_object('id',purchase_request.id,'qty',(purchase_request.req_qty - purchase_request.po_qty)) ORDER BY purchase_request.id SEPARATOR ','),']') as req_ref_list";
+
+        $queryData['leftJoin']['order_bom'] = "purchase_request.bom_id = order_bom.id";
+        $queryData['leftJoin']['trans_child'] = "trans_child.id = order_bom.trans_child_id";
+        $queryData['leftJoin']['item_master'] = "item_master.id = order_bom.item_id";
+        $queryData['leftJoin']['unit_master'] = "unit_master.id = item_master.unit_id";
+
+        $queryData['where']['purchase_request.order_status'] = 1;
+        if(!empty($ids)):
+            $queryData['where_in']['purchase_request.id'] = str_replace("~",",",$ids);
+        endif;
+        $queryData['having'][] = "SUM(purchase_request.req_qty - purchase_request.po_qty) > 0";
+
+        $queryData['group_by'][] = "order_bom.item_id,order_bom.price,order_bom.disc_per"; 
+        return $this->rows($queryData);
+    }
 }
 ?>

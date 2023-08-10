@@ -114,9 +114,13 @@
                                 <hr>
 
                                 <div class="col-md-12 row">
-                                    <div class="col-md-6"><h4>Item Details : </h4></div>
-                                    <div class="col-md-6">
-                                        <button type="button" class="btn btn-outline-success waves-effect float-right add-item"><i class="fa fa-plus"></i> Add Item</button>
+                                    <div class="col-md-8"><h4>Item Details : </h4></div>
+                                    <div class="col-md-4">
+                                        <div class="input-group" style="display:block; float:right;">
+                                            <button type="button" class="btn btn-outline-success waves-effect float-right add-item m-l-5"><i class="fa fa-plus"></i> Add Item</button>
+                                            
+                                            <button type="button"  class="btn btn-outline-info waves-effect float-right getPendingRequest "><i class="fa fa-plus"></i> Add Req. Item</button>                                            
+                                        </div>                                        
                                     </div>
                                 </div>
 
@@ -206,6 +210,7 @@
                                 <input type="hidden" name="item_type" id="item_type" value="" />
                                 <input type="hidden" name="std_pck_qty" id="std_pck_qty" value="" />
                                 <input type="hidden" name="std_qty" id="std_qty" value="" />
+                                <input type="hidden" name="feasible_remark" id="feasible_remark" value="" />
                             </div>
                             
 
@@ -327,11 +332,11 @@ endif;
 
 if(!empty($orderItemList)):
     foreach($orderItemList as $row):
-        if(($row->req_qty - $row->po_qty) > 0):
+        //if(($row->req_qty - $row->po_qty) > 0):
             $row->row_index = "";
-            $row->ref_id = $row->id;
+            //$row->ref_id = $row->id;
             $row->id = "";
-            $row->qty = ($row->req_qty - $row->po_qty);
+            //$row->qty = ($row->req_qty - $row->po_qty);
             $row->qty_kg = ($row->qty * $row->std_qty);
             $row->amount = round(($row->qty * $row->price),2);
             if(!empty($row->disc_per)):
@@ -350,8 +355,11 @@ if(!empty($orderItemList)):
             $row->net_amount = round(($row->taxable_amount + $row->gst_amount),2);
             $row->item_remark = "";
 
+            $row->req_ref_list = json_decode($row->req_ref_list);
+		    $row->feasible_remark = json_encode($row->req_ref_list);
+
             echo '<script>AddRow('.json_encode($row).');</script>';
-        endif;
+        //endif;
     endforeach;
 endif;
 ?>

@@ -124,7 +124,12 @@ function ssDatatable(ele,tableHeaders,tableOptions,dataSet={}){
 							{ className: "text-right", "targets": textAlign.right }
 						],
 		dom: "<'row'<'col-sm-7'B><'col-sm-5'f>>" +"<'row'<'col-sm-12't>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-		buttons: [ 'pageLength', 'excel', {className:'nav-tab-refresh',text: 'Refresh',action: function(){initTable();} }],
+		buttons: [ 
+			'pageLength', 
+			'excel', 
+			{className:'nav-tab-refresh',text: 'Refresh',action: function(){ initTable(); } }
+		],
+		
 		"fnInitComplete":function(){
 			$('.dataTables_scrollBody').perfectScrollbar();
 			$('#' + tableId +' tbody tr:first').trigger('click');

@@ -9,13 +9,13 @@
 							<div class="col-md-4">
 								<ul class="nav nav-pills">
 									<li class="nav-item"> 
-                                        <button onclick="statusTab('purchaseRequestTable',0);" id="PurIndPending" class="nav-tab btn waves-effect waves-light btn-outline-info active" style="outline:0px" data-toggle="tab" aria-expanded="false">Pending</button> 
+                                        <button onclick="statusTab('purchaseRequestTable',0);" id="PurIndPending" class="nav-tab btn waves-effect waves-light btn-outline-danger active" style="outline:0px" data-toggle="tab" aria-expanded="false">Pending</button> 
                                     </li>
 									<li class="nav-item"> 
                                         <button onclick="statusTab('purchaseRequestTable',2);" id="PurIndCompleted" class="nav-tab btn waves-effect waves-light btn-outline-success" style="outline:0px" data-toggle="tab" aria-expanded="false">Completed</button> 
                                     </li>
 									<li class="nav-item"> 
-                                        <button onclick="statusTab('purchaseRequestTable',3);" id="PurIndClose" class="nav-tab btn waves-effect waves-light btn-outline-primary" style="outline:0px" data-toggle="tab" aria-expanded="false">Close</button> 
+                                        <button onclick="statusTab('purchaseRequestTable',3);" id="PurIndClose" class="nav-tab btn waves-effect waves-light btn-outline-dark" style="outline:0px" data-toggle="tab" aria-expanded="false">Close</button> 
                                     </li>
 								</ul>
 							</div>
