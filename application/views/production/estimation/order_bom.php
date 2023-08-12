@@ -1,57 +1,69 @@
 <form>
     <div class="col-md-12">
-    <div class="row" id="input_excel_column">
-            <div class="col-md-3 form-group">
-                <label for="material_description_column">Material Desc. Column No.</label>
-                <input type="text" id="material_description_column" class="form-control numericOnly" value="1">
+        <!-- Excel Config Section Start -->
+        <div class="row form-group">
+            <div class="col-md-2">
+                <button type="button" class="btn btn-secondary btn-block" title="Click Me" data-toggle="collapse" href="#import_excel_section" role="button" aria-expanded="false" aria-controls="import_excel"> Excel Config.</button>
             </div>
-
-            <div class="col-md-3 form-group">
-                <label for="make_column">Make Column No.</label>
-                <input type="text" id="make_column" class="form-control numericOnly" value="2">
-            </div>
-
-            <div class="col-md-3 form-group">
-                <label for="item_code_column">Cat No. Column No.</label>
-                <input type="text" id="item_code_column" class="form-control numericOnly" value="3">
-            </div>
-
-            <div class="col-md-3 form-group">
-                <label for="uom_column">UOM Column No.</label>
-                <input type="text" id="uom_column" class="form-control numericOnly" value="4">
-            </div>
-
-            <div class="col-md-3 form-group">
-                <label for="qty_column">Qty Column No.</label>
-                <input type="text" id="qty_column" class="form-control numericOnly" value="5">
-            </div>
-
-            <div class="col-md-3 form-group">
-                <label for="price_column">Other MRP Column No.</label>
-                <input type="text" id="price_column" class="form-control numericOnly" value="6">
-            </div>
-
-            <div class="col-md-3 form-group">
-                <label for="amount_column">OTHER AMOUNT Column No.</label>
-                <input type="text" id="amount_column" class="form-control numericOnly" value="7">
-            </div>
-
-            <div class="col-md-3 form-group">
-                <label for="disc_per_column">DISC. Column No.</label>
-                <input type="text" id="disc_per_column" class="form-control numericOnly" value="8">
-            </div>
-
-            <div class="col-md-3 form-group">
-                <label for="net_amount_column">FINAL OTHER AMOUNT Column No.</label>
-                <input type="text" id="net_amount_column" class="form-control numericOnly" value="9">
-            </div>
-
-            <div class="col-md-3 form-group">
-                <label for="start_row">Start Reading (Row No.)</label>
-                <input type="text" id="start_row" class="form-control numericOnly" value="4">
+            <div class="col-md-10">
+                <hr>
             </div>
         </div>
 
+        <section class="collapse multi-collapse" id="import_excel_section">
+            <div class="row" id="input_excel_column">
+                <div class="col-md-3 form-group">
+                    <label for="material_description_column">Material Desc. Column No.</label>
+                    <input type="text" id="material_description_column" class="form-control numericOnly" value="1">
+                </div>
+
+                <div class="col-md-3 form-group">
+                    <label for="make_column">Make Column No.</label>
+                    <input type="text" id="make_column" class="form-control numericOnly" value="2">
+                </div>
+
+                <div class="col-md-3 form-group">
+                    <label for="item_code_column">Cat No. Column No.</label>
+                    <input type="text" id="item_code_column" class="form-control numericOnly" value="3">
+                </div>
+
+                <div class="col-md-3 form-group">
+                    <label for="uom_column">UOM Column No.</label>
+                    <input type="text" id="uom_column" class="form-control numericOnly" value="4">
+                </div>
+
+                <div class="col-md-3 form-group">
+                    <label for="qty_column">Qty Column No.</label>
+                    <input type="text" id="qty_column" class="form-control numericOnly" value="5">
+                </div>
+
+                <div class="col-md-3 form-group">
+                    <label for="price_column">Other MRP Column No.</label>
+                    <input type="text" id="price_column" class="form-control numericOnly" value="6">
+                </div>
+
+                <div class="col-md-3 form-group">
+                    <label for="amount_column">OTHER AMOUNT Column No.</label>
+                    <input type="text" id="amount_column" class="form-control numericOnly" value="7">
+                </div>
+
+                <div class="col-md-3 form-group">
+                    <label for="disc_per_column">DISC. Column No.</label>
+                    <input type="text" id="disc_per_column" class="form-control numericOnly" value="8">
+                </div>
+
+                <div class="col-md-3 form-group">
+                    <label for="net_amount_column">FINAL OTHER AMOUNT Column No.</label>
+                    <input type="text" id="net_amount_column" class="form-control numericOnly" value="9">
+                </div>
+
+                <div class="col-md-3 form-group">
+                    <label for="start_row">Start Reading (Row No.)</label>
+                    <input type="text" id="start_row" class="form-control numericOnly" value="4">
+                </div>
+            </div>
+        </section>
+        <!-- Excel Config Section End -->
         <hr>
 
         <div class="row">
