@@ -438,7 +438,9 @@ function resPartyDetail(response = ""){
 		
         var gstDetails = response.data.gstDetails;
         $.each(gstDetails,function(index,row){  
-            html += '<option value="'+row.gstin+'">'+row.gstin+'</option>';
+			if(row.gstin != ""){
+            	html += '<option value="'+row.gstin+'">'+row.gstin+'</option>';
+			}
         });        
     }else{
         $("#party_name").val("");

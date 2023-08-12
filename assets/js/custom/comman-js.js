@@ -1094,7 +1094,7 @@ function resPartyMaster(response,formId){
 		getPartyList({"party_category":$("#party_id").data('party_category')});
 		setTimeout(function(){
 			$("#party_id").val(response.id);
-			$("#party_id").comboSelect();
+			$("#party_id").select2();//comboSelect();
 			$(".partyDetails").trigger('change');
 		},1000);
     }else{
