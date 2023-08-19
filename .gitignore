@@ -1,4 +1,5 @@
 ascent/
 application/logs/
-assets/uploads
+assets/uploads/
+assets/db/
 vendor/

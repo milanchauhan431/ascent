@@ -111,6 +111,7 @@ $(document).ready(function(){
 		var fnsave = $(this).data("fnsave") || "save";
 		var resFunction = $(this).data('res_function') || "";
 		var jsStoreFn = $(this).data('js_store_fn') || 'store';
+		var savebtn_text = $(this).data('savebtn_text') || '<i class="fa fa-check"></i> Save';
 
 		var fnJson = "{'formId':'"+formId+"','controller':'"+controllerName+"','fnsave':'"+fnsave+"'}";
 
@@ -132,7 +133,9 @@ $(document).ready(function(){
 			if(resFunction != ""){
 				$("#"+modalId+" .modal-body form").attr('data-res_function',resFunction);
 			}
+			$("#"+modalId+" .modal-footer .btn-save").html(savebtn_text);
 			$("#"+modalId+" .modal-footer .btn-save").attr('onclick',jsStoreFn+"("+fnJson+");");
+			
 			$("#"+modalId+" .modal-footer .btn-close").attr('data-modal_id',formId);
 
             if(button == "close"){
