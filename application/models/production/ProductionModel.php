@@ -351,11 +351,10 @@ class ProductionModel extends MasterModel{
     }
     /* Estomation & Design End */
 
-    /* Fabrication Department Start */
-    public function getFabricationDTRows($data){
-
+    /* Production DTROWS Start [Fabrication,Powder Coating]*/
+    public function getProductionDTRows($data){
         $data['tableName'] = $this->productionMaster;
-        $data['select'] = "production_master.id,production_master.entry_type,production_master.ref_id,production_master.pm_id,production_master.trans_child_id,production_master.trans_main_id,trans_child.job_number,trans_child.item_name,trans_child.qty as order_qty,(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' ELSE '' END) as priority_status,production_master.ga_file,production_master.technical_specification_file,production_master.sld_file,production_master.priority,production_master.fab_dept_note,production_master.remark,production_master.accepted_by,em.emp_name as accepted_by_name,production_master.accepted_at,production_master.job_status, (CASE WHEN production_master.ref_id = 0 THEN SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), 1) ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), FIND_IN_SET('".$data['from_entry_type']."', production_master.department_ids) + 1), REPLACE(', ', ' ', ''), -1) END) as next_dept_id";
+        $data['select'] = "production_master.id,production_master.entry_type,production_master.ref_id,production_master.pm_id,production_master.trans_child_id,production_master.trans_main_id,trans_child.job_number,trans_child.item_name,trans_child.qty as order_qty,(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' ELSE '' END) as priority_status,production_master.ga_file,production_master.technical_specification_file,production_master.sld_file,production_master.priority,production_master.fab_dept_note,production_master.pc_dept_note,production_master.remark,production_master.accepted_by,em.emp_name as accepted_by_name,production_master.accepted_at,production_master.job_status, (CASE WHEN production_master.ref_id = 0 THEN SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), 1) ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), FIND_IN_SET('".$data['from_entry_type']."', production_master.department_ids) + 1), REPLACE(', ', ' ', ''), -1) END) as next_dept_id";
 
         $data['leftJoin']['trans_child'] = "production_master.trans_child_id = trans_child.id";
         $data['leftJoin']['employee_master as em'] = "em.id = production_master.accepted_by";
@@ -394,14 +393,17 @@ class ProductionModel extends MasterModel{
         $data['searchCol'][] = "";
         $data['searchCol'][] = "";
         $data['searchCol'][] = "";
-        $data['searchCol'][] = "production_master.fab_dept_note";
+        if(in_array($data['to_entry_type'],[30,31,32,33])):
+            $data['searchCol'][] = "production_master.fab_dept_note";
+        elseif($data['to_entry_type'] == 34):
+            $data['searchCol'][] = "production_master.pc_dept_note";
+        endif;
         $data['searchCol'][] = "production_master.remark";
-        //$data['searchCol'][] = "CONCAT(em.emp_name,' ',DATE_FORMAT(production_master.accepted_at,'%d-%m-%Y %h:%i:%s %A'))";
 
         $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
         if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}
         
-        return $this->pagingRows($data); $this->printQuery();
+        return $this->pagingRows($data);
     }
 
     public function acceptJob($data){
@@ -435,8 +437,10 @@ class ProductionModel extends MasterModel{
             return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
         }
     }
+    /* Production DTROWS End */
 
-    public function getFabricationData($data){
+    /* Production Transaction Data [Fabrication, Powder Coating] Start */
+    public function getProductionTransData($data){
         $queryData['tableName'] = $this->productionTrans;
         if(!empty($data['ref_id'])):
             $queryData['where']['ref_id'] = $data['ref_id'];
@@ -448,9 +452,9 @@ class ProductionModel extends MasterModel{
         $result = $this->rows($queryData); //$this->printQuery();
         return $result;
     }
-    /* Fabrication Department End */
+    /* Production Transaction Data [Fabrication, Powder Coating] End */
 
-    /* Fabrication [Mechanical Design, Cutting] Start */
+    /* Fabrication [Mechanical Design, Cutting, Fab. Assembly] Start */
     public function saveProductionTrans($data){
         try{
             $this->db->trans_begin();
@@ -493,7 +497,7 @@ class ProductionModel extends MasterModel{
             return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
         }
     }
-    /* Fabrication [Mechanical Design, Cutting] End */
+    /* Fabrication [Mechanical Design, Cutting, Fab. Assembly] End */
 
     /* Fabrication [Bending] Start */
     public function completeProductionTrans($data){

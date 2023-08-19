@@ -83,6 +83,20 @@ function getProductionDtHeader($page){
     $data['fab_assembely'][] = ["name"=>"FAB. PRODUCTION NOTE"];
     $data['fab_assembely'][] = ["name"=>"GENERAL NOTE"];
 
+    /* Powder Coating Header */
+    $data['powder_coating'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['powder_coating'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['powder_coating'][] = ["name"=>"Job No."];
+    $data['powder_coating'][] = ["name"=>"Item Name"];
+    $data['powder_coating'][] = ["name"=>"Order Qty"];
+    $data['powder_coating'][] = ["name"=>"Priority","textAlign"=>"center"];
+    $data['powder_coating'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['powder_coating'][] = ["name"=>"T.S.","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['powder_coating'][] = ["name"=>"SLD","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['powder_coating'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['powder_coating'][] = ["name"=>"POWDER COATING NOTE"];
+    $data['powder_coating'][] = ["name"=>"GENERAL NOTE"];
+
     return tableHeader($data[$page]);
 }
 
@@ -243,7 +257,7 @@ function getFabricationData($data){
         return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->fab_dept_note,$data->remark];
     endif;
 
-    if($data->to_entry_type == 33):       
+    if($data->to_entry_type == 33): // Fab. Assembly
 
         $viewComplete = $completJob = $accptJob = '';
 
@@ -270,6 +284,53 @@ function getFabricationData($data){
         $action = getActionButton($accptJob.$viewMacDes.$completJob.$viewComplete);
 
         return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->fab_dept_note,$data->remark];
+    endif;
+}
+
+/* Powder Coating Table Data */
+function getPowderCoatingData($data){
+    if($data->priority == 1):
+        $data->priority_status = '<span class="badge badge-pill badge-danger m-1">'.$data->priority_status.'</span>';
+    elseif($data->priority == 2):
+        $data->priority_status = '<span class="badge badge-pill badge-warning m-1">'.$data->priority_status.'</span>';
+    elseif($data->priority == 3):
+        $data->priority_status = '<span class="badge badge-pill badge-info m-1">'.$data->priority_status.'</span>';
+    endif;
+
+    $data->ga_file = (!empty($data->ga_file))?'<a href="'.base_url('assets/uploads/production/'.$data->ga_file).'" class="btn btn-outline-info waves-effect waves-light" target="_blank"><i class="fa fa-eye"></i></a>':'';
+    $data->technical_specification_file = (!empty($data->technical_specification_file))?'<a href="'.base_url('assets/uploads/production/'.$data->technical_specification_file).'" class="btn btn-outline-info waves-effect waves-light" target="_blank"><i class="fa fa-eye"></i></a>':'';
+    $data->sld_file = (!empty($data->sld_file))?'<a href="'.base_url('assets/uploads/production/'.$data->sld_file).'" class="btn btn-outline-info waves-effect waves-light" target="_blank"><i class="fa fa-eye"></i></a>':'';
+
+    $viewBomParam = "{'postData':{'trans_child_id':".$data->trans_child_id."},'modal_id' : 'modal-xl','fnedit':'viewProductionBom','title' : 'View Bom [Item Name : ".$data->item_name."]','button':'close','controller':'production/estimation'}";
+    $viewBom = '<a class="btn btn-outline-info waves-effect waves-light" href="javascript:void(0)" onclick="edit('.$viewBomParam.');" datatip="View Item Bom" flow="down"><i class="fa fa-eye"></i></a>';
+
+    if($data->to_entry_type == 34): // Powder Coating
+
+        $viewComplete = $completJob = $accptJob = '';
+
+        if($data->entry_type == $data->from_entry_type):
+            $acceptParam = "{'postData':{'job_status' : 3, id : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'controllerName' : 'production/powderCoating','fnsave':'acceptJob','message':'Are you sure want to accept this Job?'}";
+            $accptJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Accept Job" flow="down" onclick="confirmStore('.$acceptParam.');"><i class="fa fa-check"></i></a>';
+        endif;
+
+        if($data->job_status == 1 && $data->entry_type == $data->to_entry_type):
+            $accptJob = '';
+            $completParam = "{'postData':{'ref_id' : ".$data->id.", 'pm_id' : ".$data->pm_id.",'entry_type': ".$data->entry_type.",'fab_prod_entry_type':'33'},'controller' : 'production/powderCoating','fnedit':'powderCoating','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'powderCoating','title':'Powder Coating'}";
+            $completJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Complet Job" flow="down" onclick="edit('.$completParam.');"><i class="fa fa-check"></i></a>';
+        elseif(in_array($data->job_status,[2,3]) && $data->entry_type == $data->to_entry_type):
+            $completJob = $accptJob = '';
+
+            $viewParam = "{'postData':{'ref_id' : ".$data->id.",'entry_type': ".$data->entry_type."},'controller' : 'production/powderCoating','fnedit':'viewPowderCoating','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'powderCoating','title':'Powder Coating','button':'close'}";
+            $viewComplete = '<a class="btn btn-info" href="javascript:void(0)" datatip="View Complet Job" flow="down" onclick="edit('.$viewParam.');"><i class="fa fa-eye"></i></a>';
+        endif;
+
+        $viewMacDesParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '30'},'controller' : 'production/fabrication','fnedit':'viewMechanicalDesign','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Mechanical Design','button':'close'}";
+
+        $viewMacDes = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Mechanical Design" flow="down" onclick="edit('.$viewMacDesParam.');"><i class="fa fa-eye"></i></a>';
+
+        $action = getActionButton($accptJob.$viewMacDes.$completJob.$viewComplete);
+
+        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->pc_dept_note,$data->remark];
     endif;
 }
 ?>

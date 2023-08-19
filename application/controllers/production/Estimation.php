@@ -13,7 +13,7 @@ class Estimation extends MY_Controller{
         "31"=>"CUTTING",
         "32"=>"BENDING",
         "33"=>"FAB. ASSEMBELY",
-        "34"=>"POWER COATING",
+        "34"=>"POWDER COATING",
         "35"=>"ELETRICALS DESIGN",
         "36"=>"ASSEMBELY PRODUCTION",
         "37"=>"ASSEMBELY CONTACTOR",
@@ -245,6 +245,7 @@ class Estimation extends MY_Controller{
                 $imagePath = realpath(APPPATH . '../assets/uploads/production/');
                 $ext = pathinfo($_FILES['ga_file']['name'], PATHINFO_EXTENSION);
 
+                $_FILES['ga_file']['name'] = preg_replace('/[^A-Za-z0-9.]+/', '_', strtolower($_FILES['ga_file']['name']));
                 $config = ['file_name' => time()."_".$_FILES['ga_file']['name'],'allowed_types' => '*','max_size' => 10240,'overwrite' => FALSE, 'upload_path' => $imagePath];
 
                 if(file_exists($config['upload_path'].'/'.$config['file_name'])):
@@ -270,6 +271,7 @@ class Estimation extends MY_Controller{
                 $imagePath = realpath(APPPATH . '../assets/uploads/production/');
                 $ext = pathinfo($_FILES['technical_specification_file']['name'], PATHINFO_EXTENSION);
 
+                $_FILES['technical_specification_file']['name'] = preg_replace('/[^A-Za-z0-9.]+/', '_', strtolower($_FILES['technical_specification_file']['name']));
                 $config = ['file_name' => time()."_".$_FILES['technical_specification_file']['name'],'allowed_types' => '*','max_size' => 10240,'overwrite' => FALSE, 'upload_path' => $imagePath];
 
                 if(file_exists($config['upload_path'].'/'.$config['file_name'])): 
@@ -295,6 +297,7 @@ class Estimation extends MY_Controller{
                 $imagePath = realpath(APPPATH . '../assets/uploads/production/');
                 $ext = pathinfo($_FILES['sld_file']['name'], PATHINFO_EXTENSION);
 
+                $_FILES['sld_file']['name'] = preg_replace('/[^A-Za-z0-9.]+/', '_', strtolower($_FILES['sld_file']['name']));
                 $config = ['file_name' => time()."_".$_FILES['sld_file']['name'],'allowed_types' => '*','max_size' => 10240,'overwrite' => FALSE, 'upload_path' => $imagePath];
 
                 if(file_exists($config['upload_path'].'/'.$config['file_name'])):

@@ -27,7 +27,7 @@ class Fabrication extends MY_Controller{
         $data['to_entry_type'] = $to_entry_type;
         $data['job_status'] = $job_status;
 
-        $result = $this->production->getFabricationDTRows($data);
+        $result = $this->production->getProductionDTRows($data);
         $sendData = array();$i=($data['start']+1);
 
         foreach($result['data'] as $row):
@@ -56,7 +56,7 @@ class Fabrication extends MY_Controller{
 
     public function viewMechanicalDesign(){
         $data = $this->input->post();
-        $this->data['dataRow'] = $this->production->getFabricationData($data);
+        $this->data['dataRow'] = $this->production->getProductionTransData($data);
         $this->load->view($this->viewMechanicalDesign,$this->data);
     }
 
@@ -69,7 +69,7 @@ class Fabrication extends MY_Controller{
 
     public function viewCutting(){
         $data = $this->input->post();
-        $this->data['dataRow'] = $this->production->getFabricationData($data);
+        $this->data['dataRow'] = $this->production->getProductionTransData($data);
         $this->load->view($this->viewCutting,$this->data);
     }
 
@@ -82,7 +82,7 @@ class Fabrication extends MY_Controller{
 
     public function viewFabAssembely(){
         $data = $this->input->post();
-        $this->data['dataRow'] = $this->production->getFabricationData($data);
+        $this->data['dataRow'] = $this->production->getProductionTransData($data);
         $this->load->view($this->viewFabAssembely,$this->data);
     }
 
@@ -102,7 +102,8 @@ class Fabrication extends MY_Controller{
                 $imagePath = realpath(APPPATH . '../assets/uploads/production/');
                 $ext = pathinfo($_FILES['cutting_drawings']['name'], PATHINFO_EXTENSION);
 
-                $config = ['file_name' => time()."_"."CD_".$_FILES['cutting_drawings']['name'],'allowed_types' => '*','max_size' => 10240,'overwrite' => FALSE, 'upload_path' => $imagePath];
+                $_FILES['cutting_drawings']['name'] = preg_replace('/[^A-Za-z0-9.]+/', '_', strtolower($_FILES['cutting_drawings']['name']));
+                $config = ['file_name' => time()."_CD_".$_FILES['cutting_drawings']['name'],'allowed_types' => '*','max_size' => 10240,'overwrite' => FALSE, 'upload_path' => $imagePath];
 
                 if(file_exists($config['upload_path'].'/'.$config['file_name'])):
                     unlink($config['upload_path'].'/'.$config['file_name']);
