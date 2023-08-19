@@ -113,7 +113,7 @@ class DbUtility extends CI_Controller{
             if(!empty($error)):
                 print json_encode(['status'=>0,'message'=>'Somthing went wrong. cURL Error #: '. $error]);exit;
             else:
-                $response = json_decode($response);	
+                $response = json_decode($response,false);	
                 if($response->status == 0):
                     print json_encode(['status'=>0,'message'=>'Somthing went wrong. Error #: '. $response->message]);exit;
                 else:
