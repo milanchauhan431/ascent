@@ -218,7 +218,8 @@ $(document).ready(function() {
                                             }
                                         });
                                         postData['item_id'] = item_id;
-                                        //console.log(postData['item_code']);
+                                        postData = Object.assign({}, postData);
+                                        
                                         AddRow(postData);
                                     }); 
                                 } 
@@ -236,15 +237,18 @@ $(document).ready(function() {
 
     $(document).on('click','.addNew',function(){ 
         clickedTr = $(this).data('row_id'); 
-        var formData = $("#add-item-"+clickedTr).data('form_data');  
+        var formData = $("#add-item-"+clickedTr).data('form_data');
+        console.log(formData);
         
         setTimeout(function(){
-            $("#addItem #item_code").val(formData[3]);
-            $("#addItem #item_name").val(formData[1]);
-            $("#addItem #make_brand").val(formData[2]);$("#addItem #make_brand").select2({ with:null });//.comboSelect();
-            $("#addItem #unit_id").val(25);$("#addItem #unit_id").select2({ with:null });//.comboSelect();
-            $("#addItem #defualt_disc").val(formData[8]);
-            $("#addItem #price").val(formData[6]);
+            $("#addItem #item_code").val(formData.item_code);
+            $("#addItem #item_name").val(formData.material_description);
+            $("#addItem #make_brand").val(formData.make);
+            $("#addItem #make_brand").select2({ with:null });//.comboSelect();
+            $("#addItem #unit_id").val(25);
+            $("#addItem #unit_id").select2({ with:null });//.comboSelect();
+            $("#addItem #defualt_disc").val(formData.disc_per);
+            $("#addItem #price").val(formData.price);
         },1000);
     });
 });
@@ -261,11 +265,11 @@ function AddRow(data){
 
     var ind = -1 ;
 	row = tBody.insertRow(ind);
-    $(row).attr('style',((data['item_id'] == "")?"background:#f7b4b4;":"background:#8ce1d3;"));
-    $(row).attr('class',((data['item_id'] == "")?"none":"success"));
+    $(row).attr('style',((data.item_id == "")?"background:#f7b4b4;":"background:#8ce1d3;"));
+    $(row).attr('class',((data.item_id == "")?"none":"success"));
     
 
-    var disable = ((data['item_id'] == "")?true:false);
+    var disable = ((data.item_id == "")?true:false);
     
     //Add index cell
 	var countRow = ($('#' + tblName + ' tbody tr:last').index() + 1);
@@ -277,59 +281,58 @@ function AddRow(data){
 
     var transMainIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][trans_main_id]",  value: $("#trans_main_id").val(), disabled:disable });
     var transChildInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][trans_child_id]",  value: $("#trans_child_id").val(), disabled:disable });
-    var materialInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][material_description]",  value: data['material_description'], disabled:disable });
+    var materialInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][material_description]",  value: data.material_description, disabled:disable });
     cell = $(row.insertCell(-1));
-    cell.html(data['material_description']);
+    cell.html(data.material_description);
     cell.append(materialInput);
     cell.append(transMainIdInput);
     cell.append(transChildInput);
 
-    var makeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][make]",  value: data['make'], disabled:disable });
+    var makeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][make]",  value: data.make, disabled:disable });
     cell = $(row.insertCell(-1));
-    cell.html(data['make']);
+    cell.html(data.make);
     cell.append(makeInput);
 
-    var itemCodeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_code]",  value: data['item_code'], disabled:disable });
-    var itemIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_id]",id:'item_id_'+countRow,  value: data['item_id'], disabled:disable });
+    var itemCodeInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_code]",  value: data.item_code, disabled:disable });
+    var itemIdInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][item_id]",id:'item_id_'+countRow,  value: data.item_id, disabled:disable });
     cell = $(row.insertCell(-1));
-    cell.html(data['item_code']);
+    cell.html(data.item_code);
     cell.append(itemCodeInput);
     cell.append(itemIdInput);
 
-    var unitInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][uom]",  value: data['uom'], disabled:disable });
+    var unitInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][uom]",  value: data.uom, disabled:disable });
     cell = $(row.insertCell(-1));
-    cell.html(data['uom']);
+    cell.html(data.uom);
     cell.append(unitInput);
 
-    var qtyInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][qty]",  value: data['qty'], disabled:disable });
+    var qtyInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][qty]",  value: data.qty, disabled:disable });
     cell = $(row.insertCell(-1));
-    cell.html(data['qty']);
+    cell.html(data.qty);
     cell.append(qtyInput);
 
-    var priceInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][price]",  value: data['price'], disabled:disable });
+    var priceInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][price]",  value: data.price, disabled:disable });
     cell = $(row.insertCell(-1));
-    cell.html(data['price']);
+    cell.html(data.price);
     cell.append(priceInput);
 
-    var amountInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][amount]",  value: data['amount'], disabled:disable });
+    var amountInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][amount]",  value: data.amount, disabled:disable });
     cell = $(row.insertCell(-1));
-    cell.html(data['amount']);
+    cell.html(data.amount);
     cell.append(amountInput);
 
-    var discPerInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][disc_per]",  value: data['disc_per'], disabled:disable });
+    var discPerInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][disc_per]",  value: data.disc_per, disabled:disable });
     cell = $(row.insertCell(-1));
-    cell.html(data['disc_per']);
+    cell.html(data.disc_per);
     cell.append(discPerInput);
 
-    var netAmtInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][net_amount]",  value: data['net_amount'], disabled:disable });
+    var netAmtInput = $("<input/>", { type: "hidden", name: "itemData["+countRow+"][net_amount]",  value: data.net_amount, disabled:disable });
     cell = $(row.insertCell(-1));
-    cell.html(data['net_amount']);
+    cell.html(data.net_amount);
     cell.append(netAmtInput);
 
     var addNewItem = $('<button><i class="fa fa-plus"></i></button>');
 	addNewItem.attr("type", "button");
 	addNewItem.attr("id", "add-item-"+countRow);
-	//addNewItem.attr("onclick", "Edit(" + JSON.stringify(data) + ",this);");
 	addNewItem.attr("class", "btn waves-effect waves-light btn-outline-primary float-right addNew permission-write press-add-btn");
 	addNewItem.attr("data-button", "both");
 	addNewItem.attr("data-row_id", countRow);
@@ -343,7 +346,7 @@ function AddRow(data){
 	addNewItem.attr("data-form_data", JSON.stringify(data));
 
     cell = $(row.insertCell(-1));
-    cell.append(((data['item_id'] == "")?addNewItem:""));
+    cell.append(((data.item_id == "")?addNewItem:""));
     cell.attr('id','cell-'+countRow)
 }
 
