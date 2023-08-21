@@ -362,7 +362,13 @@ $(document).ready(function(){
 
 	$(document).on('change','.custom-file-input',function(){
 		var inputId = $(this).attr('id');
-		var fileName = $('#'+inputId).val().split('\\').pop() || "Choose file";
+		if($('#'+inputId).hasClass("multifiles")){
+			var files = $('#'+inputId).prop("files")
+			var fileNames = $.map(files, function(val) { return val.name; });
+			var fileName = fileNames.join(", ") || "Choose file";
+		}else{
+			var fileName = $('#'+inputId).val().split('\\').pop() || "Choose file";
+		}
         $('label[for="' + inputId + '"]').html(fileName);
 	});
 
@@ -597,17 +603,17 @@ function store(postData){
 		processData:false,
 		contentType:false,
 		dataType:"json",
-	}).done(function(data){
-		if(data.status==1){
+	}).done(function(response){
+		if(response.status==1){
 			initTable(); $('#'+formId)[0].reset();$(".modal").modal('hide');
-			toastr.success(data.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
+			toastr.success(response.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
 		}else{
-			if(typeof data.message === "object"){
+			if(typeof response.message === "object"){
 				$(".error").html("");
-				$.each( data.message, function( key, value ) {$("."+key).html(value);});
+				$.each( response.message, function( key, value ) {$("."+key).html(value);});
 			}else{
 				initTable();
-				toastr.error(data.message, 'Error', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
+				toastr.error(response.message, 'Error', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
 			}			
 		}				
 	});
@@ -631,20 +637,20 @@ function customStore(postData){
 		processData:false,
 		contentType:false,
 		dataType:"json",
-	}).done(function(data){
+	}).done(function(response){
 		if(resFunctionName != ""){
-			window[resFunctionName](data,formId);
+			window[resFunctionName](response,formId);
 		}else{
-			if(data.status==1){
+			if(response.status==1){
 				initTable();
-				toastr.success(data.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
+				toastr.success(response.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
 			}else{
-				if(typeof data.message === "object"){
+				if(typeof response.message === "object"){
 					$(".error").html("");
-					$.each( data.message, function( key, value ) {$("."+key).html(value);});
+					$.each( response.message, function( key, value ) {$("."+key).html(value);});
 				}else{
 					initTable();
-					toastr.error(data.message, 'Error', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
+					toastr.error(response.message, 'Error', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
 				}			
 			}	
 		}			

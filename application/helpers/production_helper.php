@@ -97,6 +97,21 @@ function getProductionDtHeader($page){
     $data['powder_coating'][] = ["name"=>"POWDER COATING NOTE"];
     $data['powder_coating'][] = ["name"=>"GENERAL NOTE"];
 
+    /* Electrical Design Header */
+    $data['electrical_design'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['electrical_design'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['electrical_design'][] = ["name"=>"Job No."];
+    $data['electrical_design'][] = ["name"=>"Item Name"];
+    $data['electrical_design'][] = ["name"=>"Order Qty"];
+    $data['electrical_design'][] = ["name"=>"Priority","textAlign"=>"center"];
+    $data['electrical_design'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['electrical_design'][] = ["name"=>"T.S.","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['electrical_design'][] = ["name"=>"SLD","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['electrical_design'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['electrical_design'][] = ["name"=>"FAB. PRODUCTION NOTE"];
+    $data['electrical_design'][] = ["name"=>"POWDER COATING NOTE"];
+    $data['electrical_design'][] = ["name"=>"GENERAL NOTE"];
+
     return tableHeader($data[$page]);
 }
 
@@ -332,5 +347,32 @@ function getPowderCoatingData($data){
 
         return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->pc_dept_note,$data->remark];
     endif;
+}
+
+/* Electrical Design Table Data */
+function getElectricalDesignData($data){
+    if($data->priority == 1):
+        $data->priority_status = '<span class="badge badge-pill badge-danger m-1">'.$data->priority_status.'</span>';
+    elseif($data->priority == 2):
+        $data->priority_status = '<span class="badge badge-pill badge-warning m-1">'.$data->priority_status.'</span>';
+    elseif($data->priority == 3):
+        $data->priority_status = '<span class="badge badge-pill badge-info m-1">'.$data->priority_status.'</span>';
+    endif;
+
+    $data->ga_file = (!empty($data->ga_file))?'<a href="'.base_url('assets/uploads/production/'.$data->ga_file).'" class="btn btn-outline-info waves-effect waves-light" target="_blank"><i class="fa fa-eye"></i></a>':'';
+    $data->technical_specification_file = (!empty($data->technical_specification_file))?'<a href="'.base_url('assets/uploads/production/'.$data->technical_specification_file).'" class="btn btn-outline-info waves-effect waves-light" target="_blank"><i class="fa fa-eye"></i></a>':'';
+    $data->sld_file = (!empty($data->sld_file))?'<a href="'.base_url('assets/uploads/production/'.$data->sld_file).'" class="btn btn-outline-info waves-effect waves-light" target="_blank"><i class="fa fa-eye"></i></a>':'';
+
+    $viewBomParam = "{'postData':{'trans_child_id':".$data->trans_child_id."},'modal_id' : 'modal-xl','fnedit':'viewProductionBom','title' : 'View Bom [Item Name : ".$data->item_name."]','button':'close','controller':'production/estimation'}";
+    $viewBom = '<a class="btn btn-outline-info waves-effect waves-light" href="javascript:void(0)" onclick="edit('.$viewBomParam.');" datatip="View Item Bom" flow="down"><i class="fa fa-eye"></i></a>';
+
+    $addAttachment = '';
+
+    $attechmentParam = "{'postData':{'pm_id':".$data->id."},'modal_id' : 'modal-md', 'form_id':'electricalDesign','fnedit':'electricalDesign','title' : 'Electrical Design [Job No. : ".$data->job_number."]','js_store_fn':'customStore','res_function':'resSaveElectricalDesign'}";
+    $addAttachment = '<a class="btn btn-info" href="javascript:void(0)" onclick="edit('.$attechmentParam.');" datatip="Add Design" flow="down"><i class="fa fa-plus"></i></a>';
+
+    $action = getActionButton($addAttachment);
+
+    return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->fab_dept_note,$data->pc_dept_note,$data->remark];
 }
 ?>

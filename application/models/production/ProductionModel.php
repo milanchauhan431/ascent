@@ -530,5 +530,84 @@ class ProductionModel extends MasterModel{
         }
     }
     /* Fabrication [Bending] End */
+
+    /* Electrical Design Start */
+    public function getElectricalDesignDTRows($data){
+        $data['tableName'] = $this->productionMaster;
+        $data['select'] = "trans_child.id as trans_child_id,trans_child.trans_main_id,trans_child.item_name,trans_child.qty as order_qty,trans_child.job_number,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_name,production_master.fab_dept_note,production_master.pc_dept_note,production_master.ass_dept_note,(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' ELSE '' END) as priority_status,production_master.ga_file,production_master.technical_specification_file,production_master.sld_file,production_master.priority,production_master.remark,production_master.id,production_master.job_status,production_master.entry_type";
+
+        $data['leftJoin']['trans_child'] = "trans_child.id = production_master.trans_child_id";
+        $data['leftJoin']['trans_main'] = "trans_main.id = trans_child.trans_main_id";
+
+        $data['where']['production_master.entry_type'] = $data['entry_type'];
+        $data['where']['trans_child.trans_status !='] = 3;
+        
+        if($data['job_status'] == 0):
+            $data['where_in']['production_master.job_status'] = [1,2];
+            $data['where']['trans_main.trans_date <='] = $this->endYearDate;
+        else:
+            $data['where_in']['production_master.job_status'] = [3];
+            $data['where']['trans_main.trans_date >='] = $this->startYearDate;
+            $data['where']['trans_main.trans_date <='] = $this->endYearDate;
+        endif;
+
+        $data['order_by']['production_master.priority'] = "ASC";
+
+        $data['searchCol'][] = "";
+        $data['searchCol'][] = "";
+        $data['searchCol'][] = "trans_child.job_number";
+        $data['searchCol'][] = "trans_child.item_name";
+        $data['searchCol'][] = "trans_child.qty";
+        $data['searchCol'][] = "(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' END)";
+        $data['searchCol'][] = "";
+        $data['searchCol'][] = "";
+        $data['searchCol'][] = "";
+        $data['searchCol'][] = "";
+        $data['searchCol'][] = "production_master.fab_dept_note";
+        $data['searchCol'][] = "production_master.pc_dept_note";
+        $data['searchCol'][] = "production_master.remark";
+
+        $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
+        if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}
+        
+        return $this->pagingRows($data); $this->printQuery();
+    }
+
+    public function saveElectricalDesign($data){
+        try{
+            $this->db->trans_begin();
+
+            foreach($data as $row):
+                $result = $this->store($this->productionTrans,$row);
+            endforeach;
+
+            $result['message'] = "Files saved Successfully.";
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
+    }
+
+    public function deleteElectricalDesignFile($id){
+        try{
+            $this->db->trans_begin();
+
+            $result = $this->trash($this->productionTrans,['id'=>$id],'File');
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }	
+    }
+    /* Electrical Design End */
 }
 ?>
