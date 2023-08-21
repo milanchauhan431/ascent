@@ -59,7 +59,7 @@
 
                 <div class="col-md-3 form-group">
                     <label for="start_row">Start Reading (Row No.)</label>
-                    <input type="text" id="start_row" class="form-control numericOnly" value="4">
+                    <input type="text" id="start_row" class="form-control numericOnly" value="2">
                 </div>
             </div>
         </section>
