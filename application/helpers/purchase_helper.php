@@ -2,19 +2,26 @@
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 function getPurchaseDtHeader($page){
-    /* Sales Order Header */
+    /* Purchase Order Header */
     $data['purchaseOrders'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
 	$data['purchaseOrders'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
 	$data['purchaseOrders'][] = ["name"=>"PO. No."];
 	$data['purchaseOrders'][] = ["name"=>"PO. Date"];
 	$data['purchaseOrders'][] = ["name"=>"Party Name"];
-	$data['purchaseOrders'][] = ["name"=>"Job No."];
-	$data['purchaseOrders'][] = ["name"=>"CAT No."];
-	$data['purchaseOrders'][] = ["name"=>"Item Name"];
-    $data['purchaseOrders'][] = ["name"=>"Order Qty"];
-    $data['purchaseOrders'][] = ["name"=>"Received Qty"];
-    $data['purchaseOrders'][] = ["name"=>"Pending Qty"];
-    $data['purchaseOrders'][] = ["name"=>"Remark"];
+	$data['purchaseOrders'][] = ["name"=>"Created BY"];
+
+    $data['poItemWise'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['poItemWise'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['poItemWise'][] = ["name"=>"PO. No."];
+	$data['poItemWise'][] = ["name"=>"PO. Date"];
+	$data['poItemWise'][] = ["name"=>"Party Name"];
+	$data['poItemWise'][] = ["name"=>"Job No."];
+	$data['poItemWise'][] = ["name"=>"CAT No."];
+	$data['poItemWise'][] = ["name"=>"Item Name"];
+    $data['poItemWise'][] = ["name"=>"Order Qty"];
+    $data['poItemWise'][] = ["name"=>"Received Qty"];
+    $data['poItemWise'][] = ["name"=>"Pending Qty"];
+    $data['poItemWise'][] = ["name"=>"Remark"];
 
     /* Purchase Indent Header */
     $masterCheckBox = '<input type="checkbox" id="masterSelect" class="filled-in chk-col-success BulkRequest" value=""><label for="masterSelect">ALL</label>';
@@ -47,9 +54,16 @@ function getPurchaseOrderData($data){
     $printBtn = '<a class="btn btn-success btn-info permission-approve" href="'.base_url('purchaseOrders/printPO/'.$data->id).'" target="_blank" datatip="Print" flow="down"><i class="fas fa-print" ></i></a>';
 
     if($data->trans_status > 0): $editButton = $cancelButton = $deleteButton = ""; endif;
-    $action = getActionButton($printBtn.$editButton.$cancelButton);
 
-    return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->job_number,$data->item_code,$data->item_name,$data->qty,$data->received_qty,$data->pending_qty,$data->item_remark];
+    if(empty($data->list_type)):
+        $action = getActionButton($printBtn.$editButton.$cancelButton);
+
+        return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->job_number,$data->item_code,$data->item_name,$data->qty,$data->received_qty,$data->pending_qty,$data->item_remark];
+    else:
+        $action = getActionButton($printBtn.$editButton);
+
+        return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->created_by_name];
+    endif;
 }
 
 /* Purchase Request Data  */

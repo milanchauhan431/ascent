@@ -13,17 +13,18 @@ class PurchaseOrders extends MY_Controller{
 	}
 
     public function index(){
-        $this->data['tableHeader'] = getPurchaseDtHeader("purchaseOrders");
+        $this->data['tableHeader'] = getPurchaseDtHeader("poItemWise");
         $this->load->view($this->indexPage,$this->data);
     }
 
-    public function getDTRows($status = 0){
-        $data = $this->input->post();$data['status'] = $status;
+    public function getDTRows($status = 0,$list_type = 0){
+        $data = $this->input->post();$data['status'] = $status;$data['list_type'] = $list_type;
         $data['entry_type'] = $this->data['entry_type'];
         $result = $this->purchaseOrder->getDTRows($data);
         $sendData = array();$i=($data['start']+1);
         foreach($result['data'] as $row):
             $row->sr_no = $i++;
+            $row->list_type = $list_type;
             $sendData[] = getPurchaseOrderData($row);
         endforeach;
         $result['data'] = $sendData;

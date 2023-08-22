@@ -8,9 +8,10 @@ class PurchaseOrderModel extends MasterModel{
 
     public function getDTRows($data){
         $data['tableName'] = $this->transChild;
-        $data['select'] = "trans_child.id as trans_child_id,trans_child.item_code,trans_child.item_name,trans_child.qty,trans_child.dispatch_qty as received_qty,(trans_child.qty - trans_child.dispatch_qty) as pending_qty,trans_child.item_remark,trans_main.id,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_name,trans_main.sales_type,trans_child.job_number,trans_child.trans_status";
+        $data['select'] = "trans_child.id as trans_child_id,trans_child.item_code,trans_child.item_name,trans_child.qty,trans_child.dispatch_qty as received_qty,(trans_child.qty - trans_child.dispatch_qty) as pending_qty,trans_child.item_remark,trans_main.id,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_name,trans_main.sales_type,trans_child.job_number,trans_child.trans_status,employee_master.emp_name as created_by_name";
 
         $data['leftJoin']['trans_main'] = "trans_main.id = trans_child.trans_main_id";
+        $data['leftJoin']['employee_master'] = "trans_main.created_by = employee_master.id";
 
         $data['where']['trans_child.entry_type'] = $data['entry_type'];
         $data['where']['trans_child.trans_status'] = $data['status'];
@@ -20,18 +21,27 @@ class PurchaseOrderModel extends MasterModel{
         $data['order_by']['trans_main.trans_date'] = "DESC";
         $data['order_by']['trans_main.id'] = "DESC";
 
+        
+
         $data['searchCol'][] = "";
         $data['searchCol'][] = "";
         $data['searchCol'][] = "trans_main.trans_number";
         $data['searchCol'][] = "DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y')";
         $data['searchCol'][] = "trans_main.party_name";
-        $data['searchCol'][] = "trans_child.job_number";
-        $data['searchCol'][] = "trans_child.item_code";
-        $data['searchCol'][] = "trans_child.item_name";
-        $data['searchCol'][] = "trans_child.qty";
-        $data['searchCol'][] = "trans_child.dispatch_qty";
-        $data['searchCol'][] = "(trans_child.qty - trans_child.dispatch_qty)";
-        $data['searchCol'][] = "trans_child.item_remark";
+        if(!empty($data['list_type'])):
+            $data['group_by'][] = "trans_child.trans_main_id";
+            
+            $data['searchCol'][] = "employee_master.emp_name";
+        else:
+            $data['searchCol'][] = "trans_child.job_number";
+            $data['searchCol'][] = "trans_child.item_code";
+            $data['searchCol'][] = "trans_child.item_name";
+            $data['searchCol'][] = "trans_child.qty";
+            $data['searchCol'][] = "trans_child.dispatch_qty";
+            $data['searchCol'][] = "(trans_child.qty - trans_child.dispatch_qty)";
+            $data['searchCol'][] = "trans_child.item_remark";
+        endif;
+        
 
         $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
         if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}
