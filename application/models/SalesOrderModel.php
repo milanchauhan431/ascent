@@ -9,10 +9,11 @@ class SalesOrderModel extends MasterModel{
 
     public function getDTRows($data){
         $data['tableName'] = $this->transChild;
-        $data['select'] = "trans_child.id as trans_child_id,trans_child.item_name,trans_child.qty,trans_child.dispatch_qty,(trans_child.qty - trans_child.dispatch_qty) as pending_qty,trans_child.job_number,trans_child.trans_status,trans_main.id,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_name,trans_main.sales_type,COUNT(order_bom.id) as bom_items,production_master.job_status";
+        $data['select'] = "trans_child.id as trans_child_id,trans_child.item_name,trans_child.qty,trans_child.dispatch_qty,(trans_child.qty - trans_child.dispatch_qty) as pending_qty,trans_child.job_number,trans_child.trans_status,trans_main.id,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_name,trans_main.sales_type,production_master.job_status";
+        //COUNT(order_bom.id) as bom_items,
 
         $data['leftJoin']['trans_main'] = "trans_main.id = trans_child.trans_main_id";
-        $data['leftJoin']['order_bom'] = "order_bom.trans_child_id = trans_child.id";
+        //$data['leftJoin']['order_bom'] = "order_bom.trans_child_id = trans_child.id";
         $data['leftJoin']['production_master'] = "production_master.trans_child_id = trans_child.id";
 
         $data['where']['trans_child.entry_type'] = $data['entry_type'];
@@ -23,7 +24,7 @@ class SalesOrderModel extends MasterModel{
             //$data['having'][] = 'COUNT(order_bom.id) <= 0';
         elseif($data['status'] == 1):
             $data['where']['trans_child.trans_status'] = 0;
-            $data['where_in']['production_master.job_status'] = [0,1];
+            $data['where_in']['production_master.job_status'] = [0,1,2];
             //$data['having'][] = 'COUNT(order_bom.id) > 0';
         elseif($data['status'] == 3):
             $data['where']['trans_child.trans_status'] = 3;

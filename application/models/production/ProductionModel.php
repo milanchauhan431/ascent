@@ -466,7 +466,7 @@ class ProductionModel extends MasterModel{
                 $row['entry_date'] = date("Y-m-d");
 
                 if($row['param_key'] == "cutting_drawings"):
-                    $row['param_value'] = $data['cutting_drawings'];
+                    $row['param_value'] = (!empty($data['cutting_drawings']))?$data['cutting_drawings']:"";
                 endif;
 
                 $result = $this->store($this->productionTrans,$row);

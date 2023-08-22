@@ -603,7 +603,11 @@ function store(postData){
 		processData:false,
 		contentType:false,
 		dataType:"json",
+		beforeSend: function() {
+			$('.btn-save').prop('disabled',true);
+		},
 	}).done(function(response){
+		$('.btn-save').prop('disabled',false);
 		if(response.status==1){
 			initTable(); $('#'+formId)[0].reset();$(".modal").modal('hide');
 			toastr.success(response.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
@@ -637,7 +641,11 @@ function customStore(postData){
 		processData:false,
 		contentType:false,
 		dataType:"json",
+		beforeSend: function() {
+			$('.btn-save').prop('disabled',true);
+		},
 	}).done(function(response){
+		$('.btn-save').prop('disabled',false);
 		if(resFunctionName != ""){
 			window[resFunctionName](response,formId);
 		}else{
@@ -675,7 +683,10 @@ function confirmStore(data){
 			type: "POST",
 			processData:false,
 			contentType:false,
-			dataType:"json"
+			dataType:"json",
+			beforeSend: function() {
+				$('.btn-save').prop('disabled',true);
+			},
 		};
 	}else{
 		var fd = data.postData;
@@ -685,7 +696,10 @@ function confirmStore(data){
 			url: base_url + controllerName + '/' + fnsave,
 			data:fd,
 			type: "POST",
-			dataType:"json"
+			dataType:"json",
+			beforeSend: function() {
+				$('.btn-save').prop('disabled',true);
+			},
 		};
 	}
 
@@ -700,6 +714,7 @@ function confirmStore(data){
 				keys: ['enter'],
 				action: function(){
 					$.ajax(ajaxParam).done(function(response){
+						$('.btn-save').prop('disabled',false);
 						if(resFunctionName != ""){
 							window[resFunctionName](response,formId);
 						}else{
@@ -802,7 +817,11 @@ function trash(data){
 						data: send_data,
 						type: "POST",
 						dataType:"json",
+						beforeSend: function() {
+							$('.btn-save').prop('disabled',true);
+						},
 					}).done(function(response){
+						$('.btn-save').prop('disabled',false);
 						if(resFunctionName != ""){
 							window[resFunctionName](response);
 						}else{

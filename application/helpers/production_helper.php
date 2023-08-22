@@ -339,11 +339,11 @@ function getPowderCoatingData($data){
             $viewComplete = '<a class="btn btn-info" href="javascript:void(0)" datatip="View Complet Job" flow="down" onclick="edit('.$viewParam.');"><i class="fa fa-eye"></i></a>';
         endif;
 
-        $viewMacDesParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '30'},'controller' : 'production/fabrication','fnedit':'viewMechanicalDesign','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Mechanical Design','button':'close'}";
+        $viewFabAssParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '33'},'controller' : 'production/fabrication','fnedit':'viewFabAssembely','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Fab. Assembely','button':'close'}";
 
-        $viewMacDes = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Mechanical Design" flow="down" onclick="edit('.$viewMacDesParam.');"><i class="fa fa-eye"></i></a>';
+        $viewFabAss = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Fab. Assembely" flow="down" onclick="edit('.$viewFabAssParam.');"><i class="fa fa-eye"></i></a>';
 
-        $action = getActionButton($accptJob.$viewMacDes.$completJob.$viewComplete);
+        $action = getActionButton($accptJob.$viewFabAss.$completJob.$viewComplete);
 
         return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->pc_dept_note,$data->remark];
     endif;
