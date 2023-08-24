@@ -159,7 +159,7 @@ $(document).ready(function(){
 	});   
 
 	$(document).on('change','#unit_id',function(){
-		$("#unit_name").val($("#unit_id :selected").text());
+		$("#unit_name").val($("#unit_id :selected").data('unit'));
 	});
 
 	$(document).on('change','#hsn_code',function(){
