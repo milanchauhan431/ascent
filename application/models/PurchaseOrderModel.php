@@ -265,6 +265,29 @@ class PurchaseOrderModel extends MasterModel{
         }
     }
 
+    public function completePoItem($data){
+        try{
+            $this->db->trans_begin();
+
+            $this->edit($this->transChild,['id'=>$data['trans_child_id']],['trans_status'=>1]);
+
+            $setData = Array();
+            $setData['tableName'] = $this->transMain;
+            $setData['where']['id'] = $data['id'];
+            $setData['update']['trans_status'] = "(SELECT IF( COUNT(id) = SUM(IF(trans_status = 1, 1, 0)) ,1 , 0 ) as trans_status FROM trans_child WHERE trans_main_id = ".$data['id']." AND is_delete = 0)";
+            $result = $this->setValue($setData);
+            $result["message"] = "Order item complete successfully.";
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
+    }
+
     public function cancelPO($data){
         try{
             $this->db->trans_begin();

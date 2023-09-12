@@ -117,6 +117,15 @@ class PurchaseOrders extends MY_Controller{
         endif;
     }
 
+    public function completePoItem(){
+        $data = $this->input->post();
+        if(empty($data['trans_child_id'])):
+            $this->printJson(['status'=>0,'message'=>'Somthing went wrong...Please try again.']);
+        else:
+            $this->printJson($this->purchaseOrder->completePoItem($data));
+        endif;
+    }
+
     public function cancelPO(){
         $data = $this->input->post();
         if(empty($data['trans_child_id'])):

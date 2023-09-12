@@ -43,10 +43,10 @@ function getPurchaseDtHeader($page){
 }
 
 function getPurchaseOrderData($data){
-    $editButton = '<a class="btn btn-success btn-edit permission-modify" href="'.base_url('purchaseOrders/edit/'.$data->id).'" datatip="Edit" flow="down" ><i class="ti-pencil-alt"></i></a>';
+    $editButton = '<a class="btn btn-warning btn-edit permission-modify" href="'.base_url('purchaseOrders/edit/'.$data->id).'" datatip="Edit" flow="down" ><i class="ti-pencil-alt"></i></a>';
 
     $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Purchase Order'}";
-    $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
+    $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';    
 
     $cancelParam = "{'postData':{'id':".$data->id.",'trans_child_id' : ".$data->trans_child_id."},'fnsave':'cancelPO','message' : 'Are you sure want to cancel this order item ?'}";
     $cancelButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="confirmStore('.$cancelParam.');" datatip="Cancel Item" flow="down"><i class="ti-close"></i></a>';
@@ -56,7 +56,13 @@ function getPurchaseOrderData($data){
     if($data->trans_status > 0): $editButton = $cancelButton = $deleteButton = ""; endif;
 
     if(empty($data->list_type)):
-        $action = getActionButton($printBtn.$editButton.$cancelButton);
+        $completeButton = '';
+        if($data->received_qty > 0 && $data->pending_qty > 0):
+            $completeParam = "{'postData':{'id':".$data->id.",'trans_child_id' : ".$data->trans_child_id."},'fnsave':'completePoItem','message' : 'Are you sure want to complete this order item ?'}";
+            $completeButton = '<a class="btn btn-success btn-delete permission-remove" href="javascript:void(0)" onclick="confirmStore('.$completeParam.');" datatip="Complete Item" flow="down"><i class="ti-check"></i></a>';
+        endif;
+
+        $action = getActionButton($printBtn.$editButton.$completeButton.$cancelButton);
 
         return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->job_number,$data->item_code,$data->item_name,$data->qty,$data->received_qty,$data->pending_qty,$data->item_remark];
     else:
