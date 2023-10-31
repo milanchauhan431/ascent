@@ -120,65 +120,78 @@
 						endforeach;
 					endif;
 					
-					$rwspan= 0; $srwspan = '';
-					$beforExp = "";
-					$afterExp = "";
-					$invExpenseData = (!empty($poData->expenseData)) ? $poData->expenseData : array();
+					$rwspan = 0; $srwspan = '';
+                    $beforExp = "";
+                    $afterExp = "";
+                    $invExpenseData = (!empty($poData->expenseData)) ? $poData->expenseData : array();
+                    foreach ($expenseList as $row) :
+                        $expAmt = 0;
+                        $amtFiledName = $row->map_code . "_amount";
+                        if (!empty($invExpenseData) && $row->map_code != "roff") :
+                            $expAmt = floatVal($invExpenseData->{$amtFiledName});
+                        endif;
+
+                        if(!empty($expAmt)):
+                            if ($row->position == 1) :
+                                if($rwspan == 0):
+                                    $beforExp .= '<th colspan="2" class="text-right">'.$row->exp_name.'</th>
+                                    <td class="text-right">'.sprintf('%.2f',$expAmt).'</td>';
+                                else:
+                                    $beforExp .= '<tr>
+                                        <th colspan="2" class="text-right">'.$row->exp_name.'</th>
+                                        <td class="text-right">'.sprintf('%.2f',$expAmt).'</td>
+                                    </tr>';
+                                endif;  
+								$rwspan++;
+                            endif;
+                            
+                        endif;
+                    endforeach;
+
+                    $taxHtml = '';
+                    foreach ($taxList as $taxRow) :
+                        $taxAmt = 0;
+                        $taxAmt = floatVal($poData->{$taxRow->map_code.'_amount'});
+                        if(!empty($taxAmt)):
+                            if($rwspan == 0):
+                                $taxHtml .= '<th colspan="2" class="text-right">'.$taxRow->name.'</th>
+                                <td class="text-right">'.sprintf('%.2f',$taxAmt).'</td>';
+                            else:
+                                $taxHtml .= '<tr>
+                                    <th colspan="2" class="text-right">'.$taxRow->name.'</th>
+                                    <td class="text-right">'.sprintf('%.2f',$taxAmt).'</td>
+                                </tr>';
+                            endif;                        
+                            $rwspan++;
+                        endif;
+                    endforeach;
+
 					foreach ($expenseList as $row) :
-						$expAmt = 0;
-						$amtFiledName = $row->map_code . "_amount";
-						if (!empty($invExpenseData) && $row->map_code != "roff") :
-							$expAmt = floatVal($invExpenseData->{$amtFiledName});
-						endif;
+                        $expAmt = 0;
+                        $amtFiledName = $row->map_code . "_amount";
+                        if (!empty($invExpenseData) && $row->map_code != "roff") :
+                            $expAmt = floatVal($invExpenseData->{$amtFiledName});
+                        endif;
 
-						if(!empty($expAmt)):
-							if ($row->position == 1) :
+                        if(!empty($expAmt)):
+                            if ($row->position != 1) :
 								if($rwspan == 0):
-									$beforExp .= '<th class="text-right" colspan="2">'.$row->exp_name.'</th>
-									<td class="text-right">'.sprintf('%.2f',$expAmt).'</td>';
-								else:
-									$beforExp .= '<tr>
-										<th colspan="2" class="text-right">' . $row->exp_name . '</th>
-										<td class="text-right">'.sprintf('%.2f',$expAmt).'</td>
-									</tr>';
-								endif;
-							else:
-								if($rwspan == 0):
-									$afterExp .= '<th class="text-right" colspan="2">'.$row->exp_name.'</th>
-									<td class="text-right">'.sprintf('%.2f',$expAmt).'</td>';
-								else:
-									$afterExp .= '<tr>
-										<th colspan="2" class="text-right">' . $row->exp_name . '</th>
-										<td class="text-right">'.sprintf('%.2f',$expAmt).'</td>
-									</tr>';
-								endif;
-							endif;
-							$rwspan++;
-						endif;
-					endforeach;
+                                    $afterExp .= '<th colspan="2" class="text-right">'.$row->exp_name.'</th>
+                                    <td class="text-right">'.sprintf('%.2f',$expAmt).'</td>';
+                                else:
+                                    $afterExp .= '<tr>
+                                        <th colspan="2" class="text-right">'.$row->exp_name.'</th>
+                                        <td class="text-right">'.sprintf('%.2f',$expAmt).'</td>
+                                    </tr>';
+                                endif;
+								$rwspan++;  
+                            endif;
+                            
+                        endif;
+                    endforeach;
 
-					$taxHtml = '';
-					foreach ($taxList as $taxRow) :
-						$taxAmt = 0;
-						$taxAmt = floatVal($poData->{$taxRow->map_code . '_amount'});
-						if(!empty($taxAmt)):
-							if($rwspan == 0):
-								$taxHtml .= '<th colspan="2" class="text-right">'.$taxRow->name.'</th>
-								<td class="text-right">'.sprintf('%.2f',$taxAmt).'</td>';
-							else:
-								$taxHtml .= '<tr>
-									<th colspan="2" class="text-right">' . $taxRow->name .'</th>
-									<td class="text-right">'.sprintf('%.2f',$taxAmt).'</td>
-								</tr>';
-							endif;
-							$rwspan++;
-						endif;
-					endforeach;
-
-					$fixRwSpan = (!empty($rwspan))?3:0;
+                    $fixRwSpan = (!empty($rwspan))?3:0;
 				?>
-			</tbody>
-			<tfoot>
 				<tr>
 					<th colspan="4" class="text-right">Total Qty.</th>
 					<th class="text-right"><?=sprintf('%.3f',$totalQty)?></th>
@@ -203,20 +216,19 @@
 					<?php if(empty($rwspan)): ?>		
 						<th colspan="2" class="text-right">Grand Total</th>
 						<th class="text-right"><?=sprintf('%.2f',$poData->net_amount)?></th>
+					<?php else: ?>
+						<th colspan="2" class="text-right">Round Off</th>
+						<td class="text-right"><?=sprintf('%.2f',$poData->round_off_amount)?></td>
 					<?php endif; ?>		
 				</tr>
 				
 				<?php if(!empty($rwspan)): ?>
 				<tr>
-					<th colspan="2" class="text-right">Round Off</th>
-					<td class="text-right"><?=sprintf('%.2f',$poData->round_off_amount)?></td>
-				</tr>
-				<tr>
 					<th colspan="2" class="text-right">Grand Total</th>
 					<th class="text-right"><?=sprintf('%.2f',$poData->net_amount)?></th>
 				</tr>
 				<?php endif; ?>
-			</tfoot>
+			</tbody>
 		</table>
 		
 		<table class="table table-terms" style="margin-top:0px;">
