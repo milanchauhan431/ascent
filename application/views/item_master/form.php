@@ -109,7 +109,12 @@
                 <input type="text" name="std_pck_qty" id="std_pck_qty" class="form-control numericOnly" value="<?=(!empty($dataRow->std_pck_qty))?floatVal($dataRow->std_pck_qty):""?>">
             </div>
 
-            <div class="col-md-6 form-group">
+            <div class="col-md-2 form-group">
+                <label for="min_qty">Min. Qty.</label>
+                <input type="text" name="min_qty" id="min_qty" class="form-control floatOnly" value="<?=(!empty($dataRow->min_qty))?$dataRow->min_qty:""?>">
+            </div>
+
+            <div class="col-md-4 form-group">
                 <label for="description">Product Description</label>
                 <textarea name="description" id="description" class="form-control" rows="1"><?=(!empty($dataRow->description))?$dataRow->description:""?></textarea>
             </div>
