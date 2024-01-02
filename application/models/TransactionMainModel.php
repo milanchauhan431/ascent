@@ -56,7 +56,8 @@ class TransactionMainModel extends MasterModel{
 
 			default : $prefix = 'TRANS/';break;
 		}
-		return $prefix.getFyDate("Y").'/';
+		return $prefix.$this->shortYear.'/';
+		//return $prefix.getFyDate("Y").'/';
     }
 
 	public function ledgerEffects($transMainData,$expenseData = array()){

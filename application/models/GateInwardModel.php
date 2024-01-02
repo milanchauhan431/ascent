@@ -17,9 +17,10 @@ class GateInwardModel extends masterModel{
         else:
             $data['tableName'] = $this->mirTrans;
 
-            $data['select'] = "mir.id,mir.trans_number,DATE_FORMAT(mir.trans_date,'%d-%m-%Y') as trans_date,mir.qty as no_of_items,party_master.party_name,item_master.item_code,item_master.item_name,mir.inv_no,ifnull(DATE_FORMAT(mir.inv_date,'%d-%m-%Y'),'') as inv_date,mir.doc_no,ifnull(DATE_FORMAT(mir.doc_date,'%d-%m-%Y'),'') as doc_date,trans_main.trans_number as po_number,mir.qty_kg,mir.inward_qty,mir_transaction.trans_status,mir.trans_type,mir_transaction.qty,mir_transaction.id as mir_trans_id";
+            $data['select'] = "mir.id,mir.trans_number,DATE_FORMAT(mir.trans_date,'%d-%m-%Y') as trans_date,mir.qty as no_of_items,party_master.party_name,item_master.item_code,item_master.item_name,mir.inv_no,ifnull(DATE_FORMAT(mir.inv_date,'%d-%m-%Y'),'') as inv_date,mir.doc_no,ifnull(DATE_FORMAT(mir.doc_date,'%d-%m-%Y'),'') as doc_date,trans_main.trans_number as po_number,mir.qty_kg,mir.inward_qty,mir_transaction.trans_status,mir.trans_type,mir_transaction.qty,mir_transaction.price,mir_transaction.id as mir_trans_id,ge.trans_number as ge_number";
 
             $data['leftJoin']['mir'] = "mir.id = mir_transaction.mir_id";
+            $data['leftJoin']['mir as ge'] = "ge.id = mir.ref_id";
             $data['leftJoin']['item_master'] = "item_master.id = mir_transaction.item_id";
             $data['leftJoin']['trans_main'] = "trans_main.id = mir_transaction.po_id";
 
@@ -48,11 +49,13 @@ class GateInwardModel extends masterModel{
             $data['searchCol'][] = "";
             $data['searchCol'][] = "mir.trans_number";
             $data['searchCol'][] = "DATE_FORMAT(mir.trans_date,'%d-%m-%Y')";
+            $data['searchCol'][] = "ge.trans_number";
+            $data['searchCol'][] = "trans_main.trans_number";
             $data['searchCol'][] = "party_master.party_name";
             $data['searchCol'][] = "item_master.item_code";
             $data['searchCol'][] = "item_master.item_name";
             $data['searchCol'][] = "mir_transaction.qty";
-            $data['searchCol'][] = "trans_main.trans_number";
+            $data['searchCol'][] = "mir_transaction.price";
         endif;
 
         $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
