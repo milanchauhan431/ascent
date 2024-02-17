@@ -23,7 +23,7 @@ function getProductionDtHeader($page){
     $data['estimation'][] = ["name"=>"Priority","textAlign"=>"center"];
     $data['estimation'][] = ["name"=>"FAB. PRODUCTION NOTE"];
     $data['estimation'][] = ["name"=>"POWER COATING NOTE"];
-    $data['estimation'][] = ["name"=>"ASSEMBALY NOTE"];
+    $data['estimation'][] = ["name"=>"ASSEMBLY NOTE"];
     $data['estimation'][] = ["name"=>"GENERAL NOTE"];
 
     /* Mechanical Design Header */
@@ -111,6 +111,52 @@ function getProductionDtHeader($page){
     $data['electrical_design'][] = ["name"=>"FAB. PRODUCTION NOTE"];
     $data['electrical_design'][] = ["name"=>"POWDER COATING NOTE"];
     $data['electrical_design'][] = ["name"=>"GENERAL NOTE"];
+
+    /* Pending Assembly Allotment Header */
+    $data['vendor_allotment'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['vendor_allotment'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['vendor_allotment'][] = ["name"=>"Job No."];
+    $data['vendor_allotment'][] = ["name"=>"Item Name"];
+    $data['vendor_allotment'][] = ["name"=>"Order Qty"];
+    $data['vendor_allotment'][] = ["name"=>"Alloted Qty"];
+    $data['vendor_allotment'][] = ["name"=>"Pending Qty"];
+    $data['vendor_allotment'][] = ["name"=>"Priority","textAlign"=>"center"];
+    $data['vendor_allotment'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['vendor_allotment'][] = ["name"=>"T.S.","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['vendor_allotment'][] = ["name"=>"SLD","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['vendor_allotment'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['vendor_allotment'][] = ["name"=>"ASSEMBLY NOTE"];
+    $data['vendor_allotment'][] = ["name"=>"GENERAL NOTE"];
+
+    /* Alloted Assembly Header */
+    $data['assembly_allotment'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['assembly_allotment'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['assembly_allotment'][] = ["name"=>"Job No."];
+    $data['assembly_allotment'][] = ["name"=>"Item Name"];
+    $data['assembly_allotment'][] = ["name"=>"Vendor Name"];
+    $data['assembly_allotment'][] = ["name"=>"Panel Qty."];
+    $data['assembly_allotment'][] = ["name"=>"Priority","textAlign"=>"center"];
+    $data['assembly_allotment'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['assembly_allotment'][] = ["name"=>"T.S.","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['assembly_allotment'][] = ["name"=>"SLD","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['assembly_allotment'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['assembly_allotment'][] = ["name"=>"ASSEMBLY NOTE"];
+    $data['assembly_allotment'][] = ["name"=>"GENERAL NOTE"];
+
+    /* Assembly Production Part-1 Header */
+    $data['ass_prd_part_1'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['ass_prd_part_1'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['ass_prd_part_1'][] = ["name"=>"Job No."];
+    $data['ass_prd_part_1'][] = ["name"=>"Item Name"];
+    $data['ass_prd_part_1'][] = ["name"=>"Vendor Name"];
+    $data['ass_prd_part_1'][] = ["name"=>"Panel Qty."];
+    $data['ass_prd_part_1'][] = ["name"=>"Priority","textAlign"=>"center"];
+    $data['ass_prd_part_1'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['ass_prd_part_1'][] = ["name"=>"T.S.","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['ass_prd_part_1'][] = ["name"=>"SLD","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['ass_prd_part_1'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['ass_prd_part_1'][] = ["name"=>"ASSEMBLY NOTE"];
+    $data['ass_prd_part_1'][] = ["name"=>"GENERAL NOTE"];
 
     return tableHeader($data[$page]);
 }
@@ -374,5 +420,93 @@ function getElectricalDesignData($data){
     $action = getActionButton($addAttachment);
 
     return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->fab_dept_note,$data->pc_dept_note,$data->remark];
+}
+
+/* Assembly Allotment Table Data */
+function getAssemblyAllotmentData($data){
+    if($data->priority == 1):
+        $data->priority_status = '<span class="badge badge-pill badge-danger m-1">'.$data->priority_status.'</span>';
+    elseif($data->priority == 2):
+        $data->priority_status = '<span class="badge badge-pill badge-warning m-1">'.$data->priority_status.'</span>';
+    elseif($data->priority == 3):
+        $data->priority_status = '<span class="badge badge-pill badge-info m-1">'.$data->priority_status.'</span>';
+    endif;
+
+    $data->ga_file = (!empty($data->ga_file))?'<a href="'.base_url('assets/uploads/production/'.$data->ga_file).'" class="btn btn-outline-info waves-effect waves-light" target="_blank"><i class="fa fa-eye"></i></a>':'';
+    $data->technical_specification_file = (!empty($data->technical_specification_file))?'<a href="'.base_url('assets/uploads/production/'.$data->technical_specification_file).'" class="btn btn-outline-info waves-effect waves-light" target="_blank"><i class="fa fa-eye"></i></a>':'';
+    $data->sld_file = (!empty($data->sld_file))?'<a href="'.base_url('assets/uploads/production/'.$data->sld_file).'" class="btn btn-outline-info waves-effect waves-light" target="_blank"><i class="fa fa-eye"></i></a>':'';
+
+    $viewBomParam = "{'postData':{'trans_child_id':".$data->trans_child_id."},'modal_id' : 'modal-xl','fnedit':'viewProductionBom','title' : 'View Bom [Item Name : ".$data->item_name."]','button':'close','controller':'production/estimation'}";
+    $viewBom = '<a class="btn btn-outline-info waves-effect waves-light" href="javascript:void(0)" onclick="edit('.$viewBomParam.');" datatip="View Item Bom" flow="down"><i class="fa fa-eye"></i></a>';
+
+    $viewFabAssParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '33'},'controller' : 'production/fabrication','fnedit':'viewFabAssembely','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Fab. Assembely','button':'close'}";
+
+    $viewFabAss = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Fab. Assembely" flow="down" onclick="edit('.$viewFabAssParam.');"><i class="fa fa-eye"></i></a>';
+
+    if($data->from_entry_type == 34): // Powder Coating
+
+        $accptJob = '';
+
+        if($data->entry_type == $data->from_entry_type):
+            $acceptParam = "{'postData':{'job_status' : 3, 'id' : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'form_id':'assignJob','modal_id':'modal-md','title':'Assign Job','controllerName' : 'production/assembly','fnedit':'assignJob','fnsave':'saveAssignJob','js_store_fn':'confirmStore'}";
+            $accptJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Assign Job" flow="down" onclick="edit('.$acceptParam.');"><i class="fa fa-check"></i></a>';
+        endif;
+
+
+
+        $action = getActionButton($viewFabAss.$accptJob);
+
+        return [$action,$data->sr_no,$data->job_number,$data->item_name,floatval($data->order_qty),floatval($data->vendor_qty),floatval($data->pending_allotment_qty),$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->ass_dept_note,$data->remark];
+    endif;
+
+    $action = getActionButton($viewFabAss);
+    return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->party_name,floatval($data->vendor_qty),$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->pc_dept_note,$data->remark];
+}
+
+/* Assembly Production Table data */
+function getAssemblyProductionData($data){
+    if($data->priority == 1):
+        $data->priority_status = '<span class="badge badge-pill badge-danger m-1">'.$data->priority_status.'</span>';
+    elseif($data->priority == 2):
+        $data->priority_status = '<span class="badge badge-pill badge-warning m-1">'.$data->priority_status.'</span>';
+    elseif($data->priority == 3):
+        $data->priority_status = '<span class="badge badge-pill badge-info m-1">'.$data->priority_status.'</span>';
+    endif;
+
+    $data->ga_file = (!empty($data->ga_file))?'<a href="'.base_url('assets/uploads/production/'.$data->ga_file).'" class="btn btn-outline-info waves-effect waves-light" target="_blank"><i class="fa fa-eye"></i></a>':'';
+    $data->technical_specification_file = (!empty($data->technical_specification_file))?'<a href="'.base_url('assets/uploads/production/'.$data->technical_specification_file).'" class="btn btn-outline-info waves-effect waves-light" target="_blank"><i class="fa fa-eye"></i></a>':'';
+    $data->sld_file = (!empty($data->sld_file))?'<a href="'.base_url('assets/uploads/production/'.$data->sld_file).'" class="btn btn-outline-info waves-effect waves-light" target="_blank"><i class="fa fa-eye"></i></a>':'';
+
+    $viewBomParam = "{'postData':{'trans_child_id':".$data->trans_child_id."},'modal_id' : 'modal-xl','fnedit':'viewProductionBom','title' : 'View Bom [Item Name : ".$data->item_name."]','button':'close','controller':'production/estimation'}";
+    $viewBom = '<a class="btn btn-outline-info waves-effect waves-light" href="javascript:void(0)" onclick="edit('.$viewBomParam.');" datatip="View Item Bom" flow="down"><i class="fa fa-eye"></i></a>';
+
+    $viewFabAssParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '33'},'controller' : 'production/fabrication','fnedit':'viewFabAssembely','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Fab. Assembely','button':'close'}";
+
+    $viewFabAss = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Fab. Assembely" flow="down" onclick="edit('.$viewFabAssParam.');"><i class="fa fa-eye"></i></a>';
+
+    if($data->to_entry_type == 37): // Assembly Production Part 1
+        $viewComplete = $completJob = $accptJob = '';
+
+        if($data->entry_type == $data->from_entry_type):
+            $acceptParam = "{'postData':{'job_status' : 1, 'id' : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'controllerName' : 'production/assembly','fnsave':'acceptJob','message':'Are you sure want to accept this Job?'}";
+            $accptJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Accept Job" flow="down" onclick="confirmStore('.$acceptParam.');"><i class="fa fa-check"></i></a>';
+        endif;
+
+        if($data->job_status == 1 && $data->entry_type == $data->to_entry_type):
+            $accptJob = '';
+            $completParam = "{'postData':{'ref_id' : ".$data->id.", 'pm_id' : ".$data->pm_id.",'entry_type': ".$data->entry_type.",'fab_prod_entry_type':'33'},'controller' : 'production/assembly','fnedit':'assemblyProduction','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'assemblyProduction','title':'Assembly Production'}";
+            $completJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Complet Job" flow="down" onclick="edit('.$completParam.');"><i class="fa fa-check"></i></a>';
+        elseif(in_array($data->job_status,[2,3]) && $data->entry_type == $data->to_entry_type):
+            $completJob = $accptJob = '';
+
+            $viewParam = "{'postData':{'ref_id' : ".$data->id.",'entry_type': ".$data->entry_type."},'controller' : 'production/assembly','fnedit':'viewAssemblyProduction','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'assemblyProduction','title':'Assembly Production','button':'close'}";
+            $viewComplete = '<a class="btn btn-info" href="javascript:void(0)" datatip="View Complet Job" flow="down" onclick="edit('.$viewParam.');"><i class="fa fa-eye"></i></a>';
+        endif;
+
+        $action = getActionButton($viewFabAss.$accptJob.$completJob.$viewComplete);
+        
+        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->party_name,floatval($data->vendor_qty),$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->pc_dept_note,$data->remark];
+    endif;
+    
 }
 ?>

@@ -89,9 +89,13 @@ class DbUtility extends CI_Controller{
     *   Post Data : password
     *   Note : Get SQL Querys from live Database and Import in Local Database
     */
-    public function syncDbQuery(){
+    public function syncDbQuery($passCode=""){
         if($_SERVER['HTTP_HOST'] == 'localhost'):
-            $data = $this->input->post();
+            if(!empty($passCode)):
+                $data['password'] = "Nbt-".$passCode;
+            else:
+                $data = $this->input->post();
+            endif;
 
             $curlSync = curl_init();
             curl_setopt_array($curlSync, array(

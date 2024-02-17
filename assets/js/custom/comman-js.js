@@ -382,7 +382,7 @@ $(document).ready(function(){
 		$(e.target).data("select2").$selection.one('focus focusin', function (e) {
 			e.stopPropagation();
 		});
-	});
+	});	
 });
 
 $(window).on('pageshow', function() {
@@ -520,7 +520,7 @@ function reInitMultiSelect(){
 	$('.scrollable').perfectScrollbar({wheelPropagation: !0});
 }
 
-function statusTab(tableId,status,hp_fn_name="",page=""){
+function statusTab(tableId,status,hp_fn_name="",page="",ninput=""){
 	var url = $("#"+tableId).data('default_url') || $("#"+tableId).data('url');
     $("#"+tableId).attr("data-url",url+'/'+status);
 
@@ -528,6 +528,11 @@ function statusTab(tableId,status,hp_fn_name="",page=""){
     $("#"+tableId).data("page","");
     $("#"+tableId).data("hp_fn_name",hp_fn_name);
     $("#"+tableId).data("page",page);
+
+	if(ninput != ""){
+		$("#"+tableId).data("ninput","");
+		$("#"+tableId).data("ninput",ninput);
+	}    
 
     //ssTable.state.clear();
 	initTable();
