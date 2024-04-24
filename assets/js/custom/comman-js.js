@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	localStorage.setItem('reloadTabs', 'false');
 
 	var lastActivityTime = new Date();;
 
@@ -286,6 +287,8 @@ $(document).ready(function(){
 								else
 								{
 									toastr.success(data.message, 'Success', { "showMethod": "slideDown", "hideMethod": "slideUp", "closeButton": true, positionClass: 'toastr toast-bottom-center', containerId: 'toast-bottom-center', "progressBar": true });
+									// Trigger refresh in all open tabs    						
+									localStorage.setItem('reloadTabs', 'true');
 									window.location.reload();
 								}
 							}
@@ -1139,3 +1142,12 @@ function resPartyMaster(response,formId){
         }			
     }	
 }
+
+// Check if the dropdown has changed in other tabs
+window.addEventListener('storage', function(event){
+    if (event.key === 'reloadTabs') {
+		localStorage.setItem('reloadTabs', 'false');
+		// Reload the page if the dropdown has changed in another tab
+		location.reload();
+    }
+});
