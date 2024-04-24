@@ -15,13 +15,13 @@ class PurchaseOrderModel extends MasterModel{
 
         $data['where']['trans_child.entry_type'] = $data['entry_type'];
         $data['where']['trans_child.trans_status'] = $data['status'];
-        $data['where']['trans_main.trans_date >='] = $this->startYearDate;
+        if($data['status'] != 0):
+            $data['where']['trans_main.trans_date >='] = $this->startYearDate;
+        endif;
         $data['where']['trans_main.trans_date <='] = $this->endYearDate;
 
         $data['order_by']['trans_main.trans_date'] = "DESC";
         $data['order_by']['trans_main.id'] = "DESC";
-
-        
 
         $data['searchCol'][] = "";
         $data['searchCol'][] = "";
