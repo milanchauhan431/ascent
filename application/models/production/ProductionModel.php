@@ -383,7 +383,11 @@ class ProductionModel extends MasterModel{
             endif;
         else:
             $data['where']['production_master.entry_type'] = $data['to_entry_type'];
-            $data['where_in']['production_master.job_status'] = ($data['job_status'] != 2)?$data['job_status']:[2,3];
+            if($data['to_entry_type'] != 36):
+                $data['where_in']['production_master.job_status'] = ($data['job_status'] != 2)?$data['job_status']:[2,3];
+            else:
+                $data['where_in']['production_master.job_status'] = $data['job_status'];
+            endif;
         endif;
 
         if(in_array($data['job_status'],[0,1]) || ($data['from_entry_type'] != $data['to_entry_type'] && $data['job_status'] == 2)):
@@ -639,7 +643,7 @@ class ProductionModel extends MasterModel{
     }
     /* Electrical Design End */
 
-    /* Assembly Production Start */
+    /* Assembly Production [Part 1, Part 2] Start */
     public function assignJob($data){
         try{
             $this->db->trans_begin();
@@ -683,6 +687,10 @@ class ProductionModel extends MasterModel{
         $data['tableName'] = $this->productionMaster;
         $data['select'] = "production_master.id,production_master.entry_type,production_master.ref_id,production_master.pm_id,production_master.trans_child_id,production_master.trans_main_id,trans_child.job_number,trans_child.item_name,trans_child.qty as order_qty,(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' ELSE '' END) as priority_status,production_master.ga_file,production_master.technical_specification_file,production_master.sld_file,production_master.priority,production_master.fab_dept_note,production_master.pc_dept_note,production_master.ass_dept_note,production_master.remark,production_master.accepted_by,em.emp_name as accepted_by_name,production_master.accepted_at,production_master.job_status, (CASE WHEN production_master.ref_id = 0 THEN SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), 1) ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), FIND_IN_SET('".$data['from_entry_type']."', production_master.department_ids) + 1), REPLACE(', ', ' ', ''), -1) END) as next_dept_id,production_master.vendor_id,vm.party_name,production_master.vendor_qty,(trans_child.qty - production_master.vendor_qty) as pending_allotment_qty";
 
+        if($data['to_entry_type'] == 38):
+            $data['select'] .= ",(production_master.vendor_qty - (SELECT IFNULL(SUM(rec_trans.vendor_qty),0) FROM production_master as rec_trans WHERE rec_trans.ref_id = production_master.id AND rec_trans.is_delete = 0) ) as pending_qty";
+        endif;
+
         $data['leftJoin']['trans_child'] = "production_master.trans_child_id = trans_child.id";
         $data['leftJoin']['employee_master as em'] = "em.id = production_master.accepted_by";
         $data['leftJoin']['party_master as vm'] = "vm.id = production_master.vendor_id";
@@ -694,8 +702,13 @@ class ProductionModel extends MasterModel{
             $data['where']['production_master.entry_type'] = $data['from_entry_type'];
             $data['where_in']['production_master.job_status'] = 1;
         else:
-            $data['where']['production_master.entry_type'] = $data['to_entry_type'];
-            $data['where_in']['production_master.job_status'] = ($data['job_status'] != 2)?$data['job_status']:[2,3];
+            if($data['from_entry_type'] != $data['to_entry_type'] && $data['to_entry_type'] == 38):
+                $data['where']['production_master.entry_type'] = $data['from_entry_type'];
+                $data['where_in']['production_master.job_status'] = $data['job_status'];
+            else:
+                $data['where']['production_master.entry_type'] = $data['to_entry_type'];
+                $data['where_in']['production_master.job_status'] = ($data['job_status'] != 2)?$data['job_status']:[2,3];
+            endif;
         endif;
 
         if(in_array($data['job_status'],[0,1]) || ($data['from_entry_type'] != $data['to_entry_type'] && $data['job_status'] == 2)):
@@ -726,6 +739,46 @@ class ProductionModel extends MasterModel{
         
         return $this->pagingRows($data); 
     }
-    /* Assembly Production End */
+
+    public function saveReceiveJob($data){
+        try{
+            $this->db->trans_begin();            
+
+            $jobData = $this->getProductionMaster(['id'=>$data['id']]);
+
+            if(floatval($data['vendor_qty']) >= floatval($jobData->vendor_qty)):
+                $setData = array();
+                $setData['tableName'] = $this->productionMaster;
+                $setData['where_in']['id'] = [$jobData->id,$jobData->ref_id];
+                $setData['update']['job_status'] = 3;
+                $this->setValue($setData);
+            endif;
+
+            $jobData = (array) $jobData;
+            unset($jobData['order_qty'],$jobData['pending_qty']);            
+
+            $jobData['id'] = "";
+            $jobData['entry_type'] = $data['next_dept_id'];
+            $jobData['ref_id'] = $data['id'];
+            if(empty($jobData['pm_id'])):
+                $jobData['pm_id'] = $data['id'];
+            endif;
+            $jobData['vendor_qty'] = $data['vendor_qty'];
+            $jobData['job_status'] = 3;
+            $jobData['entry_date'] = date("Y-m-d");
+            $jobData['accepted_by'] = $this->loginId;
+            $jobData['accepted_at'] = date("Y-m-d H:i:s");
+            $result = $this->store($this->productionMaster,$jobData);            
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
+    }
+    /* Assembly Production [Part 1, Part 2] End */
 }
 ?>

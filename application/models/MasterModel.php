@@ -783,49 +783,54 @@ class MasterModel extends CI_Model{
     
     /* Custom Set OR Update Row */
     public function setValue($data){
-		if(!empty($data['where'])):
-			if(isset($data['where'])):
-				if(!empty($data['where'])):
-					foreach($data['where'] as $key=>$value):
-						$this->db->where($key,$value);
-					endforeach;
-				endif;            
-			endif;
+        $condition = false;
+		
+        if(isset($data['where'])):
+            if(!empty($data['where'])):
+                foreach($data['where'] as $key=>$value):
+                    $this->db->where($key,$value);
+                endforeach;
+                $condition = true;
+            endif;            
+        endif;
 
-            if(isset($data['where_in'])):
-                if(!empty($data['where_in'])):
-                    foreach($data['where_in'] as $key=>$value):
-                        $this->db->where_in($key,$value,false);
-                    endforeach;
-                endif;
+        if(isset($data['where_in'])):
+            if(!empty($data['where_in'])):
+                foreach($data['where_in'] as $key=>$value):
+                    $this->db->where_in($key,$value,false);
+                endforeach;
+                $condition = true;
             endif;
+        endif;
 
-            if(isset($data['where_not_in'])):
-                if(!empty($data['where_not_in'])):
-                    foreach($data['where_not_in'] as $key=>$value):
-                        $this->db->where_not_in($key,$value,false);
-                    endforeach;
-                endif;
+        if(isset($data['where_not_in'])):
+            if(!empty($data['where_not_in'])):
+                foreach($data['where_not_in'] as $key=>$value):
+                    $this->db->where_not_in($key,$value,false);
+                endforeach;
+                $condition = true;
             endif;
-			
-			if(isset($data['set'])):
-				if(!empty($data['set'])):
-					foreach($data['set'] as $key=>$value):
-						$v = explode(',',$value);
-						$setVal = "`".$v[0]."` ".$v[1];
-						$this->db->set($key, $setVal, FALSE);
-					endforeach;
-				endif;            
-			endif;
+        endif;
+        
+        if(isset($data['set'])):
+            if(!empty($data['set'])):
+                foreach($data['set'] as $key=>$value):
+                    $v = explode(',',$value);
+                    $setVal = "`".$v[0]."` ".$v[1];
+                    $this->db->set($key, $setVal, FALSE);
+                endforeach;
+            endif;            
+        endif;
 
-            if(isset($data['update'])):
-				if(!empty($data['update'])):
-					foreach($data['update'] as $key=>$value):
-						$this->db->set($key, $value, FALSE);
-					endforeach;
-				endif;            
-			endif;
+        if(isset($data['update'])):
+            if(!empty($data['update'])):
+                foreach($data['update'] as $key=>$value):
+                    $this->db->set($key, $value, FALSE);
+                endforeach;
+            endif;            
+        endif;
             
+        if($condition == true):
             $this->db->update($data['tableName']);
             return ['status'=>1,'message'=>"Record updated Successfully.",'qry'=>$this->db->last_query()];
         endif;

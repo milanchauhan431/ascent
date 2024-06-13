@@ -158,6 +158,21 @@ function getProductionDtHeader($page){
     $data['ass_prd_part_1'][] = ["name"=>"ASSEMBLY NOTE"];
     $data['ass_prd_part_1'][] = ["name"=>"GENERAL NOTE"];
 
+    /* Assembly Production Part-2 Header */
+    $data['ass_prd_part_2'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['ass_prd_part_2'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['ass_prd_part_2'][] = ["name"=>"Job No."];
+    $data['ass_prd_part_2'][] = ["name"=>"Item Name"];
+    $data['ass_prd_part_2'][] = ["name"=>"Vendor Name"];
+    $data['ass_prd_part_2'][] = ["name"=>"Panel Qty."];
+    $data['ass_prd_part_2'][] = ["name"=>"Priority","textAlign"=>"center"];
+    $data['ass_prd_part_2'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['ass_prd_part_2'][] = ["name"=>"T.S.","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['ass_prd_part_2'][] = ["name"=>"SLD","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['ass_prd_part_2'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['ass_prd_part_2'][] = ["name"=>"ASSEMBLY NOTE"];
+    $data['ass_prd_part_2'][] = ["name"=>"GENERAL NOTE"];
+
     return tableHeader($data[$page]);
 }
 
@@ -488,7 +503,7 @@ function getAssemblyProductionData($data){
         $viewComplete = $completJob = $accptJob = '';
 
         if($data->entry_type == $data->from_entry_type):
-            $acceptParam = "{'postData':{'job_status' : 1, 'id' : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'controllerName' : 'production/assembly','fnsave':'acceptJob','message':'Are you sure want to accept this Job?'}";
+            $acceptParam = "{'postData':{'job_status' : 2, 'id' : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'controllerName' : 'production/assembly','fnsave':'acceptJob','message':'Are you sure want to accept this Job?'}";
             $accptJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Accept Job" flow="down" onclick="confirmStore('.$acceptParam.');"><i class="fa fa-check"></i></a>';
         endif;
 
@@ -508,5 +523,21 @@ function getAssemblyProductionData($data){
         return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->party_name,floatval($data->vendor_qty),$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->pc_dept_note,$data->remark];
     endif;
     
+    if($data->to_entry_type == 38): // Assembly Production Part 2
+
+        $id = ($data->from_entry_type == 37)?$data->id:$data->ref_id;
+        $viewParam = "{'postData':{'ref_id' : ".$id.",'entry_type': 37},'controller' : 'production/assembly','fnedit':'viewAssemblyProduction','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'assemblyProduction','title':'Assembly Production','button':'close'}";
+        $viewComplete = '<a class="btn btn-info" href="javascript:void(0)" datatip="View Complet Job" flow="down" onclick="edit('.$viewParam.');"><i class="fa fa-eye"></i></a>';
+
+        $receiveJob = "";
+        if($data->from_entry_type == 37):
+            $receiveParam = "{'postData':{'job_status' : 3, 'id' : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'form_id':'receiveJob','modal_id':'modal-md','title':'Complete Vendor Job','controllerName' : 'production/assembly','fnedit':'reciveJob','fnsave':'saveReceiveJob','js_store_fn':'confirmStore'}";
+            $receiveJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Complete Vendor Job" flow="down" onclick="edit('.$receiveParam.');"><i class="fa fa-check"></i></a>';
+        endif;
+
+        $action = getActionButton($viewFabAss.$viewComplete.$receiveJob);
+        
+        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->party_name,floatval($data->vendor_qty),$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->pc_dept_note,$data->remark];
+    endif;
 }
 ?>

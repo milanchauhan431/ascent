@@ -16,10 +16,11 @@ class Estimation extends MY_Controller{
         "34"=>"POWDER COATING",
         //"35"=>"ELETRICALS DESIGN",
         "36"=>"ASSEMBELY PRODUCTION",
-        "37"=>"ASSEMBELY CONTACTOR",
-        "38"=>"QULITY CHECK",
-        "39"=>"TESTING",
-        "40"=>"DOCUMATION"
+        "37"=>"ASS. PRD. Part 1",
+        "38"=>"ASS. PRD. Part 2",
+        /* "39"=>"QULITY CHECK",
+        "40"=>"TESTING",
+        "41"=>"DOCUMATION" */
     ];
 
     public function __construct(){

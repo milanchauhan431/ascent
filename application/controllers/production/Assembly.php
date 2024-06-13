@@ -3,6 +3,7 @@ class Assembly extends MY_Controller{
     private $assignForm = "production/assembly_production/assign_form";
     private $assembelyProductionFrom = "production/assembly_production/assembly_production_form";
     private $viewAssemblyProduction = "production/assembly_production/view_assembly_production";
+    private $receiveForm = "production/assembly_production/receive_form";
 
     public function __construct(){
 		parent::__construct();		
@@ -125,6 +126,33 @@ class Assembly extends MY_Controller{
         $data = $this->input->post();
         $this->data['dataRow'] = $this->production->getProductionTransData($data);
         $this->load->view($this->viewAssemblyProduction,$this->data);
+    }
+
+    public function reciveJob(){
+        $data = $this->input->post();
+        $this->data['postData'] = (object) $data;
+        $this->load->view($this->receiveForm,$this->data);
+    }
+
+    public function saveReceiveJob(){
+        $data = $this->input->post();
+        $errorMessage = array();
+
+        if(empty($data['vendor_qty']))
+            $errorMessage['vendor_qty'] = "Panel Qty is required.";
+
+        if(!empty($data['vendor_qty'])):
+            $assemblyData = $this->production->getProductionMaster(['id'=>$data['id']]);
+            if($data['vendor_qty'] > $assemblyData->vendor_qty):
+                $errorMessage['vendor_qty'] = "Invalid Qty.";
+            endif;
+        endif;
+
+        if(!empty($errorMessage)):
+            $this->printJson(['status'=>0,'message'=>$errorMessage]);
+        else:
+            $this->printJson($this->production->saveReceiveJob($data));
+        endif;
     }
 }
 ?>
