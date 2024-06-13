@@ -393,8 +393,12 @@ class ProductionModel extends MasterModel{
         if(in_array($data['job_status'],[0,1]) || ($data['from_entry_type'] != $data['to_entry_type'] && $data['job_status'] == 2)):
             $data['where']['production_master.entry_date <='] = $this->endYearDate;
         else:
-            $data['where']['production_master.entry_date >='] = $this->startYearDate;
-            $data['where']['production_master.entry_date <='] = $this->endYearDate;
+            if($data['to_entry_type'] == 36 && $data['job_status'] == 2):
+                $data['where']['production_master.entry_date <='] = $this->endYearDate;
+            else:
+                $data['where']['production_master.entry_date >='] = $this->startYearDate;
+                $data['where']['production_master.entry_date <='] = $this->endYearDate;
+            endif;
         endif;
 
         $data['order_by']['production_master.priority'] = "ASC";
