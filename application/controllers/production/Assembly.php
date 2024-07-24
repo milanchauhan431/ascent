@@ -42,7 +42,8 @@ class Assembly extends MY_Controller{
     public function assignJob(){
         $data = $this->input->post();
         $this->data['postData'] = (object) $data;
-        $this->data['partyList'] = $this->party->getPartyList(['party_category'=>3]);
+        $this->data['partyList'] = $this->employee->getEmployeeList();
+        //$this->party->getPartyList(['party_category'=>3]);
         $this->load->view($this->assignForm,$this->data);
     }
 
@@ -118,8 +119,13 @@ class Assembly extends MY_Controller{
         if(!empty($errorMessage)):
             $this->printJson(['status'=>0,'message'=>$errorMessage]);
         else:
-            $this->printJson($this->production->saveProductionTrans($data));
+            $this->printJson($this->production->acceptContractorJob($data));
         endif;
+    }
+
+    public function completeJob(){
+        $data = $this->input->post();
+        $this->printJson($this->production->completeContractorJob($data));
     }
 
     public function viewAssemblyProduction(){
@@ -128,7 +134,7 @@ class Assembly extends MY_Controller{
         $this->load->view($this->viewAssemblyProduction,$this->data);
     }
 
-    public function reciveJob(){
+    /* public function reciveJob(){
         $data = $this->input->post();
         $this->data['postData'] = (object) $data;
         $this->load->view($this->receiveForm,$this->data);
@@ -153,6 +159,6 @@ class Assembly extends MY_Controller{
         else:
             $this->printJson($this->production->saveReceiveJob($data));
         endif;
-    }
+    } */
 }
 ?>

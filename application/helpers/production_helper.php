@@ -144,19 +144,19 @@ function getProductionDtHeader($page){
     $data['assembly_allotment'][] = ["name"=>"GENERAL NOTE"];
 
     /* Assembly Production Part-1 Header */
-    $data['ass_prd_part_1'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
-	$data['ass_prd_part_1'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
-	$data['ass_prd_part_1'][] = ["name"=>"Job No."];
-    $data['ass_prd_part_1'][] = ["name"=>"Item Name"];
-    $data['ass_prd_part_1'][] = ["name"=>"Vendor Name"];
-    $data['ass_prd_part_1'][] = ["name"=>"Panel Qty."];
-    $data['ass_prd_part_1'][] = ["name"=>"Priority","textAlign"=>"center"];
-    $data['ass_prd_part_1'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
-    $data['ass_prd_part_1'][] = ["name"=>"T.S.","sortable"=>"FALSE","textAlign"=>"center"];
-    $data['ass_prd_part_1'][] = ["name"=>"SLD","sortable"=>"FALSE","textAlign"=>"center"];
-    $data['ass_prd_part_1'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
-    $data['ass_prd_part_1'][] = ["name"=>"ASSEMBLY NOTE"];
-    $data['ass_prd_part_1'][] = ["name"=>"GENERAL NOTE"];
+    $data['contactor_assembly'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['contactor_assembly'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['contactor_assembly'][] = ["name"=>"Job No."];
+    $data['contactor_assembly'][] = ["name"=>"Item Name"];
+    $data['contactor_assembly'][] = ["name"=>"Vendor Name"];
+    $data['contactor_assembly'][] = ["name"=>"Panel Qty."];
+    $data['contactor_assembly'][] = ["name"=>"Priority","textAlign"=>"center"];
+    $data['contactor_assembly'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['contactor_assembly'][] = ["name"=>"T.S.","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['contactor_assembly'][] = ["name"=>"SLD","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['contactor_assembly'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['contactor_assembly'][] = ["name"=>"ASSEMBLY NOTE"];
+    $data['contactor_assembly'][] = ["name"=>"GENERAL NOTE"];
 
     /* Assembly Production Part-2 Header */
     $data['ass_prd_part_2'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
@@ -499,18 +499,24 @@ function getAssemblyProductionData($data){
 
     $viewFabAss = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Fab. Assembely" flow="down" onclick="edit('.$viewFabAssParam.');"><i class="fa fa-eye"></i></a>';
 
-    if($data->to_entry_type == 37): // Assembly Production Part 1
+    if($data->to_entry_type == 37): // Contactor Assembly
         $viewComplete = $completJob = $accptJob = '';
 
         if($data->entry_type == $data->from_entry_type):
-            $acceptParam = "{'postData':{'job_status' : 2, 'id' : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'controllerName' : 'production/assembly','fnsave':'acceptJob','message':'Are you sure want to accept this Job?'}";
-            $accptJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Accept Job" flow="down" onclick="confirmStore('.$acceptParam.');"><i class="fa fa-check"></i></a>';
+            /* $acceptParam = "{'postData':{'job_status' : 2, 'id' : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'controllerName' : 'production/assembly','fnsave':'acceptJob','message':'Are you sure want to accept this Job?'}";
+            $accptJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Accept Job" flow="down" onclick="confirmStore('.$acceptParam.');"><i class="fa fa-check"></i></a>'; */
+
+            $acceptParam = "{'postData':{'ref_id' : ".$data->id.", 'pm_id' : ".$data->pm_id.",'entry_type': ".$data->next_dept_id.",'fab_prod_entry_type':'33'},'controller' : 'production/assembly','fnedit':'assemblyProduction','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'assemblyProduction','title':'Assembly Production'}";
+            $accptJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Complet Job" flow="down" onclick="edit('.$acceptParam.');"><i class="fa fa-check"></i></a>';
         endif;
 
         if($data->job_status == 1 && $data->entry_type == $data->to_entry_type):
             $accptJob = '';
-            $completParam = "{'postData':{'ref_id' : ".$data->id.", 'pm_id' : ".$data->pm_id.",'entry_type': ".$data->entry_type.",'fab_prod_entry_type':'33'},'controller' : 'production/assembly','fnedit':'assemblyProduction','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'assemblyProduction','title':'Assembly Production'}";
-            $completJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Complet Job" flow="down" onclick="edit('.$completParam.');"><i class="fa fa-check"></i></a>';
+            /* $completParam = "{'postData':{'ref_id' : ".$data->id.", 'pm_id' : ".$data->pm_id.",'entry_type': ".$data->entry_type.",'fab_prod_entry_type':'33'},'controller' : 'production/assembly','fnedit':'assemblyProduction','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'assemblyProduction','title':'Assembly Production'}";
+            $completJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Complet Job" flow="down" onclick="edit('.$completParam.');"><i class="fa fa-check"></i></a>'; */
+
+            $completParam = "{'postData':{'id' : ".$data->id.", 'pm_id' : ".$data->pm_id.", 'entry_type': ".$data->entry_type."},'controllerName' : 'production/assembly','fnsave':'completeJob','message':'Are you sure want to complete this Job?'}";
+            $completJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Complet Job" flow="down" onclick="confirmStore('.$completParam.');"><i class="fa fa-check"></i></a>';
         elseif(in_array($data->job_status,[2,3]) && $data->entry_type == $data->to_entry_type):
             $completJob = $accptJob = '';
 

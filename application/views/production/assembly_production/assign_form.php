@@ -10,7 +10,7 @@
                 <label for="vendor_id">Vendor Name</label>
                 <select name="vendor_id" id="vendor_id" class="form-control select2 req">
                     <option value="">Select Vendor</option>
-                    <?=getPartyListOption($partyList)?>
+                    <?=getEmployeeListOption($partyList)?>
                 </select>
             </div>
 
