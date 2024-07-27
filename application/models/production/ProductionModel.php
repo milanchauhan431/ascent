@@ -421,8 +421,10 @@ class ProductionModel extends MasterModel{
         $data['searchCol'][] = "(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' END)";
         $data['searchCol'][] = "";
         $data['searchCol'][] = "";
-        $data['searchCol'][] = "";
-        $data['searchCol'][] = "";
+        if($data['to_entry_type'] != 38):
+            $data['searchCol'][] = "";
+            $data['searchCol'][] = "";
+        endif;
         if(in_array($data['to_entry_type'],[30,31,32,33])):
             $data['searchCol'][] = "production_master.fab_dept_note";
         elseif($data['to_entry_type'] == 34):
@@ -436,7 +438,7 @@ class ProductionModel extends MasterModel{
         if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}
         
         
-        return $this->pagingRows($data); $this->printQuery();
+        return $this->pagingRows($data); //$this->printQuery();
     }
     /* Production DTROWS End */
 
@@ -877,5 +879,45 @@ class ProductionModel extends MasterModel{
         }
     } */
     /* Assembly Production [Contactor Assembly] End */
+
+    /* Quality Department Start */
+    public function saveQualityChecking($data){
+        try{
+            $this->db->trans_begin();            
+
+            $jobData = $this->getProductionMaster(['id'=>$data['id']]);
+
+            $setData = array();
+            $setData['tableName'] = $this->productionMaster;
+            $setData['where']['id'] = $jobData->id;
+            $setData['update']['job_status'] = 3;
+            $this->setValue($setData);
+
+            $jobData = (array) $jobData;
+            unset($jobData['order_qty'],$jobData['pending_qty']);            
+
+            $jobData['id'] = "";
+            $jobData['entry_type'] = $data['next_dept_id'];
+            $jobData['ref_id'] = $data['id'];
+            if(empty($jobData['pm_id'])):
+                $jobData['pm_id'] = $data['id'];
+            endif;
+            $jobData['quality_check'] = $data['quality_check'];
+            $jobData['job_status'] = 3;
+            $jobData['entry_date'] = date("Y-m-d");
+            $jobData['accepted_by'] = $this->loginId;
+            $jobData['accepted_at'] = date("Y-m-d H:i:s");
+            $result = $this->store($this->productionMaster,$jobData);            
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
+    }
+    /* Quality Department End */
 }
 ?>

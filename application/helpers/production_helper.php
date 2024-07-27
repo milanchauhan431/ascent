@@ -158,20 +158,17 @@ function getProductionDtHeader($page){
     $data['contactor_assembly'][] = ["name"=>"ASSEMBLY NOTE"];
     $data['contactor_assembly'][] = ["name"=>"GENERAL NOTE"];
 
-    /* Assembly Production Part-2 Header */
-    $data['ass_prd_part_2'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
-	$data['ass_prd_part_2'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
-	$data['ass_prd_part_2'][] = ["name"=>"Job No."];
-    $data['ass_prd_part_2'][] = ["name"=>"Item Name"];
-    $data['ass_prd_part_2'][] = ["name"=>"Vendor Name"];
-    $data['ass_prd_part_2'][] = ["name"=>"Panel Qty."];
-    $data['ass_prd_part_2'][] = ["name"=>"Priority","textAlign"=>"center"];
-    $data['ass_prd_part_2'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
-    $data['ass_prd_part_2'][] = ["name"=>"T.S.","sortable"=>"FALSE","textAlign"=>"center"];
-    $data['ass_prd_part_2'][] = ["name"=>"SLD","sortable"=>"FALSE","textAlign"=>"center"];
-    $data['ass_prd_part_2'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
-    $data['ass_prd_part_2'][] = ["name"=>"ASSEMBLY NOTE"];
-    $data['ass_prd_part_2'][] = ["name"=>"GENERAL NOTE"];
+    /* Quality Department Header */
+    $data['quality'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['quality'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['quality'][] = ["name"=>"Job No."];
+    $data['quality'][] = ["name"=>"Item Name"];
+    $data['quality'][] = ["name"=>"Order Qty."];
+    $data['quality'][] = ["name"=>"Priority","textAlign"=>"center"];
+    $data['quality'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['quality'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['quality'][] = ["name"=>"FAB. PRODUCTION NOTE"];
+    $data['quality'][] = ["name"=>"GENERAL NOTE"];
 
     return tableHeader($data[$page]);
 }
@@ -528,22 +525,37 @@ function getAssemblyProductionData($data){
         
         return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->party_name,floatval($data->vendor_qty),$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->pc_dept_note,$data->remark];
     endif;
-    
-    if($data->to_entry_type == 38): // Assembly Production Part 2
+}
 
-        $id = ($data->from_entry_type == 37)?$data->id:$data->ref_id;
-        $viewParam = "{'postData':{'ref_id' : ".$id.",'entry_type': 37},'controller' : 'production/assembly','fnedit':'viewAssemblyProduction','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'assemblyProduction','title':'Assembly Production','button':'close'}";
-        $viewComplete = '<a class="btn btn-info" href="javascript:void(0)" datatip="View Complet Job" flow="down" onclick="edit('.$viewParam.');"><i class="fa fa-eye"></i></a>';
+/* Quality Department Data */
+function getQualityData($data){
+    if($data->priority == 1):
+        $data->priority_status = '<span class="badge badge-pill badge-danger m-1">'.$data->priority_status.'</span>';
+    elseif($data->priority == 2):
+        $data->priority_status = '<span class="badge badge-pill badge-warning m-1">'.$data->priority_status.'</span>';
+    elseif($data->priority == 3):
+        $data->priority_status = '<span class="badge badge-pill badge-info m-1">'.$data->priority_status.'</span>';
+    endif;
 
-        $receiveJob = "";
+    $data->ga_file = (!empty($data->ga_file))?'<a href="'.base_url('assets/uploads/production/'.$data->ga_file).'" class="btn btn-outline-info waves-effect waves-light" target="_blank"><i class="fa fa-eye"></i></a>':'';
+
+    $viewBomParam = "{'postData':{'trans_child_id':".$data->trans_child_id."},'modal_id' : 'modal-xl','fnedit':'viewProductionBom','title' : 'View Bom [Item Name : ".$data->item_name."]','button':'close','controller':'production/estimation'}";
+    $viewBom = '<a class="btn btn-outline-info waves-effect waves-light" href="javascript:void(0)" onclick="edit('.$viewBomParam.');" datatip="View Item Bom" flow="down"><i class="fa fa-eye"></i></a>';
+
+    if($data->to_entry_type == 38): //Quality Department
+
+        $viewMacDesParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '30'},'controller' : 'production/fabrication','fnedit':'viewMechanicalDesign','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Mechanical Design','button':'close'}";
+        $viewMacDes = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Mechanical Design" flow="down" onclick="edit('.$viewMacDesParam.');"><i class="fa fa-eye"></i></a>';
+
+        $qcButton = "";
         if($data->from_entry_type == 37):
-            $receiveParam = "{'postData':{'job_status' : 3, 'id' : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'form_id':'receiveJob','modal_id':'modal-md','title':'Complete Vendor Job','controllerName' : 'production/assembly','fnedit':'reciveJob','fnsave':'saveReceiveJob','js_store_fn':'confirmStore'}";
-            $receiveJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Complete Vendor Job" flow="down" onclick="edit('.$receiveParam.');"><i class="fa fa-check"></i></a>';
+            $qcParam = "{'postData':{'job_status' : 3, 'id' : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'form_id':'qualityChecking','modal_id':'modal-md','title':'Quality Checking','controllerName' : 'production/quality','fnedit':'qualityChecking','fnsave':'saveQualityChecking','js_store_fn':'confirmStore'}";
+            $qcButton = '<a class="btn btn-success" href="javascript:void(0)" datatip="QC Check" flow="down" onclick="edit('.$qcParam.');"><i class="fa fa-check"></i></a>';
         endif;
 
-        $action = getActionButton($viewFabAss.$viewComplete.$receiveJob);
-        
-        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->party_name,floatval($data->vendor_qty),$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->pc_dept_note,$data->remark];
+        $action = getActionButton($viewMacDes.$qcButton);
+
+        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark];
     endif;
 }
 ?>
