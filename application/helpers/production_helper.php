@@ -170,6 +170,14 @@ function getProductionDtHeader($page){
     $data['quality'][] = ["name"=>"FAB. PRODUCTION NOTE"];
     $data['quality'][] = ["name"=>"GENERAL NOTE"];
 
+    /* Testing Parameters Header */
+    $data['testingParameters'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['testingParameters'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['testingParameters'][] = ["name"=>"System Detail"];
+    $data['testingParameters'][] = ["name"=>"Control Supply"];
+    $data['testingParameters'][] = ["name"=>"HV Test"];
+    $data['testingParameters'][] = ["name"=>"Insulation Resistance"];
+
     return tableHeader($data[$page]);
 }
 
@@ -185,7 +193,6 @@ function getParametersData($data){
 	$action = getActionButton($editButton.$deleteButton);
     return [$action,$data->sr_no,$data->param_type_text,$data->param_name,$data->seq,$data->input_type_text,$data->remark];
 }
-
 
 /* Estimation & Desing Table Data */
 function getEstimationData($data){    
@@ -557,5 +564,18 @@ function getQualityData($data){
 
         return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark];
     endif;
+}
+
+/* Testing Parameters Data */
+function getTestingParametersData($data){
+    $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Testing Parameter'}";
+    $editParam = "{'postData':{'id' : ".$data->id."},'modal_id' : 'modal-md', 'form_id' : 'editTestingParameter', 'title' : 'Update Testing Parameter'}";
+
+    $editButton = '<a class="btn btn-success btn-edit permission-modify" href="javascript:void(0)" datatip="Edit" flow="down" onclick="edit('.$editParam.');"><i class="ti-pencil-alt" ></i></a>';
+
+    $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
+	
+	$action = getActionButton($editButton.$deleteButton);
+    return [$action,$data->sr_no,$data->system_detail,$data->control_supply,$data->hv_test,$data->insulation_resistance];
 }
 ?>

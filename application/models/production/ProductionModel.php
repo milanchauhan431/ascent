@@ -7,6 +7,7 @@ class ProductionModel extends MasterModel{
     private $orderBom = "order_bom";
     private $purchseReq = "purchase_request";
     private $paramMaster = "parameter_master";
+    private $testingParameters = "testing_params";
 
     /* Parameters Start */
     public function getParametersDTRows($data){
@@ -919,5 +920,80 @@ class ProductionModel extends MasterModel{
         }
     }
     /* Quality Department End */
+
+    /* Testing Parameters Start */
+    public function getTestingParametersDTRows($data){
+        $data['tableName'] = $this->testingParameters;
+        $data['select'] = "testing_params.*";
+
+        $data['searchCol'][] = "";
+		$data['searchCol'][] = "";
+		$data['searchCol'][] = "system_detail";
+		$data['searchCol'][] = "control_supply";
+        $data['searchCol'][] = "hv_test";
+        $data['searchCol'][] = "insulation_resistance";
+
+		$columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
+
+		if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}
+        return $this->pagingRows($data);
+    }
+
+    public function saveTestingParameter($data){
+        try{
+            $this->db->trans_begin();
+
+            if($this->checkTestingParameterDuplicate($data) > 0):
+                $errorMessage['system_detail'] = "System Detail is duplicate.";
+                return ['status'=>0,'message'=>$errorMessage];
+            endif;
+
+            $result = $this->store($this->testingParameters,$data,'Testing Parameter');
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
+    }
+
+    public function checkTestingParameterDuplicate($data){
+        $queryData['tableName'] = $this->testingParameters;
+        $queryData['where']['system_detail'] = $data['system_detail'];
+                
+        if(!empty($data['id']))
+            $queryData['where']['id !='] = $data['id'];
+        
+        $queryData['resultType'] = "numRows";
+        return $this->specificRow($queryData);
+    }
+
+    public function getTestingParameter($data){
+        if(!empty($data['id'])):
+            $queryData['where']['id'] = $data['id'];
+        endif;
+        $queryData['tableName'] = $this->testingParameters;
+        return $this->row($queryData);
+    }
+
+    public function deleteTestingParameter($id){
+        try{
+            $this->db->trans_begin();
+
+            $result = $this->trash($this->testingParameters,['id'=>$id],'Testing Parameter');
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }	
+    }
+    /* Testing Parameters End */
 }
 ?>
