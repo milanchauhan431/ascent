@@ -979,6 +979,14 @@ class ProductionModel extends MasterModel{
         return $this->row($queryData);
     }
 
+    public function getSystemDetailList(){
+        $queryData = [];
+        $queryData['tableName'] = $this->testingParameters;
+        $queryData['select'] = "id,system_detail";
+        $result = $this->rows($queryData);
+        return $result;
+    }
+
     public function deleteTestingParameter($id){
         try{
             $this->db->trans_begin();
@@ -995,5 +1003,169 @@ class ProductionModel extends MasterModel{
         }	
     }
     /* Testing Parameters End */
+
+    /* Testing Department Start */
+    public function getTestingDTRows($data){
+        $data['tableName'] = $this->productionMaster;
+        $data['select'] = "production_master.id,production_master.entry_type,production_master.ref_id,production_master.pm_id,production_master.trans_child_id,production_master.trans_main_id,trans_child.job_number,trans_child.item_name,trans_child.qty as order_qty,(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' ELSE '' END) as priority_status,production_master.ga_file,production_master.technical_specification_file,production_master.sld_file,production_master.priority,production_master.fab_dept_note,production_master.pc_dept_note,production_master.ass_dept_note,production_master.remark,production_master.accepted_by,em.emp_name as accepted_by_name,production_master.accepted_at,production_master.job_status, (CASE WHEN production_master.ref_id = 0 THEN SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), 1) ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), FIND_IN_SET('".$data['from_entry_type']."', production_master.department_ids) + 1), REPLACE(', ', ' ', ''), -1) END) as next_dept_id,production_master.tested_qty,trans_main.party_name,(trans_child.qty - test_trans.tested_qty) as pending_qty, test_trans.tested_qty as total_tested_qty, production_master.customer_name, CONCAT(trans_child.job_number,'/',production_master.drgs_no) as drgs_number, CONCAT(production_master.tc_prefix,production_master.tc_sr_no) as tc_sr_number";  
+
+        $data['leftJoin']['trans_main'] = "production_master.trans_main_id = trans_main.id";
+        $data['leftJoin']['trans_child'] = "production_master.trans_child_id = trans_child.id";
+        $data['leftJoin']['employee_master as em'] = "em.id = production_master.accepted_by";
+        $data['leftJoin']['(SELECT IFNULL(SUM(production_master.tested_qty),0) as tested_qty,ref_id FROM production_master WHERE production_master.is_delete = 0 AND production_master.entry_type = 40 GROUP BY ref_id) as test_trans'] = "test_trans.ref_id = production_master.id";
+
+        $data['where']['trans_child.trans_status !='] = 3;
+        
+        if($data['from_entry_type'] != $data['to_entry_type'] && $data['to_entry_type'] == 40):
+            $data['where']['production_master.entry_type'] = $data['from_entry_type'];
+            $data['where_in']['production_master.job_status'] = $data['job_status'];
+            $data['where']['(trans_child.qty - test_trans.tested_qty) > '] = 0;
+        else:
+            $data['where']['production_master.entry_type'] = $data['to_entry_type'];
+            $data['where_in']['production_master.job_status'] = ($data['job_status'] != 2)?$data['job_status']:[2,3];
+        endif;
+
+        if(in_array($data['job_status'],[0,1]) || ($data['from_entry_type'] != $data['to_entry_type'] && $data['job_status'] == 3)):
+            $data['where']['production_master.entry_date <='] = $this->endYearDate;
+        else:
+            $data['where']['production_master.entry_date >='] = $this->startYearDate;
+            $data['where']['production_master.entry_date <='] = $this->endYearDate;
+        endif;
+
+        $data['order_by']['production_master.priority'] = "ASC";
+
+        $data['searchCol'][] = "";
+        $data['searchCol'][] = "";
+        $data['searchCol'][] = "trans_child.job_number";
+        if($data['from_entry_type'] == 40):
+            $data['searchCol'][] = "production_master.customer_name";
+        endif;
+        $data['searchCol'][] = "trans_child.item_name";
+        $data['searchCol'][] = "trans_child.qty";
+        if($data['from_entry_type'] == 40):
+            $data['searchCol'][] = "production_master.tested_qty";
+            $data['searchCol'][] = "CONCAT(trans_child.job_number,'/',production_master.drgs_no)";
+            $data['searchCol'][] = "CONCAT(production_master.tc_prefix,production_master.tc_sr_no)";
+        else:
+            $data['searchCol'][] = "test_trans.tested_qty";
+        endif;
+        $data['searchCol'][] = "(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' END)";
+        $data['searchCol'][] = "";
+        $data['searchCol'][] = "";
+        $data['searchCol'][] = "production_master.fab_dept_note";
+        $data['searchCol'][] = "production_master.remark";
+
+        $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
+        if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}        
+        
+        return $this->pagingRows($data); 
+    }
+
+    public function getDrgsNo($data){
+        $queryData = [];
+        $queryData['tableName'] = $this->productionMaster;
+        $queryData['select'] = "IFNULL((MAX(drgs_no) + 1),1) as drgs_no";
+        $queryData['where']['trans_child_id'] = $data['trans_child_id'];
+        $result = $this->row($queryData);
+        return $result->drgs_no;
+    }
+
+    public function getTcNo($data){
+        $queryData = [];
+        $queryData['tableName'] = $this->productionMaster;
+        $queryData['select'] = "IFNULL((MAX(tc_sr_no) + 1),1) as tc_sr_no";
+        $queryData['where']['tc_prefix'] = $data['tc_prefix'];
+        $result = $this->row($queryData);
+        return $result->tc_sr_no;
+    }
+
+    public function saveTestingParameters($data){
+        try{
+            $this->db->trans_begin();
+
+            if(empty($data['id'])):
+                $result = $this->store($this->productionMaster,['id'=>$data['ref_id'],'job_status'=>3]);
+
+                $jobData = $this->getProductionMaster(['id'=>$data['ref_id']]);
+                $jobData = (array) $jobData;
+                unset($jobData['order_qty'],$jobData['pending_qty']);
+
+                $jobData['id'] = "";
+                $jobData['entry_type'] = $data['entry_type'];
+                $jobData['ref_id'] = $data['ref_id'];
+                if(empty($jobData['pm_id'])):
+                    $jobData['pm_id'] = $data['ref_id'];
+                endif;
+                $jobData['job_status'] = 3;
+                $jobData['entry_date'] = $data['entry_date'];
+                $jobData['accepted_by'] = $this->loginId;
+                $jobData['accepted_at'] = date("Y-m-d H:i:s");
+                $jobData['customer_name'] = $data['customer_name'];
+                $jobData['tc_prefix'] = $data['tc_prefix'];
+                $jobData['tc_sr_no'] = $this->getTcNo(['tc_prefix'=>$data['tc_prefix']]);
+                $jobData['drgs_no'] = $this->production->getDrgsNo(['trans_child_id'=>$data['trans_child_id']]);
+                $jobData['switchgear_no'] = $data['switchgear_no'];
+                $jobData['tested_qty'] = $data['tested_qty'];
+                $jobData['system_detail_id'] = $data['system_detail_id'];
+                $jobData['control_supply'] = $data['control_supply'];
+                $jobData['hv_test'] = $data['hv_test'];
+                $jobData['ins_res'] = $data['ins_res'];
+            else:
+                $jobData = $data;
+                unset($jobData['paramData']);
+            endif;
+
+            $refData = $this->store($this->productionMaster,$jobData);
+
+            foreach($data['paramData'] as $row):
+                $row['entry_type'] = $data['entry_type'];
+                $row['ref_id'] = $refData['id'];
+                $row['main_pm_id'] = $jobData['pm_id'];
+                $row['entry_date'] = $data['entry_date'];
+
+                $this->store($this->productionTrans,$row);
+            endforeach;
+
+            if(empty($data['id'])):
+                //Manage Main Job Record Status
+                $setData = Array();
+                $setData['tableName'] = $this->productionMaster;
+                $setData['where']['id'] = $jobData['pm_id'];
+                $setData['update']['job_status'] = "(CASE WHEN REVERSE(SUBSTRING_INDEX(REVERSE(department_ids), ',', 1)) = ".$data['entry_type']." THEN 3 ELSE job_status END)";
+                $this->setValue($setData);
+            endif;
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $refData;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
+    }
+
+    public function getTestingParameterData($data){
+        $queryData = [];
+        $queryData['tableName'] = $this->productionMaster;
+        $queryData['select'] = "production_master.*, trans_child.job_number, trans_child.item_name, CONCAT(trans_child.job_number,'/',production_master.drgs_no) as drgs_number, CONCAT(production_master.tc_prefix,production_master.tc_sr_no) as tc_sr_number, em.emp_name as tested_by, testing_params.system_detail";
+
+        $queryData['leftJoin']['trans_child'] = "production_master.trans_child_id = trans_child.id";
+        $queryData['leftJoin']['employee_master as em'] = "em.id = production_master.accepted_by";
+        $queryData['leftJoin']['testing_params'] = "testing_params.id = production_master.system_detail_id";
+
+        $queryData['where']['production_master.id'] = $data['id'];
+
+        $result = $this->row($queryData);
+
+        $queryData = [];
+        $queryData['tableName'] = $this->productionTrans;
+        $queryData['where']['entry_type'] = $result->entry_type;
+        $queryData['where']['ref_id'] = $result->id;
+        $result->insulation_resistance_param = $this->rows($queryData);
+
+        return $result;
+    }
+    /* Testing Department End */
 }
 ?>

@@ -60,5 +60,32 @@ class TestingParameters extends MY_Controller{
             $this->printJson($this->production->deleteTestingParameter($id));
         endif;
     }
+
+    public function getSystemDetail(){
+        $data = $this->input->post();
+        $result = $this->production->getTestingParameter($data);
+
+        $insulation_resistance_json = json_decode($result->insulation_resistance_json);
+
+        $html = '';$i=1;
+        foreach($insulation_resistance_json as $row):
+            $html .= '<tr>
+                <td>'.$row->param.'</td>
+                <td>
+                    <input type="hidden" name="paramData['.$i.'][id]" value="">
+                    <input type="hidden" name="paramData['.$i.'][param_key]" value="'.$row->param.'">
+                    <input type="text" name="paramData['.$i.'][param_value]" class="form-control" value="'.$row->param_value.'">
+                </td>
+            </tr>';
+            $i++;
+        endforeach;
+
+        if(empty($html)):
+            $html = '<tr><td colspan="2" class="text-center">No data available in table</td></tr>';
+        endif;
+
+        $result->insulation_resistance_param = $html;
+        $this->printJson(['status'=>1,'data'=>$result]);
+    }
 }
 ?>

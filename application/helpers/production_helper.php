@@ -178,6 +178,34 @@ function getProductionDtHeader($page){
     $data['testingParameters'][] = ["name"=>"HV Test"];
     $data['testingParameters'][] = ["name"=>"Insulation Resistance"];
 
+    /* Testing Department Header */
+    $data['pending_testing'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['pending_testing'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['pending_testing'][] = ["name"=>"Job No."];
+    $data['pending_testing'][] = ["name"=>"Item Name"];
+    $data['pending_testing'][] = ["name"=>"Order Qty."];
+    $data['pending_testing'][] = ["name"=>"Tested Qty."];
+    $data['pending_testing'][] = ["name"=>"Priority","textAlign"=>"center"];
+    $data['pending_testing'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['pending_testing'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['pending_testing'][] = ["name"=>"FAB. PRODUCTION NOTE"];
+    $data['pending_testing'][] = ["name"=>"GENERAL NOTE"];
+
+    $data['complete_testing'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['complete_testing'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['complete_testing'][] = ["name"=>"Job No."];
+	$data['complete_testing'][] = ["name"=>"Customer Name"];
+    $data['complete_testing'][] = ["name"=>"Item Name"];
+    $data['complete_testing'][] = ["name"=>"Order Qty."];
+    $data['complete_testing'][] = ["name"=>"Tested Qty."];
+	$data['complete_testing'][] = ["name"=>"TC Sr. No."];
+	$data['complete_testing'][] = ["name"=>"Drgs Ref."];
+    $data['complete_testing'][] = ["name"=>"Priority","textAlign"=>"center"];
+    $data['complete_testing'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['complete_testing'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
+    $data['complete_testing'][] = ["name"=>"FAB. PRODUCTION NOTE"];
+    $data['complete_testing'][] = ["name"=>"GENERAL NOTE"];
+
     return tableHeader($data[$page]);
 }
 
@@ -577,5 +605,40 @@ function getTestingParametersData($data){
 	
 	$action = getActionButton($editButton.$deleteButton);
     return [$action,$data->sr_no,$data->system_detail,$data->control_supply,$data->hv_test,$data->insulation_resistance];
+}
+
+/* Testing Department Data */
+function getTestingData($data){
+    if($data->priority == 1):
+        $data->priority_status = '<span class="badge badge-pill badge-danger m-1">'.$data->priority_status.'</span>';
+    elseif($data->priority == 2):
+        $data->priority_status = '<span class="badge badge-pill badge-warning m-1">'.$data->priority_status.'</span>';
+    elseif($data->priority == 3):
+        $data->priority_status = '<span class="badge badge-pill badge-info m-1">'.$data->priority_status.'</span>';
+    endif;
+
+    $data->ga_file = (!empty($data->ga_file))?'<a href="'.base_url('assets/uploads/production/'.$data->ga_file).'" class="btn btn-outline-info waves-effect waves-light" target="_blank"><i class="fa fa-eye"></i></a>':'';
+
+    $viewBomParam = "{'postData':{'trans_child_id':".$data->trans_child_id."},'modal_id' : 'modal-xl','fnedit':'viewProductionBom','title' : 'View Bom [Item Name : ".$data->item_name."]','button':'close','controller':'production/estimation'}";
+    $viewBom = '<a class="btn btn-outline-info waves-effect waves-light" href="javascript:void(0)" onclick="edit('.$viewBomParam.');" datatip="View Item Bom" flow="down"><i class="fa fa-eye"></i></a>';
+
+    $viewMacDesParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '30'},'controller' : 'production/fabrication','fnedit':'viewMechanicalDesign','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Mechanical Design','button':'close'}";
+    $viewMacDes = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Mechanical Design" flow="down" onclick="edit('.$viewMacDesParam.');"><i class="fa fa-eye"></i></a>';
+
+    if($data->from_entry_type != $data->to_entry_type):
+        $testingParam = "{'postData':{'job_status' : 3, 'id' : ".$data->id.",'next_dept_id': ".$data->next_dept_id.",'trans_child_id':".$data->trans_child_id.",'party_name':'".$data->party_name."','item_name':'".$data->item_name."','job_number':'".$data->job_number."'},'form_id':'testingForm','modal_id':'modal-md','title':'Testing','controllerName' : 'production/testing','fnedit':'addTestingDetail','fnsave':'save','js_store_fn':'confirmStore'}";
+        $testingButton = '<a class="btn btn-success" href="javascript:void(0)" datatip="Testing" flow="down" onclick="edit('.$testingParam.');"><i class="fa fa-check"></i></a>';
+
+        $action = getActionButton($viewMacDes.$testingButton);
+        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->total_tested_qty,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark];
+    else:
+        $editParam = "{'postData':{'id' : ".$data->id."},'form_id':'testingForm','modal_id':'modal-md','title':'Testing','controllerName' : 'production/testing','fnedit':'editTestingDetail','fnsave':'save','js_store_fn':'confirmStore'}";
+        $editButton = '<a class="btn btn-success" href="javascript:void(0)" datatip="Testing" flow="down" onclick="edit('.$editParam.');"><i class="ti-pencil-alt"></i></a>';
+
+        $printBtn = '<a class="btn btn-info" href="'.base_url('production/testing/printTestingCertificate/'.$data->id).'" target="_blank" datatip="Print Test Certificate" flow="down"><i class="fas fa-print" ></i></a>';
+
+        $action = getActionButton($viewMacDes.$editButton.$printBtn);
+        return [$action,$data->sr_no,$data->job_number,$data->customer_name,$data->item_name,$data->order_qty,$data->tested_qty,$data->drgs_number,$data->tc_sr_number,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark];
+    endif;
 }
 ?>

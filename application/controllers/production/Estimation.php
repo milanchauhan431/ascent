@@ -18,6 +18,7 @@ class Estimation extends MY_Controller{
         "36"=>"ASSEMBELY PRODUCTION",
         "37"=>"Contactor Assembly",
         "38"=>"QULITY CHECK",
+        "40"=>"Testing",
         /* "39"=>"QULITY CHECK",
         "40"=>"TESTING",
         "41"=>"DOCUMATION" */
