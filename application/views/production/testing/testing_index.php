@@ -12,7 +12,7 @@
                                         <button onclick="statusTab('testingTable','38/40/3','getProductionDtHeader','pending_testing',[0,1,7,8]);" class="nav-tab btn waves-effect waves-light btn-outline-danger active" id="powder_coating_pending" style="outline:0px" data-toggle="tab" aria-expanded="false">Pending</button> 
                                     </li>
                                     <li class="nav-item">
-                                        <button onclick="statusTab('testingTable','40/40/2','getProductionDtHeader','complete_testing',[0,1,10,11]);" class="nav-tab btn waves-effect waves-light btn-outline-success" id="powder_coating_completed" style="outline:0px" data-toggle="tab" aria-expanded="false">Completed</button>
+                                        <button onclick="statusTab('testingTable','40/40/2','getProductionDtHeader','complete_testing',[0,1,12,13]);" class="nav-tab btn waves-effect waves-light btn-outline-success" id="powder_coating_completed" style="outline:0px" data-toggle="tab" aria-expanded="false">Completed</button>
                                     </li>
                                 </ul>
                             </div>

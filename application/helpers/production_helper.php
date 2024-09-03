@@ -200,6 +200,8 @@ function getProductionDtHeader($page){
     $data['complete_testing'][] = ["name"=>"Tested Qty."];
 	$data['complete_testing'][] = ["name"=>"TC Sr. No."];
 	$data['complete_testing'][] = ["name"=>"Drgs Ref."];
+	$data['complete_testing'][] = ["name"=>"Switchgear Sr. No."];
+	$data['complete_testing'][] = ["name"=>"Tested By"];
     $data['complete_testing'][] = ["name"=>"Priority","textAlign"=>"center"];
     $data['complete_testing'][] = ["name"=>"GA","sortable"=>"FALSE","textAlign"=>"center"];
     $data['complete_testing'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
@@ -638,7 +640,7 @@ function getTestingData($data){
         $printBtn = '<a class="btn btn-info" href="'.base_url('production/testing/printTestingCertificate/'.$data->id).'" target="_blank" datatip="Print Test Certificate" flow="down"><i class="fas fa-print" ></i></a>';
 
         $action = getActionButton($viewMacDes.$editButton.$printBtn);
-        return [$action,$data->sr_no,$data->job_number,$data->customer_name,$data->item_name,$data->order_qty,$data->tested_qty,$data->drgs_number,$data->tc_sr_number,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark];
+        return [$action,$data->sr_no,$data->job_number,$data->customer_name,$data->item_name,$data->order_qty,$data->tested_qty,$data->drgs_number,$data->tc_sr_number,$data->switchgear_no,$data->accepted_by_name,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark];
     endif;
 }
 ?>
