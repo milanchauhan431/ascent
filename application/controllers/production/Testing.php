@@ -98,8 +98,6 @@ class Testing extends MY_Controller{
 
         $mpdf = new \Mpdf\Mpdf();
 		$pdfFileName=str_replace(["/","-"],"_",$dataRow->tc_sr_number).'.pdf';
-		$stylesheet = file_get_contents(base_url('assets/extra-libs/datatables.net-bs4/css/dataTables.bootstrap4.css'));
-		$stylesheet = file_get_contents(base_url('assets/css/style.css?v='.time()));
 		$stylesheet = file_get_contents(base_url('assets/css/pdf_style.css?v='.time()));
 		$mpdf->WriteHTML($stylesheet,1);
 		$mpdf->SetDisplayMode('fullpage');
@@ -107,7 +105,7 @@ class Testing extends MY_Controller{
 		$mpdf->showWatermarkImage = true;
 		$mpdf->SetProtection(array('print'));
 		$mpdf->SetHTMLFooter($htmlFooter);
-		$mpdf->AddPage('P','','','','',5,5,0,2,2,2,'','','','','','','','','','A4-P');
+		$mpdf->AddPage('P','','','','',5,5,0,5,2,2,'','','','','','','','','','A4-P');
 		$mpdf->WriteHTML($pdfData);
 		$mpdf->Output($pdfFileName,'I');
     }

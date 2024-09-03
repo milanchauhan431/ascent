@@ -20,25 +20,25 @@
                 <input type="text" id="switchboard_tag" class="form-control" value="<?=(!empty($dataRow->item_name))?$dataRow->item_name:$postData->item_name?>" readonly>
             </div>
 
-            <div class="col-md-6 form-group">
+            <div class="col-md-4 form-group">
                 <label for="tc_sr_no">TC Sr. Nos.</label>
                 <input type="text" id="tc_sr_number" class="form-control" value="<?=(!empty($dataRow->tc_sr_number))?$dataRow->tc_sr_number:$postData->tc_sr_number?>" readonly>
                 <input type="hidden" name="tc_prefix" id="tc_prefix" value="<?=(!empty($dataRow->tc_prefix))?$dataRow->tc_prefix:$postData->tc_prefix?>">
                 <input type="hidden" name="tc_sr_no" id="tc_sr_no" value="<?=(!empty($dataRow->tc_sr_no))?$dataRow->tc_sr_no:$postData->tc_sr_no?>">
             </div>
 
-            <div class="col-md-6 form-group">
+            <div class="col-md-4 form-group">
                 <label for="job_number">JOB Number</label>
                 <input type="text" id="job_number" class="form-control" value="<?=(!empty($dataRow->job_number))?$dataRow->job_number:$postData->job_number?>" readonly>
             </div>
 
-            <div class="col-md-6 form-group">
+            <div class="col-md-4 form-group">
                 <label for="drgs_no">Drgs Ref.</label>
                 <input type="text" id="drgs_number" class="form-control" value="<?=(!empty($dataRow->drgs_number))?$dataRow->drgs_number:$postData->drgs_number?>" readonly>
                 <input type="hidden" name="drgs_no" id="drgs_no" value="<?=(!empty($dataRow->drgs_no))?$dataRow->drgs_no:$postData->drgs_no?>">
             </div>
 
-            <div class="col-md-6 form-group">
+            <div class="col-md-12 form-group">
                 <label for="switchgear_no">Switchgear Sr. No.</label>
                 <input type="text" name="switchgear_no" id="switchgear_no" class="form-control" value="<?=(!empty($dataRow->switchgear_no))?$dataRow->switchgear_no:""?>">
             </div>
