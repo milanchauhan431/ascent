@@ -38,7 +38,7 @@
 					Billing Address: <br>
 					<b><?=$companyData->company_name?></b> <br>
 					<small>
-						<?=$companyData->company_address?><br>
+						<?=$companyData->company_address." ".$companyData->company_state.", ".$companyData->company_city." - ".$companyData->company_pincode?><br>
 						Contact No. : <?=$companyData->company_contact?><br>
 						GSTIN : <?=$companyData->company_gst_no?><br><br>
 					</small><br><br>
