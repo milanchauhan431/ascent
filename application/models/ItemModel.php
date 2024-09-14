@@ -97,6 +97,10 @@ class ItemModel extends MasterModel{
                 $errorMessage['item_name'] = "Name is duplicate.";
                 return ['status'=>0,'message'=>$errorMessage];
             endif;
+
+            $data['std_pck_qty'] = (!empty($data['std_pck_qty']))?$data['std_pck_qty']:1;
+            /* $data['std_qty'] = (!empty($data['std_qty']))?$data['std_qty']:1;
+            $data['sec_unit_id'] = (!empty($data['sec_unit_id']))?$data['sec_unit_id']:$data['unit_id']; */
             
             $result = $this->store($this->itemMaster,$data,"Item");            
 

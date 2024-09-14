@@ -49,7 +49,7 @@ $(document).ready(function(){
 	});
 
 	$(document).on('keyup change','.calQty',function(){
-		var std_qty = $("#itemForm #std_qty").val() || 0;
+		var std_qty = $("#itemForm #std_qty").val() || 1;
 
 		if($(this).attr('id') == "qty"){
 			var qty = $(this).val() || 0;			
@@ -60,8 +60,6 @@ $(document).ready(function(){
 			if((parseFloat(qty_kg) > 0) && parseFloat(std_qty) > 0){
 				var qty = parseFloat(parseFloat(qty_kg) / parseFloat(std_qty)).toFixed(3);
 				$("#itemForm #qty").val(qty);
-			}else{
-				$("#itemForm #qty").val(0);
 			}
 		}
 	});

@@ -32,7 +32,7 @@
                                 <input type="hidden" name="itemData[<?=$i?>][mir_id]" value="<?=$row->mir_id?>">
                                 <input type="hidden" name="itemData[<?=$i?>][inspection_date]" value="<?=(!empty($row->inspection_date))?$row->inspection_date:getFyDate()?>">
 
-                                <input type="text" name="itemData[<?=$i?>][ok_qty]" class="form-control floatOnly" value="<?=(!empty($row->ok_qty))?floatVal($row->ok_qty):""?>">
+                                <input type="text" name="itemData[<?=$i?>][ok_qty]" class="form-control floatOnly" value="<?=(!empty(floatVal($row->ok_qty)))?floatVal($row->ok_qty):floatVal($row->qty)?>">
 
                                 <div class="error ok_qty_<?=$i?>"></div>
                             </td>
