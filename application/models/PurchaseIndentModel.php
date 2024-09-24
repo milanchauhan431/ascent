@@ -1,7 +1,7 @@
 <?php
 class PurchaseIndentModel extends MasterModel{
     private $purchaseReq = "purchase_request";
-
+    
     public function nextIndentNo() {
         $data['tableName'] = $this->purchaseReq;
         $data['select'] = "MAX(req_no) as req_no";
@@ -61,7 +61,22 @@ class PurchaseIndentModel extends MasterModel{
                 $msg = "Approved";
             elseif($data['order_status'] == 2):
                 $msg = "Closed";
+            elseif($data['order_status'] == 3):
+                $queryData = [];
+                $queryData['tableName'] = $this->purchaseReq;
+                $queryData['where']['id'] = $data['id'];
+                $reqDetail = $this->row($queryData);
+
+                $setData = Array();
+                $setData['tableName'] = "order_bom";;
+                $setData['where']['id'] = $reqDetail->bom_id;
+                $setData['set_value']['req_qty'] = 'IF(`req_qty` - '.floatval($reqDetail->req_qty).' >= 0, `req_qty` - '.floatval($reqDetail->req_qty).', 0)';
+                $this->setValue($setData);
+
+                $msg = "Canceled";
             endif;
+
+                
 
             $result['message'] = "Request ".$msg. " Successfully.";
 

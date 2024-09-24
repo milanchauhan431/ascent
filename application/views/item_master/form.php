@@ -21,16 +21,16 @@
                     <option value="0">--</option>
                     <?=getItemUnitListOption($unitData,((!empty($dataRow->unit_id))?$dataRow->unit_id:""))?>
                 </select>
+            </div>            
+
+            <div class="<?=(!empty($dataRow->item_type) && $dataRow->item_type == 1 || !empty($item_type) && $item_type == 1)?"hidden":""?> col-md-2 form-group">
+                <label for="price">Price</label>
+                <input type="text" name="price" id="price" class="form-control floatOnly" value="<?=(!empty($dataRow->price))?floatVal($dataRow->price):""?>">
             </div>
 
             <div class="<?=(!empty($dataRow->item_type) && $dataRow->item_type == 1 || !empty($item_type) && $item_type == 1)?"col-md-3":"col-md-2"?> form-group">
                 <label for="defualt_disc">Defual Disc. (%)</label>
                 <input type="text" name="defualt_disc" id="defualt_disc" class="form-control floatOnly req" value="<?=(!empty($dataRow->defualt_disc)) ? floatVal($dataRow->defualt_disc) : ""?>" />
-            </div>
-
-            <div class="<?=(!empty($dataRow->item_type) && $dataRow->item_type == 1 || !empty($item_type) && $item_type == 1)?"hidden":""?> col-md-2 form-group">
-                <label for="price">Price</label>
-                <input type="text" name="price" id="price" class="form-control floatOnly" value="<?=(!empty($dataRow->price))?floatVal($dataRow->price):""?>">
             </div>
 
             <div class="col-md-3 form-group">

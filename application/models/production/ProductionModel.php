@@ -1044,8 +1044,8 @@ class ProductionModel extends MasterModel{
         $data['searchCol'][] = "trans_child.qty";
         if($data['from_entry_type'] == 40):
             $data['searchCol'][] = "production_master.tested_qty";
-            $data['searchCol'][] = "CONCAT(trans_child.job_number,'/',production_master.drgs_no)";
             $data['searchCol'][] = "CONCAT(production_master.tc_prefix,production_master.tc_sr_no)";
+            $data['searchCol'][] = "CONCAT(trans_child.job_number,'/',production_master.drgs_no)";
             $data['searchCol'][] = "production_master.switchgear_no";
             $data['searchCol'][] = "em.emp_name";
         else:

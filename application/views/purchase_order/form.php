@@ -238,14 +238,14 @@
                             </div>                            
 
                             <div class="col-md-3 form-group">
-                                <label for="disc_per">Disc. (%)</label>
-                                <input type="text" name="disc_per" id="disc_per" class="form-control floatOnly" value="0">
-                            </div>
-
-                            <div class="col-md-3 form-group">
                                 <label for="price">Price</label>
                                 <input type="text" name="price" id="price" class="form-control floatOnly req" value="0" />
                             </div>    
+
+                            <div class="col-md-3 form-group">
+                                <label for="disc_per">Disc. (%)</label>
+                                <input type="text" name="disc_per" id="disc_per" class="form-control floatOnly" value="0">
+                            </div>
                             
                             <div class="col-md-4 form-group">
                                 <label for="qty_kg">Conversion Qty</label>

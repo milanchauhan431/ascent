@@ -19,8 +19,8 @@ class ItemModel extends MasterModel{
         $data['searchCol'][] = "item_category.category_name";
         $data['searchCol'][] = "unit_master.unit_name";
         $data['searchCol'][] = "item_master.make_brand";
-        $data['searchCol'][] = "item_master.defualt_disc";
         $data['searchCol'][] = "item_master.price";
+        $data['searchCol'][] = "item_master.defualt_disc";
 
 		$columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
 

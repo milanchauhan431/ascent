@@ -52,8 +52,8 @@ function getMasterDtHeader($page){
     $data['finish_goods'][] = ["name"=>"Category Name"];
     $data['finish_goods'][] = ["name"=>"Unit"];
     $data['finish_goods'][] = ["name"=>"Make"];
-    $data['finish_goods'][] = ["name"=>"Defual Disc. (%)"];
     $data['finish_goods'][] = ["name"=>"Price"];
+    $data['finish_goods'][] = ["name"=>"Defual Disc. (%)"];
 
     /* Row Material Header */
     $data['raw_material'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
@@ -63,8 +63,8 @@ function getMasterDtHeader($page){
     $data['raw_material'][] = ["name"=>"Category Name"];
     $data['raw_material'][] = ["name"=>"Unit"];
     $data['raw_material'][] = ["name"=>"Make"];
-    $data['raw_material'][] = ["name"=>"Defual Disc. (%)"];
     $data['raw_material'][] = ["name"=>"Price"];
+    $data['raw_material'][] = ["name"=>"Defual Disc. (%)"];
 
     /* Consumable Header */
     $data['consumable'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
@@ -74,8 +74,8 @@ function getMasterDtHeader($page){
     $data['consumable'][] = ["name"=>"Category Name"];
     $data['consumable'][] = ["name"=>"Unit"];
     $data['consumable'][] = ["name"=>"Make"];
-    $data['consumable'][] = ["name"=>"Defual Disc. (%)"];
     $data['consumable'][] = ["name"=>"Price"];
+    $data['consumable'][] = ["name"=>"Defual Disc. (%)"];
 
     return tableHeader($data[$page]);
 }
@@ -158,5 +158,5 @@ function getProductData($data){
 
     $action = getActionButton($editButton.$deleteButton);
 
-    return [$action,$data->sr_no,$data->item_code,$data->item_name,$data->category_name,$data->unit_name,$data->make_brand,floatVal($data->defualt_disc),floatVal($data->price)];
+    return [$action,$data->sr_no,$data->item_code,$data->item_name,$data->category_name,$data->unit_name,$data->make_brand,floatVal($data->price),floatVal($data->defualt_disc)];
 }
