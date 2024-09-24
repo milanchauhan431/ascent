@@ -637,6 +637,11 @@ class ProductionModel extends MasterModel{
         try{
             $this->db->trans_begin();
 
+            $transDetail = $this->getProductionTrans(['id'=>$id]);
+            if(file_exists(realpath(APPPATH . '../assets/uploads/production/').'/'.$transDetail->param_value)):
+                unlink(realpath(APPPATH . '../assets/uploads/production/').'/'.$transDetail->param_value);
+            endif;
+
             $result = $this->trash($this->productionTrans,['id'=>$id],'File');
 
             if ($this->db->trans_status() !== FALSE):
@@ -1169,5 +1174,55 @@ class ProductionModel extends MasterModel{
         return $result;
     }
     /* Testing Department End */
+
+    /* Documentation Start */
+    public function getProductionTrans($data){
+        $queryData['tableName'] = $this->productionTrans;
+        $queryData['where']['id'] = $data['id'];
+        $result = $this->row($queryData);
+        return $result;
+    }
+
+    public function saveDocumentation($data){
+        try{
+            $this->db->trans_begin();
+
+            foreach($data as $row):
+                $result = $this->store($this->productionTrans,$row);
+            endforeach;
+
+            $result['message'] = "Files saved Successfully.";
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
+    }
+
+    public function deleteDocumentFile($id){
+        try{
+            $this->db->trans_begin();
+
+            $transDetail = $this->getProductionTrans(['id'=>$id]);
+            if(file_exists(realpath(APPPATH . '../assets/uploads/production/').'/'.$transDetail->param_value)):
+                unlink(realpath(APPPATH . '../assets/uploads/production/').'/'.$transDetail->param_value);
+            endif;
+
+            $result = $this->trash($this->productionTrans,['id'=>$id],'File');
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }	
+    }
+    /* Documentation End */
 }
 ?>
