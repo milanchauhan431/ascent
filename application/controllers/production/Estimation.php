@@ -1,6 +1,6 @@
 <?php
-/* require_once 'vendor/autoload.php';
-use Xthiago\PDFVersionConverter\Guesser\RegexGuesser; */
+require_once 'vendor/autoload.php';
+use Xthiago\PDFVersionConverter\Guesser\RegexGuesser;
 class Estimation extends MY_Controller{
     private $index = "production/estimation/index";
     private $orderBom = "production/estimation/order_bom";
@@ -439,8 +439,6 @@ class Estimation extends MY_Controller{
         $filesTotal = sizeof($filenames);
         $fileNumber = 1;
 
-        //$document->SetImportUse(); // this line comment out if method doesnt exist
-
         if (!file_exists($pdfFileName)):
             $handle = fopen($pdfFileName, 'w');
             fclose($handle);
@@ -448,16 +446,15 @@ class Estimation extends MY_Controller{
 
         foreach ($filenames as $fileName):
             if (file_exists($fileName)):
-                $pagesInFile = $document->SetSourceFile($fileName);
+                $pagesInFile = $document->setSourceFile($fileName);
 
                 for ($i = 1; $i <= $pagesInFile; $i++) :
                     $tplId = $document->ImportPage($i); // in mPdf v8 should be 'importPage($i)'
-                    $size = $document->getTemplateSize($tplId);
+                    //$size = $document->getTemplateSize($tplId);
 
-                    $document->UseTemplate($tplId, 0, 0, $size['width'], $size['height'], true);
+                    $document->UseTemplate($tplId);
                     if (($fileNumber < $filesTotal) || ($i != $pagesInFile)) :
-                        //$document->WriteHTML('<pagebreak />');
-                        $document->addPage();
+                        $document->AddPage();
                     endif;
                 endfor;
             endif;
