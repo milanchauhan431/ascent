@@ -1,7 +1,8 @@
 <?php
 class SalesOrders extends MY_Controller{
     private $indexPage = "sales_order/index";
-    private $form = "sales_order/form";    
+    private $form = "sales_order/form";
+    private $dispatchForm = "sales_order/dispatch_form";
 
     public function __construct(){
 		parent::__construct();
@@ -130,6 +131,113 @@ class SalesOrders extends MY_Controller{
             $this->printJson(['status'=>0,'message'=>'Somthing went wrong...Please try again.']);
         else:
             $this->printJson($this->salesOrder->cancelSO($data));
+        endif;
+    }
+
+    public function dispatch(){
+        $data = $this->input->post();
+        $this->data['id'] = $data['id'];
+        $this->load->view($this->dispatchForm,$this->data);
+    }
+
+    public function getPendingDispatchList(){
+        $data = $this->input->post();
+        $result = $this->salesOrder->getPendingDispatchItems($data);
+
+        $i=1;$tbody = '';
+        foreach($result as $row):
+            $tbody .= '<tr>
+                <td>'.$i.'</td>
+                <td>'.$row->item_name.'</td>
+                <td>'.$row->job_number.'</td>
+                <td>'.floatval($row->qty).'</td>
+                <td>'.floatval($row->pending_qty).'</td>
+                <td>
+                    <input type="hidden" name="itemData['.$i.'][so_id]" value="'.$row->trans_main_id.'">
+                    <input type="hidden" name="itemData['.$i.'][so_trans_id]" value="'.$row->id.'">
+                    <input type="text" name="itemData['.$i.'][qty]" id="qty_'.$i.'" class="form-control floatOnly" value="'.floatval($row->pending_qty).'">
+                    <div class="error qty_'.$i.'"></div>
+                </td>
+            </tr>';
+            $i++;
+        endforeach;
+
+        $tbody  = (!empty($tbody))?$tbody:'<tr><td colspan="6" class="text-center">No data available in table</td></tr>';
+
+        $this->printJson(['status'=>1,'tbodyData'=>$tbody]);
+    }
+
+    public function getDispatchedList(){
+        $data = $this->input->post();
+        $result = $this->salesOrder->getDispatchedItemList($data);
+
+        $i=1;$tbody = '';
+        foreach($result as $row):
+            $deleteParam = "{'postData':{'id' : ".$row->id."},'message' : 'File','res_function':'resDeleteDispatchTrans','fndelete':'deleteDispatchTrans'}";
+            $removeBtn = '<a class="btn btn-outline-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="left"><i class="ti-trash"></i></a>';
+
+            $tbody .= '<tr>
+                <td>'.$i.'</td>
+                <td>'.$row->item_name.'</td>
+                <td>'.$row->job_number.'</td>
+                <td>'.formatDate($row->dispatch_date).'</td>
+                <td>'.$row->vehicle_no.'</td>
+                <td>'.$row->challan_no.'</td>
+                <td>'.$row->invoice_no.'</td>
+                <td>'.floatval($row->qty).'</td>
+                <td>'.$row->remark.'</td>
+                <td class="text-center">
+                    '.$removeBtn.'
+                </td>
+            </tr>';
+            $i++;
+        endforeach;
+
+        $tbody  = (!empty($tbody))?$tbody:'<tr><td colspan="10" class="text-center">No data available in table</td></tr>';
+
+        $this->printJson(['status'=>1,'tbodyData'=>$tbody]);
+    }
+
+    public function saveDispatchDetails(){
+        $data = $this->input->post();
+        $errorMessage = [];
+
+        if(empty($data['dispatch_date']))
+            $errorMessage['dispatch_date'] = "Dispatch Date is required.";
+        if(empty($data['challan_no']) && empty($data['invoice_no']))
+            $errorMessage['invoice_no'] = "Challan/Invoice No. is required.";
+
+        if(empty($data['itemData'])):
+            $errorMessage['item_error'] = "Item Details is required.";
+        elseif(!empty($data['itemData']) && array_sum(array_column($data['itemData'],'qty')) == 0):
+            $errorMessage['item_error'] = "Dispatch Qty. is required.";
+        else:
+            $i=1;
+            foreach($data['itemData'] as $row):
+                if(floatval($row['qty']) > 0):
+                    $itemDetail = $this->salesOrder->getSalesOrderItem(['id'=>$row['so_trans_id']]);
+                    $pendingQty = $itemDetail->qty - $itemDetail->dispatch_qty;
+                    if(floatval($row['qty']) > $pendingQty):
+                        $errorMessage['qty_'.$i] = "Invalid Qty.";
+                    endif;
+                endif;
+                $i++;
+            endforeach;
+        endif;
+
+        if(!empty($errorMessage)):
+            $this->printJson(['status'=>0,'message'=>$errorMessage]);
+        else:
+            $this->printJson($this->salesOrder->saveDispatchDetails($data));
+        endif;
+    }
+
+    public function deleteDispatchTrans(){
+        $id = $this->input->post('id');
+        if(empty($id)):
+            $this->printJson(['status'=>0,'message'=>'Somthing went wrong...Please try again.']);
+        else:
+            $this->printJson($this->salesOrder->deleteDispatchTrans($id));
         endif;
     }
 }

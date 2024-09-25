@@ -43,7 +43,13 @@ function getSalesOrderData($data){
         $cancelButton = $editButton = $deleteButton = "";
     endif;
 
-    $action = getActionButton($viewBom.$editButton.$cancelButton);
+    $dispatchButton = '';
+    if(in_array($data->job_status,[2,3])):
+        $dispatchParam = "{'postData':{'id' : ".$data->id."},'form_id':'dispatchForm','modal_id':'modal-lg','title':'Dispatch [Order No. : ".$data->trans_number."]','fnedit':'dispatch','fnsave':'saveDispatchDetails','js_store_fn':'customStore','res_function':'resSaveDispatchDetails'}";
+        $dispatchButton = '<a class="btn btn-dark" href="javascript:void(0)" datatip="Dispatch" flow="down" onclick="edit('.$dispatchParam.');"><i class="fa fa-truck"></i></a>';
+    endif;
+
+    $action = getActionButton($dispatchButton.$viewBom.$editButton.$cancelButton);
 
     return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->job_number,$data->party_name,$data->item_name,$data->qty,$data->dispatch_qty,$data->pending_qty];
 }

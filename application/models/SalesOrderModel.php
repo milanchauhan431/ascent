@@ -6,6 +6,7 @@ class SalesOrderModel extends MasterModel{
     private $transDetails = "trans_details";
     private $orderBom = "order_bom";
     private $purchseReq = "purchase_request";
+    private $dispatchTrans = "dispatch_trans";
 
     public function getDTRows($data){
         $data['tableName'] = $this->transChild;
@@ -268,6 +269,93 @@ class SalesOrderModel extends MasterModel{
             $setData['update']['trans_status'] = "(SELECT IF( COUNT(id) = SUM(IF(trans_status = 3, 1, 0)) ,3 , ".$soData->trans_status." ) as trans_status FROM trans_child WHERE trans_main_id = ".$data['id']." AND is_delete = 0)";
             $result = $this->setValue($setData);
             $result["message"] = "Order item canceled successfully.";
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
+    }
+
+    public function getPendingDispatchItems($data){
+        $queryData = array();
+        $queryData['tableName'] = $this->transChild;
+        $queryData['select'] = "trans_child.*,(trans_child.qty - trans_child.dispatch_qty) as pending_qty";
+
+        $queryData['where']['trans_child.trans_main_id'] = $data['id'];
+        $queryData['where']['trans_child.trans_status'] = 0;
+
+        $result = $this->rows($queryData);
+        return $result;
+    }
+
+    public function getDispatchedItemList($data){
+        $queryData = array();
+        $queryData['tableName'] = $this->dispatchTrans;
+        $queryData['select'] = "dispatch_trans.*,trans_child.item_name,trans_child.job_number";
+
+        $queryData['leftJoin']['trans_child'] = "dispatch_trans.so_trans_id = trans_child.id";
+
+        $queryData['where']['dispatch_trans.so_id'] = $data['id'];
+
+        $result = $this->rows($queryData);
+        return $result;
+    }
+
+    public function saveDispatchDetails($data){
+        try{
+            $this->db->trans_begin();
+
+            foreach($data['itemData'] as $row):
+                if(floatval($row['qty']) > 0):
+                    $row['id'] = "";
+                    $row['dispatch_date'] = $data['dispatch_date'];
+                    $row['vehicle_no'] = $data['vehicle_no'];
+                    $row['challan_no'] = $data['challan_no'];
+                    $row['invoice_no'] = $data['invoice_no'];
+                    $row['remark'] = $data['remark'];
+
+                    $result = $this->store($this->dispatchTrans,$row,'Dispatch Detail');
+
+                    $setData = Array();
+                    $setData['tableName'] = $this->transChild;
+                    $setData['where']['id'] = $row['so_trans_id'];
+                    $setData['set']['dispatch_qty'] = 'dispatch_qty, + '.$row['qty'];
+                    $setData['update']['trans_status'] = "(CASE WHEN dispatch_qty >= qty THEN 1 ELSE 0 END)";
+                    $this->setValue($setData);
+                endif;
+            endforeach;
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
+    }
+
+    public function deleteDispatchTrans($id){
+        try{
+            $this->db->trans_begin();
+
+            $queryData = array();
+            $queryData['tableName'] = $this->dispatchTrans;
+            $queryData['where']['dispatch_trans.id'] = $id;
+            $transData = $this->row($queryData);
+
+            $result = $this->trash($this->dispatchTrans,['id'=>$id],'Dispatch Item');
+
+            $setData = Array();
+            $setData['tableName'] = $this->transChild;
+            $setData['where']['id'] = $transData->so_trans_id;
+            $setData['set_value']['dispatch_qty'] = 'IF(`dispatch_qty` - '.floatval($transData->qty).' >= 0, `dispatch_qty` - '.floatval($transData->qty).', 0)';
+            $setData['update']['trans_status'] = "(CASE WHEN dispatch_qty >= qty THEN 1 ELSE 0 END)";
+            $this->setValue($setData);
 
             if ($this->db->trans_status() !== FALSE):
                 $this->db->trans_commit();
