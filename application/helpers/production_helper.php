@@ -642,7 +642,9 @@ function getTestingData($data){
 
         $printBtn = '<a class="btn btn-info" href="'.base_url('production/testing/printTestingCertificate/'.$data->id).'" target="_blank" datatip="Print Test Certificate" flow="down"><i class="fas fa-print" ></i></a>';
 
-        $action = getActionButton($viewMacDes.$documentationButton.$editButton.$printBtn);
+        $prodDetailPrintBtn = '<a class="btn btn-dark" href="'.base_url('production/estimation/printProductionDetails/'.$data->id).'" target="_blank" datatip="Print Production Document" flow="down"><i class="fas fa-print" ></i></a>';
+
+        $action = getActionButton($viewMacDes.$prodDetailPrintBtn.$documentationButton.$editButton.$printBtn);
         return [$action,$data->sr_no,$data->job_number,$data->customer_name,$data->item_name,$data->order_qty,$data->tested_qty,$data->tc_sr_number,$data->drgs_number,$data->switchgear_no,$data->accepted_by_name,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark];
     endif;
 }

@@ -1,4 +1,6 @@
 <?php
+require_once 'vendor/autoload.php';
+use Xthiago\PDFVersionConverter\Guesser\RegexGuesser;
 class Estimation extends MY_Controller{
     private $index = "production/estimation/index";
     private $orderBom = "production/estimation/order_bom";
@@ -343,6 +345,126 @@ class Estimation extends MY_Controller{
     public function startJob(){
         $data = $this->input->post();
         $this->printJson($this->production->startJob($data));
+    }
+
+    public function printProductionDetails($id){
+        $productionDetail = $this->production->getProductionMaster(['id'=>$id]);
+        $bomItems = $this->production->getOrderBomItems(['trans_child_id'=>$productionDetail->trans_child_id]);
+        $companyData = $this->masterModel->getCompanyInfo();
+
+        $a=1;$tbodyData = "";
+        if(!empty($bomItems)):
+            foreach($bomItems as $row):
+
+                $tbodyData .=  '<tr>
+                    <td>'.$a++.'</td>
+                    <td>'.$row->item_name.'</td>
+                    <td>'.$row->make.'</td>
+                    <td>'.$row->item_code.'</td>
+                    <td>'.$row->uom.'</td>
+                    <td>'.$row->qty.'</td>
+                </tr>';
+            endforeach;
+        else:
+            $tbodyData.= '<tr><td colspan="6" class="text-center">No data available in table</td></tr>';
+        endif;
+
+        $thead = '<tr>
+            <th colspan="6" class="text-center">BOM Detail</th>
+        </tr>        
+        <tr>
+            <th>#</th>
+            <th>Material Description</th>
+            <th>Make</th>
+            <th>Cat. No.</th>
+            <th>UOM</th>
+            <th>Total Qty.</th>
+        </tr>';
+
+        $htmlHeader = '<table class="table" style="border-bottom:1px solid #036aae;">
+            <tr>
+                <td class="org_title text-uppercase text-left" style="font-size:1rem;width:30%"></td>
+                <td class="org_title text-uppercase text-center" style="font-size:1.3rem;width:40%">'.$companyData->company_name.'</td>
+                <td class="org_title text-uppercase text-right" style="font-size:1rem;width:30%"></td>
+            </tr>
+        </table>
+        <table class="table" style="border-bottom:1px solid #036aae;margin-bottom:2px;">
+            <tr><td class="org-address text-center" style="font-size:13px;">'.$companyData->company_address.'</td></tr>
+        </table>';
+
+		$htmlFooter = '<table class="table top-table" style="margin-top:10px;border-top:1px solid #545454;">
+            <tr>
+                <td style="width:33%;" class="text-left">SO. No. & Date : '.$productionDetail->trans_number.' ['.formatDate($productionDetail->trans_date).']</td>
+                <td style="width:34%;" class="text-center">Job. No. : '.$productionDetail->job_number.'</td>
+                <td style="width:33%;text-align:right;">Page No. {PAGENO}/{nbpg}</td>
+            </tr>
+        </table>';
+
+        $pdfData = '<table class="table table-bordered" style="margin-top:0px;font-size:8px !important;">
+            <thead>'.$thead.'</thead>
+            <tbody>'.$tbodyData.'</tbody>
+        </table>';
+
+        $mpdf = new \Mpdf\Mpdf();
+        $filePath = realpath(APPPATH . '../assets/uploads/removable_files/');
+		$pdfFileName = $filePath."/".str_replace(["/","-"],"_",$productionDetail->job_number).'.pdf';
+		$stylesheet = file_get_contents(base_url('assets/css/pdf_style.css?v='.time()));
+		$mpdf->WriteHTML($stylesheet,1);
+		$mpdf->SetDisplayMode('fullpage');
+		//$mpdf->SetProtection(array('print'));
+		$mpdf->SetHTMLHeader($htmlHeader);
+        $mpdf->SetHTMLFooter($htmlFooter);
+		$mpdf->AddPage('P','','','','',5,5,25,5,2,2,'','','','','','','','','','A4-P');
+		$mpdf->WriteHTML($pdfData);
+
+        ob_clean();
+		$mpdf->Output($pdfFileName,'F');
+
+
+        $filenames[] = $pdfFileName;
+
+        if((!empty($productionDetail->ga_file)) && file_exists(realpath(APPPATH . '../assets/uploads/production/').'/'.$productionDetail->ga_file)):
+            $filenames[] = realpath(APPPATH . '../assets/uploads/production/').'/'.$productionDetail->ga_file;
+        endif;
+
+        /* if((!empty($productionDetail->technical_specification_file)) && file_exists(base_url('assets/uploads/production/'.$productionDetail->ga_file))):
+            
+        endif;
+
+        if((!empty($productionDetail->sld_file)) && file_exists(base_url('assets/uploads/production/'.$productionDetail->sld_file))):
+            
+        endif; */
+
+        $document = new \Mpdf\Mpdf();
+        $filesTotal = sizeof($filenames);
+        $fileNumber = 1;
+
+        //$document->SetImportUse(); // this line comment out if method doesnt exist
+
+        if (!file_exists($pdfFileName)):
+            $handle = fopen($pdfFileName, 'w');
+            fclose($handle);
+        endif;
+
+        foreach ($filenames as $fileName):
+            if (file_exists($fileName)):
+                $pagesInFile = $document->SetSourceFile($fileName);
+
+                for ($i = 1; $i <= $pagesInFile; $i++) :
+                    $tplId = $document->ImportPage($i); // in mPdf v8 should be 'importPage($i)'
+                    $size = $document->getTemplateSize($tplId);
+
+                    $document->UseTemplate($tplId, 0, 0, $size['width'], $size['height'], true);
+                    if (($fileNumber < $filesTotal) || ($i != $pagesInFile)) :
+                        //$document->WriteHTML('<pagebreak />');
+                        $document->addPage();
+                    endif;
+                endfor;
+            endif;
+            $fileNumber++;
+        endforeach;
+
+        $document->Output($pdfFileName,'I');
     }
 }
 ?>

@@ -216,10 +216,6 @@ class Testing extends MY_Controller{
         else:
             $this->printJson($this->production->deleteDocumentFile($id));
         endif;
-    }
-
-    public function printProductionDetails($id){
-        
-    }
+    }    
 }
 ?>

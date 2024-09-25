@@ -275,8 +275,9 @@ class ProductionModel extends MasterModel{
 
     public function getProductionMaster($data=array()){
         $queryData['tableName'] = $this->productionMaster;
-        $queryData['select'] = "production_master.*,trans_child.qty as order_qty,(trans_child.qty - production_master.vendor_qty) as pending_qty";
+        $queryData['select'] = "production_master.*,trans_child.qty as order_qty,(trans_child.qty - production_master.vendor_qty) as pending_qty,trans_child.job_number,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date";
         $queryData['leftJoin']['trans_child'] = "production_master.trans_child_id = trans_child.id";
+        $queryData['leftJoin']['trans_main'] = "trans_main.id = trans_child.trans_main_id";
         $queryData['where']['production_master.id'] = $data['id'];
         return $this->row($queryData);
     }
