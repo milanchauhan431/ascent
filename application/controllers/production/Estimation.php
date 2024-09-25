@@ -405,6 +405,8 @@ class Estimation extends MY_Controller{
             <tbody>'.$tbodyData.'</tbody>
         </table>';
 
+        $this->trashFiles();
+
         $mpdf = new \Mpdf\Mpdf();
         $filePath = realpath(APPPATH . '../assets/uploads/removable_files/');
 		$pdfFileName = $filePath."/".str_replace(["/","-"],"_",$productionDetail->job_number).'.pdf';
@@ -427,13 +429,13 @@ class Estimation extends MY_Controller{
             $filenames[] = realpath(APPPATH . '../assets/uploads/production/').'/'.$productionDetail->ga_file;
         endif;
 
-        /* if((!empty($productionDetail->technical_specification_file)) && file_exists(base_url('assets/uploads/production/'.$productionDetail->ga_file))):
-            
+        if((!empty($productionDetail->technical_specification_file)) && file_exists(base_url('assets/uploads/production/'.$productionDetail->ga_file))):
+            $filenames[] = realpath(APPPATH . '../assets/uploads/production/').'/'.$productionDetail->technical_specification_file;
         endif;
 
         if((!empty($productionDetail->sld_file)) && file_exists(base_url('assets/uploads/production/'.$productionDetail->sld_file))):
-            
-        endif; */
+            $filenames[] = realpath(APPPATH . '../assets/uploads/production/').'/'.$productionDetail->sld_file;
+        endif;
 
         $document = new \Mpdf\Mpdf();
         $filesTotal = sizeof($filenames);

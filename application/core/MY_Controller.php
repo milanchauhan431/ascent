@@ -203,5 +203,27 @@ class MY_Controller extends CI_Controller{
 		endif;
     }
 
+	public function trashFiles(){
+        /** define the directory **/
+        $dirs = [
+            realpath(APPPATH . '../assets/uploads/removable_files/'),
+        ];
+
+        foreach($dirs as $dir):
+            $files = array();
+            $files = scandir($dir);
+            unset($files[0],$files[1]);
+
+            /*** cycle through all files in the directory ***/
+            foreach($files as $file):
+                /*** if file is 24 hours (86400 seconds) old then delete it ***/
+                if(time() - filectime($dir.'/'.$file) > 86400):
+                    unlink($dir.'/'.$file);
+                endif;
+            endforeach;
+        endforeach;
+
+        return true;
+    }
 }
 ?>
