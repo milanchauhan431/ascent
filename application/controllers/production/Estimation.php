@@ -1,6 +1,6 @@
 <?php
-require_once 'vendor/autoload.php';
-use Xthiago\PDFVersionConverter\Guesser\RegexGuesser;
+/* require_once 'vendor/autoload.php';
+use Xthiago\PDFVersionConverter\Guesser\RegexGuesser; */
 class Estimation extends MY_Controller{
     private $index = "production/estimation/index";
     private $orderBom = "production/estimation/order_bom";
