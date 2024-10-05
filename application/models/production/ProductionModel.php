@@ -454,7 +454,7 @@ class ProductionModel extends MasterModel{
 
             $jobData = $this->getProductionMaster(['id'=>$data['id']]);
             $jobData = (array) $jobData;
-            unset($jobData['order_qty'],$jobData['pending_qty']);
+            unset($jobData['order_qty'],$jobData['pending_qty'],$jobData['job_number'],$jobData['trans_number'],$jobData['trans_date']);
 
             $jobData['id'] = "";
             $jobData['entry_type'] = $next_dept_id;
@@ -670,7 +670,7 @@ class ProductionModel extends MasterModel{
 
             $jobData = $this->getProductionMaster(['id'=>$data['id']]);
             $jobData = (array) $jobData;
-            unset($jobData['order_qty'],$jobData['pending_qty']);
+            unset($jobData['order_qty'],$jobData['pending_qty'],$jobData['job_number'],$jobData['trans_number'],$jobData['trans_date']);
 
             $jobData['id'] = "";
             $jobData['entry_type'] = $data['next_dept_id'];
@@ -765,7 +765,7 @@ class ProductionModel extends MasterModel{
 
             $jobData = $this->getProductionMaster(['id'=>$data['ref_id']]);
             $jobData = (array) $jobData;
-            unset($jobData['order_qty'],$jobData['pending_qty']);
+            unset($jobData['order_qty'],$jobData['pending_qty'],$jobData['job_number'],$jobData['trans_number'],$jobData['trans_date']);
 
             $jobData['id'] = "";
             $jobData['entry_type'] = $data['entry_type'];
@@ -901,7 +901,7 @@ class ProductionModel extends MasterModel{
             $this->setValue($setData);
 
             $jobData = (array) $jobData;
-            unset($jobData['order_qty'],$jobData['pending_qty']);            
+            unset($jobData['order_qty'],$jobData['pending_qty'],$jobData['job_number'],$jobData['trans_number'],$jobData['trans_date']);            
 
             $jobData['id'] = "";
             $jobData['entry_type'] = $data['next_dept_id'];
@@ -1096,7 +1096,7 @@ class ProductionModel extends MasterModel{
 
                 $jobData = $this->getProductionMaster(['id'=>$data['ref_id']]);
                 $jobData = (array) $jobData;
-                unset($jobData['order_qty'],$jobData['pending_qty']);
+                unset($jobData['order_qty'],$jobData['pending_qty'],$jobData['job_number'],$jobData['trans_number'],$jobData['trans_date']);
 
                 $jobData['id'] = "";
                 $jobData['entry_type'] = $data['entry_type'];
