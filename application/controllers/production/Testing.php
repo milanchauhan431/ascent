@@ -190,23 +190,70 @@ class Testing extends MY_Controller{
             $fileView = "";
 
             if(in_array($extension,$imgExtension)):
-                $fileView = '<a href="'.base_url("assets/uploads/production/".$row->param_value).'" target="_blank"><image src="'.base_url("assets/uploads/production/".$row->param_value).'" width="50"></a><br>'.$fileName;
+                $fileView = '<a href="'.base_url("assets/uploads/production/".$row->param_value).'" download><image src="'.base_url("assets/uploads/production/".$row->param_value).'" width="50"></a><br>'.$fileName;
             elseif(in_array($extension,["pdf"])):
-                $fileView = '<a href="'.base_url("assets/uploads/production/".$row->param_value).'"  target="_blank"><image src="'.base_url($fileExtension[$extension]).'" width="50"></a><br>'.$fileName;
+                $fileView = '<a href="'.base_url("assets/uploads/production/".$row->param_value).'"  download><image src="'.base_url($fileExtension[$extension]).'" width="50"></a><br>'.$fileName;
             endif;
 
+            $viewButton = '<a class="btn btn-outline-info mr-2" href="'.base_url("assets/uploads/production/".$row->param_value).'" datatip="View" flow="left" target="_balnk"><i class="fa fa-eye"></i></a>';
             $deleteParam = "{'postData':{'id' : ".$row->id."},'message' : 'File','res_function':'resDeleteFile','fndelete':'deleteDocumentFile'}";
             $removeBtn = '<a class="btn btn-outline-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="left"><i class="ti-trash"></i></a>';
 
             $html .= '<tr>
                 <td class="text-center">'.$fileView.'</td>
-                <td class="text-center">'.$removeBtn.'</td>
+                <td class="text-center">'.$viewButton.$removeBtn.'</td>
             </tr>';
         endforeach;
 
         $html  = (!empty($html))?$html:'<tr><td colspan="2" class="text-center">No data available in table</td></tr>';
 
         $this->printJson(['status'=>1,'tbodyData'=>$html]);
+    }
+
+    public function printDocumentationFiles($ref_id,$pm_id){
+        $result = $this->production->getProductionTransData(['ref_id'=>$ref_id,'main_pm_id'=> $pm_id]);
+
+        $filePath = realpath(APPPATH . '../assets/uploads/removable_files/');
+		$pdfFileName = $filePath.'/documents.pdf';
+        $filenames = [];
+        
+        foreach($result as $row):
+            $extension = pathinfo($row->param_value, PATHINFO_EXTENSION);
+            if(in_array($extension,["pdf"])):
+                if((!empty($row->param_value)) && file_exists(realpath(APPPATH . '../assets/uploads/production/').'/'.$row->param_value)):
+                    $filenames[] = realpath(APPPATH . '../assets/uploads/production/').'/'.$row->param_value;
+                endif;
+            endif;
+        endforeach;
+
+        $document = new \Mpdf\Mpdf();
+        $filesTotal = sizeof($filenames);
+        $fileNumber = 1;
+
+        if (!file_exists($pdfFileName)):
+            $handle = fopen($pdfFileName, 'w');
+            fclose($handle);
+        endif;
+
+        foreach ($filenames as $fileName):
+            if(file_exists($fileName)):
+                $pagesInFile = $document->setSourceFile($fileName);
+
+                for ($i = 1; $i <= $pagesInFile; $i++) :
+                    $tplId = $document->ImportPage($i); // in mPdf v8 should be 'importPage($i)'
+                    $size = $document->getTemplateSize($tplId);
+
+                    //$document->UseTemplate($tplId);
+                    $document->useTemplate($tplId, 0, 0, $size['width'], $size['height'], true);
+                    if (($fileNumber < $filesTotal) || ($i != $pagesInFile)) :
+                        $document->AddPage();
+                    endif;
+                endfor;
+            endif;
+            $fileNumber++;
+        endforeach;
+
+        $document->Output($pdfFileName,'I');
     }
 
     public function deleteDocumentFile(){
