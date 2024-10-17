@@ -131,11 +131,11 @@ class Fabrication extends MY_Controller{
         endif;
 
         if($data['entry_type'] == 33)://Fab. Assembely
-            foreach($data['transData'] as $key=>$row):
+            /* foreach($data['transData'] as $key=>$row):
                 if(empty($row['param_value'])):
                     $errorMessage['param_value_'.$key] = ucwords(str_replace("_"," ",$row['param_key']))." is required.";
                 endif;
-            endforeach;
+            endforeach; */
         endif;
 
         if(!empty($errorMessage)):

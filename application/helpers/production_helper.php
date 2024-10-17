@@ -255,16 +255,20 @@ function getEstimationData($data){
 
     $data->bom_status = '<span class="badge badge-pill badge-'.(($data->bom_status == "Generated")?"success":"danger").' m-1">'.$data->bom_status.'</span>';
 
-    $changePriority = '';
+    $changePriority = $prodDetailPrintBtn = '';
     if(!empty($data->job_status)):
-        $startJob = $soBom = $estimationButton = '';
+        $startJob = $estimationButton = '';
         if($data->job_status == 1):
             $changePriorityParam = "{'postData':{'id' : ".$data->id."},'fnsave':'saveJobPriority','title':'Change Job Priority','form_id':'changeJobPriority','js_store_fn':'confirmStore','controller':'production/estimation','fnedit':'changeJobPriority','modal_id':'modal-md'}";
             $changePriority = '<a class="btn btn-success" href="javascript:void(0)" datatip="Change Job Priority" flow="down" onclick="edit('.$changePriorityParam.');"><i class="fa fa-sync"></i></a>';
         endif;
+
+        if($data->job_status == 3): $soBom = ''; endif;
+
+        $prodDetailPrintBtn = '<a class="btn btn-dark" href="'.base_url('production/estimation/printProductionDetails/'.$data->id).'" target="_blank" datatip="Print GA,T.S. & SLD Document" flow="down"><i class="fas fa-print" ></i></a>';
     endif;
 
-    $action = getActionButton($soBom.$viewBom.$reqButton.$estimationButton.$changePriority.$startJob);
+    $action = getActionButton($soBom.$viewBom.$reqButton.$prodDetailPrintBtn.$estimationButton.$changePriority.$startJob);
 
     return [$action,$data->sr_no,$data->job_number,$data->trans_date,$data->party_name,$data->item_name,$data->qty,$data->bom_status,$data->priority_status,$data->fab_dept_note,$data->pc_dept_note,$data->ass_dept_note,$data->remark];
 }
@@ -466,7 +470,9 @@ function getElectricalDesignData($data){
     $attechmentParam = "{'postData':{'pm_id':".$data->id."},'modal_id' : 'modal-md', 'form_id':'electricalDesign','fnedit':'electricalDesign','title' : 'Electrical Design [Job No. : ".$data->job_number."]','js_store_fn':'customStore','res_function':'resSaveElectricalDesign'}";
     $addAttachment = '<a class="btn btn-info" href="javascript:void(0)" onclick="edit('.$attechmentParam.');" datatip="Add Design" flow="down"><i class="fa fa-plus"></i></a>';
 
-    $action = getActionButton($addAttachment);
+    $documentPrintBtn = '<a class="btn btn-dark" href="'.base_url('production/electricalDesign/printElectricalDesignDocuments/'.$data->id).'" target="_blank" datatip="Print Electrical Design Document" flow="down"><i class="fas fa-print" ></i></a>';
+
+    $action = getActionButton($documentPrintBtn.$addAttachment);
 
     return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->fab_dept_note,$data->pc_dept_note,$data->remark];
 }
@@ -642,7 +648,7 @@ function getTestingData($data){
 
         $printBtn = '<a class="btn btn-info" href="'.base_url('production/testing/printTestingCertificate/'.$data->id).'" target="_blank" datatip="Print Test Certificate" flow="down"><i class="fas fa-print" ></i></a>';
 
-        $prodDetailPrintBtn = '<a class="btn btn-dark" href="'.base_url('production/estimation/printProductionDetails/'.$data->id).'" target="_blank" datatip="Print Production Document" flow="down"><i class="fas fa-print" ></i></a>';
+        $prodDetailPrintBtn = '<a class="btn btn-dark" href="'.base_url('production/estimation/printProductionDetails/'.$data->id).'" target="_blank" datatip="Print GA,T.S. & SLD Document" flow="down"><i class="fas fa-print" ></i></a>';
 
         $action = getActionButton($viewMacDes.$prodDetailPrintBtn.$documentationButton.$editButton.$printBtn);
         return [$action,$data->sr_no,$data->job_number,$data->customer_name,$data->item_name,$data->order_qty,$data->tested_qty,$data->tc_sr_number,$data->drgs_number,$data->switchgear_no,$data->accepted_by_name,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark];

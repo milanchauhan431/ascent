@@ -134,13 +134,13 @@ class SalesOrders extends MY_Controller{
         endif;
     }
 
-    public function dispatch(){
+    /* public function dispatch(){
         $data = $this->input->post();
         $this->data['id'] = $data['id'];
         $this->load->view($this->dispatchForm,$this->data);
-    }
+    } */
 
-    public function getPendingDispatchList(){
+    /* public function getPendingDispatchList(){
         $data = $this->input->post();
         $result = $this->salesOrder->getPendingDispatchItems($data);
 
@@ -165,9 +165,9 @@ class SalesOrders extends MY_Controller{
         $tbody  = (!empty($tbody))?$tbody:'<tr><td colspan="6" class="text-center">No data available in table</td></tr>';
 
         $this->printJson(['status'=>1,'tbodyData'=>$tbody]);
-    }
+    } */
 
-    public function getDispatchedList(){
+    /* public function getDispatchedList(){
         $data = $this->input->post();
         $result = $this->salesOrder->getDispatchedItemList($data);
 
@@ -196,9 +196,9 @@ class SalesOrders extends MY_Controller{
         $tbody  = (!empty($tbody))?$tbody:'<tr><td colspan="10" class="text-center">No data available in table</td></tr>';
 
         $this->printJson(['status'=>1,'tbodyData'=>$tbody]);
-    }
+    } */
 
-    public function saveDispatchDetails(){
+    /* public function saveDispatchDetails(){
         $data = $this->input->post();
         $errorMessage = [];
 
@@ -230,15 +230,15 @@ class SalesOrders extends MY_Controller{
         else:
             $this->printJson($this->salesOrder->saveDispatchDetails($data));
         endif;
-    }
+    } */
 
-    public function deleteDispatchTrans(){
+    /* public function deleteDispatchTrans(){
         $id = $this->input->post('id');
         if(empty($id)):
             $this->printJson(['status'=>0,'message'=>'Somthing went wrong...Please try again.']);
         else:
             $this->printJson($this->salesOrder->deleteDispatchTrans($id));
         endif;
-    }
+    } */
 }
 ?>

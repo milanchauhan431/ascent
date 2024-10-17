@@ -14,6 +14,20 @@ function getSalesDtHeader($page){
     $data['salesOrders'][] = ["name"=>"Dispatch Qty"];
     $data['salesOrders'][] = ["name"=>"Pending Qty"];
 
+    /* Dispatch Challan Header */
+    $data['dispatchChallan'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
+	$data['dispatchChallan'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
+	$data['dispatchChallan'][] = ["name"=>"CHL. No."];
+	$data['dispatchChallan'][] = ["name"=>"CHL. Date"];
+	$data['dispatchChallan'][] = ["name"=>"Inv. No."];
+	$data['dispatchChallan'][] = ["name"=>"Vehicle No."];
+	$data['dispatchChallan'][] = ["name"=>"So. No."];
+	$data['dispatchChallan'][] = ["name"=>"Job No."];
+	$data['dispatchChallan'][] = ["name"=>"Customer Name"];
+	$data['dispatchChallan'][] = ["name"=>"Item Name"];
+    $data['dispatchChallan'][] = ["name"=>"Qty"];
+    $data['dispatchChallan'][] = ["name"=>"Remark"];
+
     return tableHeader($data[$page]);
 }
 
@@ -44,13 +58,24 @@ function getSalesOrderData($data){
     endif;
 
     $dispatchButton = '';
-    if(in_array($data->job_status,[2,3])):
-        $dispatchParam = "{'postData':{'id' : ".$data->id."},'form_id':'dispatchForm','modal_id':'modal-lg','title':'Dispatch [Order No. : ".$data->trans_number."]','fnedit':'dispatch','fnsave':'saveDispatchDetails','js_store_fn':'customStore','res_function':'resSaveDispatchDetails'}";
+    if(in_array($data->job_status,[3])):
+        $dispatchParam = "{'postData':{'id' : ".$data->id."},'form_id':'dispatchForm','modal_id':'modal-lg','title':'Dispatch [Order No. : ".$data->trans_number."]','fnedit':'dispatch','fnsave':'saveDispatchDetails'}";//,'js_store_fn':'customStore','res_function':'resSaveDispatchDetails'
         $dispatchButton = '<a class="btn btn-dark" href="javascript:void(0)" datatip="Dispatch" flow="down" onclick="edit('.$dispatchParam.');"><i class="fa fa-truck"></i></a>';
     endif;
 
     $action = getActionButton($dispatchButton.$viewBom.$editButton.$cancelButton);
 
     return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->job_number,$data->party_name,$data->item_name,$data->qty,$data->dispatch_qty,$data->pending_qty];
+}
+
+function getDispatchChallanData($data){
+    $editParam = "{'postData':{'chl_no' : ".$data->chl_no."},'modal_id' : 'modal-lg', 'form_id' : 'dispatchForm', 'title' : 'Dispatch [Order No. : ".$data->trans_number."]','fnedit':'editDispatch','fnsave':'saveDispatchDetails'}";
+    $editButton = '<a class="btn btn-success btn-edit permission-modify" href="javascript:void(0)" datatip="Edit" flow="down" onclick="edit('.$editParam.');"><i class="ti-pencil-alt"></i></a>';
+    
+    $deleteParam = "{'postData':{'id' : ".$data->chl_no."},'message' : 'Dispatch Challan'}";
+    $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
+
+    $action = getActionButton($editButton.$deleteButton);
+    return [$action,$data->sr_no,$data->challan_no,$data->dispatch_date,$data->invoice_no,$data->vehicle_no,$data->trans_number,$data->job_number,$data->party_name,$data->item_name,$data->qty,$data->remark];
 }
 ?>

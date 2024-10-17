@@ -15,26 +15,36 @@ class SalesOrderModel extends MasterModel{
 
         $data['leftJoin']['trans_main'] = "trans_main.id = trans_child.trans_main_id";
         //$data['leftJoin']['order_bom'] = "order_bom.trans_child_id = trans_child.id";
-        $data['leftJoin']['production_master'] = "production_master.trans_child_id = trans_child.id";
+        $data['leftJoin']['production_master'] = "production_master.trans_child_id = trans_child.id AND production_master.entry_type = 27";
 
         $data['where']['trans_child.entry_type'] = $data['entry_type'];
 
-        if($data['status'] == 0):
+        if($data['status'] == 0): // Pending Orders
             $data['where']['trans_child.trans_status'] = 0;
             $data['where']['production_master.job_status'] = null;
-            //$data['having'][] = 'COUNT(order_bom.id) <= 0';
-        elseif($data['status'] == 1):
+
+            $data['where']['trans_main.trans_date <='] = $this->endYearDate;
+        elseif($data['status'] == 1): // Production in Process
             $data['where']['trans_child.trans_status'] = 0;
             $data['where_in']['production_master.job_status'] = [0,1,2];
-            //$data['having'][] = 'COUNT(order_bom.id) > 0';
-        elseif($data['status'] == 3):
-            $data['where']['trans_child.trans_status'] = 3;
-        else:
+
+            $data['where']['trans_main.trans_date <='] = $this->endYearDate;
+        elseif($data['status'] == 2): // Completed Order
             $data['where']['trans_child.trans_status'] = 1;
+
+            $data['where']['trans_main.trans_date >='] = $this->startYearDate;
+            $data['where']['trans_main.trans_date <='] = $this->endYearDate;
+        elseif($data['status'] == 3): // Cancled Order
+            $data['where']['trans_child.trans_status'] = 3;
+
+            $data['where']['trans_main.trans_date >='] = $this->startYearDate;
+            $data['where']['trans_main.trans_date <='] = $this->endYearDate;
+        else: // Pending For Dispatch
+            $data['where']['trans_child.trans_status'] = 0;
+            $data['where_in']['production_master.job_status'] = [3];
+
+            $data['where']['trans_main.trans_date <='] = $this->endYearDate;
         endif;
-        
-        $data['where']['trans_main.trans_date >='] = $this->startYearDate;
-        $data['where']['trans_main.trans_date <='] = $this->endYearDate;
 
         $data['order_by']['trans_main.trans_date'] = "DESC";
         $data['order_by']['trans_main.id'] = "DESC";
@@ -280,7 +290,7 @@ class SalesOrderModel extends MasterModel{
         }
     }
 
-    public function getPendingDispatchItems($data){
+    /* public function getPendingDispatchItems($data){
         $queryData = array();
         $queryData['tableName'] = $this->transChild;
         $queryData['select'] = "trans_child.*,(trans_child.qty - trans_child.dispatch_qty) as pending_qty";
@@ -290,9 +300,9 @@ class SalesOrderModel extends MasterModel{
 
         $result = $this->rows($queryData);
         return $result;
-    }
+    } */
 
-    public function getDispatchedItemList($data){
+    /* public function getDispatchedItemList($data){
         $queryData = array();
         $queryData['tableName'] = $this->dispatchTrans;
         $queryData['select'] = "dispatch_trans.*,trans_child.item_name,trans_child.job_number";
@@ -303,9 +313,9 @@ class SalesOrderModel extends MasterModel{
 
         $result = $this->rows($queryData);
         return $result;
-    }
+    } */
 
-    public function saveDispatchDetails($data){
+    /* public function saveDispatchDetails($data){
         try{
             $this->db->trans_begin();
 
@@ -337,9 +347,9 @@ class SalesOrderModel extends MasterModel{
             $this->db->trans_rollback();
             return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
         }
-    }
+    } */
 
-    public function deleteDispatchTrans($id){
+    /* public function deleteDispatchTrans($id){
         try{
             $this->db->trans_begin();
 
@@ -365,6 +375,6 @@ class SalesOrderModel extends MasterModel{
             $this->db->trans_rollback();
             return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
         }
-    }
+    } */
 }
 ?>

@@ -51,6 +51,19 @@ function getStoreDtHeader($page){
     $data['gateInward'][] = ["name" => "Price"];
     $data['gateInward'][] = ["name" => "Disc. (%)"];
 
+    /* Material Issue */
+    $data['materialIssue'][] = ["name" => "Action", "textAlign" => "center"];
+    $data['materialIssue'][] = ["name" => "#", "textAlign" => "center"];
+    $data['materialIssue'][] = ["name" => "Entry Date", "textAlign" => "center"];
+    $data['materialIssue'][] = ["name" => "Entry No.", "textAlign" => "center"];
+    $data['materialIssue'][] = ["name" => "Collected By"];   
+    $data['materialIssue'][] = ["name" => "CAT No."];
+    $data['materialIssue'][] = ["name" => "Item Name"];
+    $data['materialIssue'][] = ["name" => "Req. Qty"];   
+    $data['materialIssue'][] = ["name" => "Issue Qty"];
+    $data['materialIssue'][] = ["name" => "Return Qty"];
+    $data['materialIssue'][] = ["name" => "Remark"];
+
     return tableHeader($data[$page]);
 }
 
@@ -130,4 +143,10 @@ function getGateInwardData($data){
     endif;
 }
 
+/* Material Issue */
+function getMaterialIssueData($data){
+    $action = getActionButton("");
+
+    return [$action,$data->sr_no,formatDate($data->trans_date),$data->trans_number,$data->collected_by,$data->item_code,$data->item_name,$data->req_qty,$data->issue_qty,$data->return_qty,$data->remark];
+}
 ?>

@@ -91,30 +91,32 @@
             <div class="col-md-3 form-group">
                 <label for="std_qty">Conversion Qty</label>
                 <div class="input-group">
-                    <div class="input-group-append" style="width:40%!important;">
-                        <input type="text" name="std_qty" id="std_qty" class="form-control floatOnly" placeholder="Qty." value="<?=(!empty($dataRow->std_qty))?floatVal($dataRow->std_qty):""?>">
-                    </div>
-
                     <div class="input-group-append"  style="width:60%!important;">
                         <select name="sec_unit_id" id="sec_unit_id" class="form-control select2">
                             <option value="0">--</option>
                             <?=getItemUnitListOption($unitData,((!empty($dataRow->sec_unit_id))?$dataRow->sec_unit_id:""))?>
                         </select>
                     </div>
+
+                    <div class="input-group-append" style="width:40%!important;">
+                        <input type="hidden" name="std_qty" id="std_qty" class="form-control floatOnly" placeholder="Qty." value="<?=(!empty($dataRow->std_qty))?floatVal($dataRow->std_qty):"1"?>">
+
+                        <input type="text" name="std_pck_qty" id="std_pck_qty" class="form-control numericOnly" placeholder="Qty." value="<?=(!empty($dataRow->std_pck_qty))?floatVal($dataRow->std_pck_qty):""?>">
+                    </div>
                 </div>
             </div>
 
-            <div class="col-md-3 form-group">
+            <!-- <div class="col-md-3 form-group">
                 <label for="std_pck_qty">Standard Packing Qty</label>
                 <input type="text" name="std_pck_qty" id="std_pck_qty" class="form-control numericOnly" value="<?=(!empty($dataRow->std_pck_qty))?floatVal($dataRow->std_pck_qty):""?>">
-            </div>
+            </div> -->
 
             <div class="col-md-2 form-group">
                 <label for="min_qty">Min. Qty.</label>
                 <input type="text" name="min_qty" id="min_qty" class="form-control floatOnly" value="<?=(!empty($dataRow->min_qty))?$dataRow->min_qty:""?>">
             </div>
 
-            <div class="col-md-4 form-group">
+            <div class="col-md-7 form-group">
                 <label for="description">Product Description</label>
                 <textarea name="description" id="description" class="form-control" rows="1"><?=(!empty($dataRow->description))?$dataRow->description:""?></textarea>
             </div>

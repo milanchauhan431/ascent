@@ -6,7 +6,7 @@ class GateInward extends MY_Controller{
 
     public function __construct(){
         parent::__construct();
-        $this->data['headData']->pageTitle = "Gate Inward Register";
+        $this->data['headData']->pageTitle = "Inward Register";
 		$this->data['headData']->controller = "gateInward";
         $this->data['headData']->pageUrl = "gateInward";
     }

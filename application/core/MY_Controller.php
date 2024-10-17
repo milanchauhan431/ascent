@@ -58,6 +58,7 @@ class MY_Controller extends CI_Controller{
 		$this->load->model('TaxMasterModel','taxMaster');
 		$this->load->model('ExpenseMasterModel','expenseMaster');
 		$this->load->model('SalesOrderModel','salesOrder');
+		$this->load->model('DispatchChallanModel','dispatchChallan');
 
 		/* Purchase Model */
 		$this->load->model('PurchaseOrderModel','purchaseOrder');
@@ -67,11 +68,12 @@ class MY_Controller extends CI_Controller{
 		$this->load->model('StoreLocationModel','storeLocation');
 		$this->load->model('GateEntryModel','gateEntry');
 		$this->load->model('GateInwardModel','gateInward');
+		$this->load->model('MaterialIssueModel','materialIssue');
 
 		/* Production Model */
 		$this->load->model('production/ProductionModel','production');
 
-		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry","gateInward","production","brandMaster"]);
+		$this->setSessionVariables(["masterModel","dashboard","permission","terms","transport","hsnModel","materialGrade","itemCategory","item","department","designation","employeeCategory","shiftModel","employee","party","transMainModel","taxMaster","expenseMaster","salesOrder","purchaseOrder","purchaseIndent","vehicleType","storeLocation","gateEntry","gateInward","production","brandMaster","materialIssue","dispatchChallan"]);
 	}
 
 	public function setSessionVariables($modelNames){

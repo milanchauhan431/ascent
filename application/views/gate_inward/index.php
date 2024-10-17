@@ -20,7 +20,7 @@
                                 </ul>
                             </div>
                             <div class="col-md-4 text-center">
-                                <h4 class="card-title">Gate Inward Register</h4>
+                                <h4 class="card-title">Inward Register</h4>
                             </div>
                             <div class="col-md-4">
                                 <button type="button" class="btn waves-effect waves-light btn-outline-primary float-right permission-write addNew press-add-btn" data-button="both" data-modal_id="modal-xl" data-function="addGateInward" data-form_title="Gate Inward"><i class="fa fa-plus"></i> Add GI</button>

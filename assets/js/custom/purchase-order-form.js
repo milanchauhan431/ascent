@@ -49,16 +49,18 @@ $(document).ready(function(){
 	});
 
 	$(document).on('keyup change','.calQty',function(){
-		var std_qty = $("#itemForm #std_qty").val() || 1;
-
+		var std_pck_qty = $("#itemForm #std_pck_qty").val() || 1;
+		
 		if($(this).attr('id') == "qty"){
-			var qty = $(this).val() || 0;			
-			var qty_kg = parseFloat(parseFloat(qty) * parseFloat(std_qty)).toFixed(3);
-			$("#itemForm #qty_kg").val(qty_kg);
+			var qty = $(this).val() || 0;
+			if(parseFloat(qty) > 0 && parseFloat(std_pck_qty) > 0){
+				var qty_kg = parseFloat(parseFloat(qty) / parseFloat(std_pck_qty)).toFixed(3);
+				$("#itemForm #qty_kg").val(qty_kg);
+			}
 		}else{
 			var qty_kg = $(this).val() || 0;
-			if((parseFloat(qty_kg) > 0) && parseFloat(std_qty) > 0){
-				var qty = parseFloat(parseFloat(qty_kg) / parseFloat(std_qty)).toFixed(3);
+			if(parseFloat(qty_kg) > 0 && parseFloat(std_pck_qty) > 0){
+				var qty = parseFloat(parseFloat(qty_kg) * parseFloat(std_pck_qty)).toFixed(3);
 				$("#itemForm #qty").val(qty);
 			}
 		}
@@ -459,9 +461,9 @@ function resItemDetail(response = ""){
         $("#itemForm #item_code").val(itemDetail.item_code);
         $("#itemForm #item_name").val(itemDetail.item_name);
         $("#itemForm #item_type").val(itemDetail.item_type);
+        $("#itemForm #qty, #itemForm #qty_kg").val("");
 
         $("#itemForm #unit_id").val(itemDetail.unit_id);
-		//$("#itemForm #unit_id").comboSelect();
 		$("#itemForm #unit_id").select2({ with:null });
 
         $("#itemForm #unit_name").val(itemDetail.unit_name);
@@ -469,22 +471,18 @@ function resItemDetail(response = ""){
         $("#itemForm #price").val(itemDetail.price);
 
         $("#itemForm #make").val(itemDetail.make_brand);
-		//$("#itemForm #make").comboSelect();
 		$("#itemForm #make").select2({ with:null });
 
         $("#itemForm #std_qty").val(itemDetail.std_qty);
         $("#itemForm #std_pck_qty").val(itemDetail.std_pck_qty);
 
         $("#itemForm #sec_unit_id").val(itemDetail.sec_unit_id);
-		//$("#itemForm #sec_unit_id").comboSelect();
 		$("#itemForm #sec_unit_id").select2({ with:null });
 
         $("#itemForm #hsn_code").val(itemDetail.hsn_code);
-		//$("#itemForm #hsn_code").comboSelect();
 		$("#itemForm #hsn_code").select2({ with:null });
 
         $("#itemForm #gst_per").val(parseFloat(itemDetail.gst_per).toFixed(0));
-		//$("#itemForm #gst_per").comboSelect();
 		$("#itemForm #gst_per").select2({ with:null });
 
 		if(parseFloat(itemDetail.std_pck_qty) > 0){
@@ -494,32 +492,29 @@ function resItemDetail(response = ""){
         $("#itemForm #item_code").val("");
         $("#itemForm #item_name").val("");
         $("#itemForm #item_type").val("");
+		$("#itemForm #qty, #itemForm #qty_kg").val("");
+
         $("#itemForm #unit_id").val("");
-		//$("#itemForm #unit_id").comboSelect();
 		$("#itemForm #unit_id").select2({ with:null });
 
         $("#itemForm #unit_name").val("");
 		$("#itemForm #disc_per").val("");
         $("#itemForm #price").val("");
+
 		$("#itemForm #make").val("");
-		//$("#itemForm #make").comboSelect();
 		$("#itemForm #make").select2({ with:null });
 
 		$("#itemForm #std_qty").val("");
         $("#itemForm #std_pck_qty").val("");
 
 		$("#itemForm #sec_unit_id").val("");
-		//$("#itemForm #sec_unit_id").comboSelect();
 		$("#itemForm #sec_unit_id").select2({ with:null });
 
         $("#itemForm #hsn_code").val("");
-		//$("#itemForm #hsn_code").comboSelect();
 		$("#itemForm #hsn_code").select2({ with:null });
 
         $("#itemForm #gst_per").val("");
-		//$("#itemForm #gst_per").comboSelect();
 		$("#itemForm #gst_per").select2({ with:null });
-
 
 		$("#itemForm #stdPck").html("");
     }

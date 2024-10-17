@@ -348,9 +348,10 @@ class Estimation extends MY_Controller{
     }
 
     public function printProductionDetails($id){
-        $productionDetail = $this->production->getProductionMaster(['id'=>$id]);
-        $bomItems = $this->production->getOrderBomItems(['trans_child_id'=>$productionDetail->trans_child_id]);
         $companyData = $this->masterModel->getCompanyInfo();
+        $productionDetail = $this->production->getProductionMaster(['id'=>$id]);
+
+        /* $bomItems = $this->production->getOrderBomItems(['trans_child_id'=>$productionDetail->trans_child_id]);
 
         $a=1;$tbodyData = "";
         if(!empty($bomItems)):
@@ -420,21 +421,23 @@ class Estimation extends MY_Controller{
 		$mpdf->WriteHTML($pdfData);
 
         ob_clean();
-		$mpdf->Output($pdfFileName,'F');
+		$mpdf->Output($pdfFileName,'F'); */
 
-
-        $filenames[] = $pdfFileName;
+        $filePath = realpath(APPPATH . '../assets/uploads/removable_files/');
+		$pdfFileName = $filePath."/".str_replace(["/","-"],"_",$productionDetail->job_number).'.pdf';
+        $filenames = [];
+        //$filenames[] = $pdfFileName;
 
         if((!empty($productionDetail->ga_file)) && file_exists(realpath(APPPATH . '../assets/uploads/production/').'/'.$productionDetail->ga_file)):
-            $filenames[] = realpath(APPPATH . '../assets/uploads/production/').'/'.$productionDetail->ga_file;
+            $filenames[0] = realpath(APPPATH . '../assets/uploads/production/').'/'.$productionDetail->ga_file;
         endif;
 
-        if((!empty($productionDetail->technical_specification_file)) && file_exists(base_url('assets/uploads/production/'.$productionDetail->ga_file))):
-            $filenames[] = realpath(APPPATH . '../assets/uploads/production/').'/'.$productionDetail->technical_specification_file;
+        if((!empty($productionDetail->technical_specification_file)) && file_exists(realpath(APPPATH . '../assets/uploads/production/').'/'.$productionDetail->technical_specification_file)):
+            $filenames[1] = realpath(APPPATH . '../assets/uploads/production/').'/'.$productionDetail->technical_specification_file;
         endif;
 
-        if((!empty($productionDetail->sld_file)) && file_exists(base_url('assets/uploads/production/'.$productionDetail->sld_file))):
-            $filenames[] = realpath(APPPATH . '../assets/uploads/production/').'/'.$productionDetail->sld_file;
+        if((!empty($productionDetail->sld_file)) && file_exists(realpath(APPPATH . '../assets/uploads/production/').'/'.$productionDetail->sld_file)):
+            $filenames[2] = realpath(APPPATH . '../assets/uploads/production/').'/'.$productionDetail->sld_file;
         endif;
 
         $document = new \Mpdf\Mpdf();
@@ -447,14 +450,15 @@ class Estimation extends MY_Controller{
         endif;
 
         foreach ($filenames as $fileName):
-            if (file_exists($fileName)):
+            if(file_exists($fileName)):
                 $pagesInFile = $document->setSourceFile($fileName);
 
                 for ($i = 1; $i <= $pagesInFile; $i++) :
                     $tplId = $document->ImportPage($i); // in mPdf v8 should be 'importPage($i)'
-                    //$size = $document->getTemplateSize($tplId);
+                    $size = $document->getTemplateSize($tplId);
 
-                    $document->UseTemplate($tplId);
+                    //$document->UseTemplate($tplId);
+                    $document->useTemplate($tplId, 0, 0, $size['width'], $size['height'], true);
                     if (($fileNumber < $filesTotal) || ($i != $pagesInFile)) :
                         $document->AddPage();
                     endif;
