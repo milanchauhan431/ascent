@@ -211,7 +211,7 @@ class Testing extends MY_Controller{
     }
 
     public function printDocumentationFiles($ref_id,$pm_id){
-        $result = $this->production->getProductionTransData(['ref_id'=>$ref_id,'main_pm_id'=> $pm_id]);
+        $result = $this->production->getProductionTransData(['ref_id' => $ref_id, 'main_pm_id' => $pm_id, 'entry_type' => 0]);
 
         $filePath = realpath(APPPATH . '../assets/uploads/removable_files/');
 		$pdfFileName = $filePath.'/documents.pdf';
