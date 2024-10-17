@@ -145,7 +145,15 @@ function getGateInwardData($data){
 
 /* Material Issue */
 function getMaterialIssueData($data){
-    $action = getActionButton("");
+    $editParam = "{'postData':{'id' : ".$data->id."},'modal_id' : 'modal-lg', 'form_id' : 'edit', 'title' : 'Material Issue'}";
+    $editButton = '<a class="btn btn-success btn-edit permission-modify" href="javascript:void(0)" datatip="Edit" flow="down" onclick="edit('.$editParam.');"><i class="ti-pencil-alt" ></i></a>';
+
+    $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Material Issue'}";
+    $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
+
+    if(floatval($data->return_qty) > 0): $editButton = $deleteButton = ''; endif;
+
+    $action = getActionButton($editButton.$deleteButton);
 
     return [$action,$data->sr_no,formatDate($data->trans_date),$data->trans_number,$data->collected_by,$data->item_code,$data->item_name,$data->req_qty,$data->issue_qty,$data->return_qty,$data->remark];
 }
