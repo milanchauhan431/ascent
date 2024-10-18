@@ -7,6 +7,7 @@ class Estimation extends MY_Controller{
     private $viewBom = "production/estimation/view_bom";
     private $viewProdBom = "production/estimation/view_production_bom";
     private $requestFrom = "production/estimation/pur_request_form";
+    private $miRequestFrom = "production/estimation/mi_request_form";
     private $estimationFrom = "production/estimation/estimation_form";
     private $changeJobPriorityFrom = "production/estimation/change_job_priority_form";
 
@@ -468,6 +469,31 @@ class Estimation extends MY_Controller{
         endforeach;
 
         $document->Output($pdfFileName,'I');
+    }
+
+    public function materialIssueRequest(){
+        $data = $this->input->post();
+        $this->data['dataRow'] = $this->production->getOrderBomItems($data);
+        $this->data['postData'] = (object) $data;
+        $this->load->view($this->miRequestFrom,$this->data);
+    }
+
+    public function saveMaterialIssueRequest(){
+        $data = $this->input->post();
+
+        if(empty($data['itemData'])):
+            $errorMessage['itemData'] = "Item Details is required.";
+        else:
+            if(empty(array_sum(array_column($data['itemData'],'req_qty')))):
+                $errorMessage['itemData'] = "Please input request Qty.";
+            endif;
+        endif;
+
+        if(!empty($errorMessage)):
+            $this->printJson(['status'=>0,'message'=>$errorMessage]);
+        else:
+            $this->printJson($this->production->saveMaterialIssueRequest($data));
+        endif;
     }
 }
 ?>

@@ -14,7 +14,7 @@ class MaterialIssueModel extends MasterModel{
 
     public function getDTRows($data){
         $data['tableName'] = $this->materialIssue;
-        $data['select'] = "material_issue.id, material_issue.trans_date, CONCAT(material_issue.trans_prefix, material_issue.trans_no) as trans_number, material_issue.collected_by, material_issue.item_id, item_master.item_code, item_master.item_name, material_issue.req_qty, material_issue.issue_qty, material_issue.return_qty, material_issue.remark";
+        $data['select'] = "material_issue.id, material_issue.trans_date, CONCAT(material_issue.trans_prefix, material_issue.trans_no) as trans_number, material_issue.collected_by, material_issue.item_id, item_master.item_code, item_master.item_name, material_issue.req_qty, material_issue.issue_qty, material_issue.return_qty, material_issue.remark,material_issue.trans_status";
 
         $data['leftJoin']['item_master'] = "item_master.id = material_issue.item_id";
 
@@ -26,6 +26,9 @@ class MaterialIssueModel extends MasterModel{
             $data['where']['material_issue.trans_date >='] = $this->startYearDate;
             $data['where']['material_issue.trans_date <='] = $this->endYearDate;
         endif;
+
+        $data['order_by']['material_issue.trans_date'] = "DESC";
+        $data['order_by']['material_issue.trans_no'] = "DESC";
 
         $data['searchCol'][] = "";
         $data['searchCol'][] = "";
@@ -164,7 +167,9 @@ class MaterialIssueModel extends MasterModel{
     public function getMaterialIssueDetail($data){
         $queryData = [];
         $queryData['tableName'] = $this->materialIssue;
-        $queryData['where']['id'] = $data['id'];
+        $queryData['select'] = "material_issue.*, item_master.item_code, item_master.item_name";
+        $queryData['leftJoin']['item_master'] = "item_master.id = material_issue.item_id";
+        $queryData['where']['material_issue.id'] = $data['id'];
         $result = $this->row($queryData);
         return $result;
     }
@@ -184,6 +189,43 @@ class MaterialIssueModel extends MasterModel{
             $this->db->trans_rollback();
             return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
         }	
+    }
+
+    public function saveReturnMaterial($data){
+        try {
+			$this->db->trans_begin();
+
+            $this->remove($this->stockTrans,['main_ref_id'=>$data['id'],'entry_type'=>$this->data['entry_type'],'p_or_m'=>1]);
+
+            $batchDetail = $data['batchDetail'];
+            $data['batch_detail'] = json_encode($data['batchDetail']); unset($data['batchDetail']);
+            $result = $this->store($this->materialIssue,$data,'Material Return');
+
+            foreach($batchDetail as $row):
+                if($row['return_qty'] > 0):
+                    $row['id'] = "";
+                    $row['ref_no'] = $data['trans_prefix'].$data['trans_no'];
+                    $row['ref_date'] = $data['trans_date'];
+                    $row['item_id'] = $data['item_id'];
+                    $row['main_ref_id'] = $result['id'];
+                    $row['entry_type'] = $this->data['entry_type'];
+                    $row['p_or_m'] = 1;
+                    $row['qty'] = $row['return_qty'];
+
+                    unset($row['batch_qty'],$row['return_qty'],$row['batch_stock'],$row['location_name']);
+
+                    $this->store($this->stockTrans,$row);
+                endif;
+            endforeach;
+
+            if ($this->db->trans_status() !== FALSE) :
+				$this->db->trans_commit();
+				return $result;
+			endif;
+		} catch (\Exception $e) {
+			$this->db->trans_rollback();
+			return ['status' => 2, 'message' => "somthing is wrong. Error : " . $e->getMessage()];
+		}
     }
 }
 ?>

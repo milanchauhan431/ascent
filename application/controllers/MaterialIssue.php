@@ -2,6 +2,7 @@
 class MaterialIssue extends MY_Controller{
     private $index = "material_issue/index";
     private $form = "material_issue/form";
+    private $materialReturnForm = "material_issue/material_return_form";
 
     public function __construct(){
         parent::__construct();
@@ -149,7 +150,7 @@ class MaterialIssue extends MY_Controller{
                 endif;
                 
                 if(!isset($bQty[$batchKey])):
-                    $bQty[$batchKey] = $batch['batch_qty'] ;
+                    $bQty[$batchKey] = $batch['batch_qty'];
                 else:
                     $bQty[$batchKey] += $row['batch_qty'];
                 endif;
@@ -161,6 +162,8 @@ class MaterialIssue extends MY_Controller{
                         $errorMessage['batch_qty_'.$key] = "Stock not available.";
                     endif;
                 endif;
+
+                if(floatval($batch['batch_qty']) <= 0): unset($data['batchDetail'][$key]); endif;
             endforeach;
         endif;
 
@@ -174,6 +177,7 @@ class MaterialIssue extends MY_Controller{
     public function edit(){
         $data = $this->input->post();
         $this->data['dataRow'] = $this->materialIssue->getMaterialIssueDetail($data);
+
         $this->data['itemList'] = $this->item->getItemList(['item_type'=>"2,3"]);
         $this->load->view($this->form,$this->data);
     }
@@ -184,6 +188,44 @@ class MaterialIssue extends MY_Controller{
             $this->printJson(['status'=>0,'message'=>'Somthing went wrong...Please try again.']);
         else:
             $this->printJson($this->materialIssue->delete($id));
+        endif;
+    }
+
+    public function changeRequestStatus(){
+        $data = $this->input->post();
+        $result = $this->masterModel->store('material_issue',$data,'Request Status');
+        $this->printJson($result);
+    }
+
+    public function materialReturn(){
+        $data = $this->input->post();
+        $this->data['dataRow'] = $this->materialIssue->getMaterialIssueDetail($data);
+        $this->load->view($this->materialReturnForm,$this->data);
+    }
+
+    public function saveReturnMaterial(){
+        $data = $this->input->post();
+        $errorMessage = [];
+
+        if(empty($data['trans_date']))
+            $errorMessage['trans_date'] = "Entry Date is required.";
+        if(empty($data['item_id']))
+            $errorMessage['item_id'] = "Item Name is required.";
+        if(empty($data['batchDetail'])):
+            $errorMessage['issue_qty'] = "Qty is required.";
+        else:
+            $bQty = array();
+            foreach($data['batchDetail'] as $key=>$batch):
+                if($batch['return_qty'] > $batch['batch_qty']):
+                    $errorMessage['batch_qty_'.$key] = "Invalid Qty.";
+                endif;
+            endforeach;
+        endif;
+
+        if(!empty($errorMessage)):
+            $this->printJson(['status'=>0,'message'=>$errorMessage]);
+        else:
+            $this->printJson($this->materialIssue->saveReturnMaterial($data));
         endif;
     }
 }

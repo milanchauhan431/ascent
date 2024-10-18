@@ -79,7 +79,7 @@
 var batchDetail = '<?php echo (!empty($dataRow->batch_detail))?$dataRow->batch_detail:""; ?>';
 $(document).ready(function(){
     setTimeout(function() { $("#item_id").trigger('change'); },200);
-    console.log(batchDetail);
+    
     $(document).on('change','#item_id',function(){
         if($("#item_id").val() != ""){
             var stockTrans = {'postData':{'id' : $("#id").val(), 'item_id' : $("#item_id").val(), 'batchDetail' : batchDetail},'table_id':"itemStockDetail",'tbody_id':'itemStockTrans','tfoot_id':'','fnget':'getBatchWiseItemStock'};

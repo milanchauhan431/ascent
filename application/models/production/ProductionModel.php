@@ -273,6 +273,38 @@ class ProductionModel extends MasterModel{
         }
     }
 
+    public function saveMaterialIssueRequest($data){
+        try{
+            $this->db->trans_begin();
+            
+            foreach($data['itemData'] as $row):
+                if(!empty($row['req_qty'])):
+                    $row['id'] = "";
+                    $row['trans_no'] = $this->materialIssue->getNextNo();
+                    $row['trans_prefix'] = "MI/".$this->shortYear."/";
+                    $row['trans_date'] = $data['trans_date'];
+                    $this->store("material_issue",$row);
+
+                    $setData = Array();
+                    $setData['tableName'] = $this->orderBom;
+                    $setData['where']['id'] = $row['bom_id'];
+                    $setData['set']['mi_req_qty'] = 'mi_req_qty, + '.$row['req_qty'];
+                    $this->setValue($setData);
+                endif;
+            endforeach;
+
+            $result = ['status'=>1,'message'=>'Request sent successfully.'];
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }
+    }
+
     public function getProductionMaster($data=array()){
         $queryData['tableName'] = $this->productionMaster;
         $queryData['select'] = "production_master.*,trans_child.qty as order_qty,(trans_child.qty - production_master.vendor_qty) as pending_qty,trans_child.job_number,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date";

@@ -234,7 +234,10 @@ function getEstimationData($data){
     $viewBom = '<a class="btn btn-primary permission-read" href="javascript:void(0)" onclick="edit('.$viewBomParam.');" datatip="View Item Bom" flow="down"><i class="fa fa-eye"></i></a>';
 
     $reqParam = "{'postData':{'trans_child_id':".$data->trans_child_id.",'trans_number':'".$data->trans_number."','item_name':'".$data->item_name."'},'modal_id' : 'modal-xl', 'form_id' : 'addOrderBom', 'fnedit':'purchaseRequest', 'fnsave':'savePurchaseRequest','title' : 'Send Purchase Request'}";
-    $reqButton = '<a class="btn btn-info btn-delete permission-write" href="javascript:void(0)" onclick="edit('.$reqParam.');" datatip="Purchase Request" flow="down"><i class="fa fa-paper-plane"></i></a>';
+    $reqButton = '<a class="btn btn-info permission-write" href="javascript:void(0)" onclick="edit('.$reqParam.');" datatip="Purchase Request" flow="down"><i class="fa fa-paper-plane"></i></a>';
+
+    $miReqParam = "{'postData':{'trans_child_id':".$data->trans_child_id.",'trans_number':'".$data->trans_number."','item_name':'".$data->item_name."'},'modal_id' : 'modal-xl', 'form_id' : 'addMaterialRequest', 'fnedit':'materialIssueRequest', 'fnsave':'saveMaterialIssueRequest','title' : 'Send Request for Material Issue'}";
+    $miReqButton = '<a class="btn btn-warning permission-write" href="javascript:void(0)" onclick="edit('.$miReqParam.');" datatip="Material Issue Request" flow="down"><i class="fa fa-paper-plane"></i></a>';
 
     $estimationParam = "{'postData':{'id':'".$data->id."','trans_child_id':".$data->trans_child_id.",'trans_main_id':'".$data->trans_main_id."'},'modal_id' : 'modal-xl', 'form_id' : 'estimation', 'fnedit':'addEstimation', 'fnsave':'saveEstimation','title' : 'Estimation & Design'}";
     $estimationButton = '<a class="btn btn-success permission-write" href="javascript:void(0)" onclick="edit('.$estimationParam.');" datatip="Estimation" flow="down"><i class="fa fa-plus"></i></a>';
@@ -268,7 +271,7 @@ function getEstimationData($data){
         $prodDetailPrintBtn = '<a class="btn btn-dark" href="'.base_url('production/estimation/printProductionDetails/'.$data->id).'" target="_blank" datatip="Print GA,T.S. & SLD Document" flow="down"><i class="fas fa-print" ></i></a>';
     endif;
 
-    $action = getActionButton($soBom.$viewBom.$reqButton.$prodDetailPrintBtn.$estimationButton.$changePriority.$startJob);
+    $action = getActionButton($soBom.$viewBom.$reqButton.$miReqButton.$prodDetailPrintBtn.$estimationButton.$changePriority.$startJob);
 
     return [$action,$data->sr_no,$data->job_number,$data->trans_date,$data->party_name,$data->item_name,$data->qty,$data->bom_status,$data->priority_status,$data->fab_dept_note,$data->pc_dept_note,$data->ass_dept_note,$data->remark];
 }

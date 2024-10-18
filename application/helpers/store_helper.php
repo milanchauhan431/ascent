@@ -151,10 +151,26 @@ function getMaterialIssueData($data){
     $deleteParam = "{'postData':{'id' : ".$data->id."},'message' : 'Material Issue'}";
     $deleteButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="trash('.$deleteParam.');" datatip="Remove" flow="down"><i class="ti-trash"></i></a>';
 
+    $rejectButton = '';  
+    if($data->trans_status == 0):
+        $editButton = '<a class="btn btn-success btn-edit permission-modify" href="javascript:void(0)" datatip="Material Issue" flow="down" onclick="edit('.$editParam.');"><i class="fa fa-paper-plane" ></i></a>';
+
+        $rejectParam = "{'postData':{'id':".$data->id.",'trans_status' : 2},'fnsave':'changeRequestStatus','message' : 'Are you sure want to reject this request ?'}";
+        $rejectButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="confirmStore('.$rejectParam.');" datatip="Reject Request" flow="down"><i class="ti-close"></i></a>';
+
+        $deleteButton = '';
+    endif;
+
+    $returnButton = '';
+    if($data->trans_status == 1):
+        $returnParam = "{'postData':{'id' : ".$data->id."},'modal_id' : 'modal-xl', 'form_id' : 'edit', 'title' : 'Material Return','fnedit':'materialReturn','fnsave':'saveReturnMaterial'}";
+        $returnButton = '<a class="btn btn-primary btn-edit permission-modify" href="javascript:void(0)" datatip="Material Return" flow="down" onclick="edit('.$returnParam.');"><i class="fa fa-reply"></i></a>';
+    endif;
+
     if(floatval($data->return_qty) > 0): $editButton = $deleteButton = ''; endif;
 
-    $action = getActionButton($editButton.$deleteButton);
+    $action = getActionButton($rejectButton.$returnButton.$editButton.$deleteButton);
 
-    return [$action,$data->sr_no,formatDate($data->trans_date),$data->trans_number,$data->collected_by,$data->item_code,$data->item_name,$data->req_qty,$data->issue_qty,$data->return_qty,$data->remark];
+    return [$action,$data->sr_no,formatDate($data->trans_date),$data->trans_number,$data->collected_by,$data->item_code,$data->item_name,floatval($data->req_qty),floatval($data->issue_qty),floatval($data->return_qty),$data->remark];
 }
 ?>
