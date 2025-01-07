@@ -50,10 +50,10 @@ function getSalesOrderData($data){
     $cancelButton = '<a class="btn btn-danger btn-delete permission-remove" href="javascript:void(0)" onclick="confirmStore('.$cancelParam.');" datatip="Cancel Item" flow="down"><i class="ti-close"></i></a>';
 
     if($data->job_status != null):
-        $cancelButton = $editButton = "";
+        $editButton = "";
     endif;
 
-    if($data->trans_status == 3):
+    if(in_array($data->trans_status,[1,3])):
         $cancelButton = $editButton = $deleteButton = "";
     endif;
 

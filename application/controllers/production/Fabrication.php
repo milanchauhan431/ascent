@@ -90,6 +90,10 @@ class Fabrication extends MY_Controller{
         $data = $this->input->post();
         $errorMessage = array();
 
+        //Get Only Required Parameters
+        $parameterList = $this->production->getParameterList(['param_type'=>1,'is_required'=>1]);
+        $paramIds = array_column($parameterList,'id');
+
         if($data['entry_type'] == 30): // Mechanical Design
             $this->load->library('upload');
             if(!empty($_FILES['cutting_drawings']['name'])):
@@ -117,6 +121,12 @@ class Fabrication extends MY_Controller{
                     $data['cutting_drawings'] = $uploadData['file_name'];
                 endif;
             endif;
+
+            foreach($data['transData'] as $key=>$row):
+                if(in_array($row['param_id'],$paramIds) && empty($row['param_value'])):
+                    $errorMessage['param_value_'.$key] = ucwords(str_replace("_"," ",$row['param_key']))." is required.";
+                endif;
+            endforeach;
         endif;
 
         if($data['entry_type'] == 31): // Cutting
@@ -131,11 +141,11 @@ class Fabrication extends MY_Controller{
         endif;
 
         if($data['entry_type'] == 33)://Fab. Assembely
-            /* foreach($data['transData'] as $key=>$row):
-                if(empty($row['param_value'])):
+            foreach($data['transData'] as $key=>$row):
+                if(in_array($row['param_id'],$paramIds) && empty($row['param_value'])):
                     $errorMessage['param_value_'.$key] = ucwords(str_replace("_"," ",$row['param_key']))." is required.";
                 endif;
-            endforeach; */
+            endforeach;
         endif;
 
         if(!empty($errorMessage)):

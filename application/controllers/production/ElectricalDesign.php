@@ -96,6 +96,15 @@ class ElectricalDesign extends MY_Controller{
         endif;
     }
 
+    public function deleteAllElectricalDesignFile(){
+        $data = $this->input->post();
+        if(empty($data['ref_id'])):
+            $this->printJson(['status'=>0,'message'=>'Somthing went wrong...Please try again.']);
+        else:
+            $this->printJson($this->production->deleteAllElectricalDesignFile($data));
+        endif;
+    }
+
     public function getElectricalDesignFilesHtml(){
         $data = $this->input->post();
         $result = $this->production->getProductionTransData($data);

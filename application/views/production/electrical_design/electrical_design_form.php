@@ -21,6 +21,10 @@
 <hr>
 <div class="col-md-12">
     <div class="row">
+        <div class="col-md-12 form-group">
+            <?php $deleteParam = "{'postData':{'ref_id' : ".$pm_id.",'entry_type':".$entry_type."},'message' : 'File','res_function':'resDeleteFile','fndelete':'deleteAllElectricalDesignFile'}"; ?>
+            <button type="button" class="btn btn-outline-danger float-right" onclick="trash(<?=$deleteParam?>);">Remove All Files</button>
+        </div>
         <div class="col-md-12">
             <div class="table table-responsive">
                 <table id="designFiles" class="table table-bordered">

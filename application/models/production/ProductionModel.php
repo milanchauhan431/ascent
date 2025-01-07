@@ -12,7 +12,7 @@ class ProductionModel extends MasterModel{
     /* Parameters Start */
     public function getParametersDTRows($data){
         $data['tableName'] = $this->paramMaster;
-        $data['select'] = "parameter_master.*,(CASE WHEN param_type = 1 THEN 'Production' WHEN param_type = 2 THEN 'Testing' ELSE '' END) as param_type_text,(CASE WHEN input_type = 1 THEN 'Number' WHEN input_type = 2 THEN 'Decimal' WHEN input_type = 3 THEN 'Text' ELSE '' END) as input_type_text";
+        $data['select'] = "parameter_master.*,(CASE WHEN param_type = 1 THEN 'Production' WHEN param_type = 2 THEN 'Testing' ELSE '' END) as param_type_text,(CASE WHEN input_type = 1 THEN 'Number' WHEN input_type = 2 THEN 'Decimal' WHEN input_type = 3 THEN 'Text' ELSE '' END) as input_type_text, (CASE WHEN is_required = 0 THEN 'No' ELSE 'Yes' END) as is_required_text";
 
         if(!isset($data['order'])):
             $data['order_by']['seq'] = "ASC";
@@ -24,6 +24,7 @@ class ProductionModel extends MasterModel{
 		$data['searchCol'][] = "param_name";
         $data['searchCol'][] = "seq";
         $data['searchCol'][] = "(CASE WHEN input_type = 1 THEN 'Number' WHEN input_type = 2 THEN 'Decimal' WHEN input_type = 3 THEN 'Text' ELSE '' END)";
+        $data['searchCol'][] = "(CASE WHEN is_required = 0 THEN 'No' ELSE 'Yes' END)";
         $data['searchCol'][] = "remark";
 
 		$columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
@@ -81,6 +82,10 @@ class ProductionModel extends MasterModel{
 
         if($data['param_type']):
             $queryData['where']['param_type'] = $data['param_type'];
+        endif;
+
+        if(!empty($data['is_required'])):
+            $queryData['where']['is_required'] = $data['is_required'];
         endif;
 
         $queryData['order_by']['seq'] = "ASC";
@@ -676,6 +681,30 @@ class ProductionModel extends MasterModel{
             endif;
 
             $result = $this->trash($this->productionTrans,['id'=>$id],'File');
+
+            if ($this->db->trans_status() !== FALSE):
+                $this->db->trans_commit();
+                return $result;
+            endif;
+        }catch(\Exception $e){
+            $this->db->trans_rollback();
+            return ['status'=>2,'message'=>"somthing is wrong. Error : ".$e->getMessage()];
+        }	
+    }
+
+    public function deleteAllElectricalDesignFile($data){
+        try{
+            $this->db->trans_begin();
+
+            $transDetail = $this->production->getProductionTransData($data);
+
+            foreach($transDetail as $row):
+                if(file_exists(realpath(APPPATH . '../assets/uploads/production/').'/'.$row->param_value)):
+                    unlink(realpath(APPPATH . '../assets/uploads/production/').'/'.$row->param_value);
+                endif;
+
+                $result = $this->trash($this->productionTrans,['id'=>$row->id],'File');
+            endforeach;
 
             if ($this->db->trans_status() !== FALSE):
                 $this->db->trans_commit();

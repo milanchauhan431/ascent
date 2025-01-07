@@ -95,7 +95,7 @@
 								echo '<td>'.$row->make.'</td>';
 								echo '<td>'.$row->item_code.'</td>';
 								echo '<td>'.$row->item_name.'</td>';
-								echo '<td class="text-right">'.floatVal($row->qty).' '.$row->unit_name.'  '.((!empty(floatVal($row->qty_kg)))?"<br>(".$row->qty_kg." ".$row->sec_unit_name.")":"").'</td>';
+								echo '<td class="text-right">'.floatVal($row->qty).' '.$row->unit_name.'  '.((!empty(floatVal($row->qty_kg)) && $row->unit_id != $row->sec_unit_id)?"<br>(".$row->qty_kg." ".$row->sec_unit_name.")":"").'</td>';
 								echo '<td class="text-right">'.floatVal($row->price).'</td>';
 								echo '<td class="text-right">'.floatVal($row->disc_per).'</td>';
 								echo '<td class="text-right">'.floatVal($row->gst_per).'</td>';							

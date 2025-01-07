@@ -99,7 +99,7 @@
                     </div>
 
                     <div class="input-group-append" style="width:40%!important;">
-                        <input type="hidden" name="std_qty" id="std_qty" class="form-control floatOnly" placeholder="Qty." value="<?=(!empty($dataRow->std_qty))?floatVal($dataRow->std_qty):"1"?>">
+                        <input type="hidden" name="std_qty" id="std_qty" class="form-control floatOnly" placeholder="Qty." value="<?=(!empty(floatVal($dataRow->std_qty)))?floatVal($dataRow->std_qty):""?>">
 
                         <input type="text" name="std_pck_qty" id="std_pck_qty" class="form-control numericOnly" placeholder="Qty." value="<?=(!empty($dataRow->std_pck_qty))?floatVal($dataRow->std_pck_qty):""?>">
                     </div>

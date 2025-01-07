@@ -3,7 +3,7 @@
         <div class="row">
             <input type="hidden" name="id" id="id" value="<?=(!empty($dataRow->id))?$dataRow->id:""?>">
 
-            <div class="col-md-6 form-group">
+            <div class="col-md-4 form-group">
                 <label for="param_type">Parameter Type</label>
                 <select name="param_type" id="param_type" class="form-control">
                     <option value="1" <?=(!empty($dataRow->param_type) && $dataRow->param_type == 1)?"selected":""?>>Production</option>
@@ -11,12 +11,20 @@
                 </select>
             </div>
 
-            <div class="col-md-6 form-group">
+            <div class="col-md-4 form-group">
                 <label for="input_type">Input Type</label>
                 <select name="input_type" id="input_type" class="form-control">
                     <option value="1" <?=(!empty($dataRow->input_type) && $dataRow->input_type == 1)?"selected":""?>>Number</option>
                     <option value="2" <?=(!empty($dataRow->input_type) && $dataRow->input_type == 2)?"selected":""?>>Decimal</option>
                     <option value="3" <?=(!empty($dataRow->input_type) && $dataRow->input_type == 3)?"selected":""?>>Text</option>
+                </select>
+            </div>
+
+            <div class="col-md-4 form-group">
+                <label for="is_required">Input Required</label>
+                <select name="is_required" id="is_required" class="form-control">
+                    <option value="0" <?=(!empty($dataRow) && $dataRow->is_required == 0)?"selected":""?>>No</option>
+                    <option value="1" <?=(!empty($dataRow->is_required) && $dataRow->is_required == 1)?"selected":""?>>Yes</option>
                 </select>
             </div>
 

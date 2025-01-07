@@ -167,6 +167,7 @@ class PurchaseOrderModel extends MasterModel{
                     endif;                    
                 endif;
 
+                $row['sec_unit_id'] = (!empty($row['sec_unit_id']))?$row['sec_unit_id']:$row['unit_id'];
                 $this->store($this->transChild,$row);
             endforeach;            
 

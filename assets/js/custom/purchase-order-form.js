@@ -487,6 +487,8 @@ function resItemDetail(response = ""){
 
 		if(parseFloat(itemDetail.std_pck_qty) > 0){
 			$("#itemForm #stdPck").html("Box Cap. : "+parseFloat(itemDetail.std_pck_qty));
+		}else{
+			$("#itemForm #stdPck").html("");
 		}		
     }else{
         $("#itemForm #item_code").val("");

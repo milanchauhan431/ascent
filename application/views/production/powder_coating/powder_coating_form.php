@@ -52,7 +52,7 @@
                                 endif;
 
                                 echo '<tr>
-                                    <td>'.$row->param_name.' <span class="text-danger">*</span></td>
+                                    <td>'.$row->param_name.' </td>
                                     <td>
                                         <input type="hidden" name="transData['.$i.'][id]" id="id_'.$i.'" value="">
                                         <input type="hidden" name="transData['.$i.'][param_id]" id="param_id_'.$i.'" value="'.$row->id.'">
@@ -78,7 +78,7 @@
                 <table class="table table-borderless">
                     <tbody>
                         <tr>
-                            <td style="width:50%;">DISCRIPTION OF POWDER <span class="text-danger">*</span></td>
+                            <td style="width:50%;">DISCRIPTION OF POWDER </td>
                             <td style="width:50%;">
                                 <input type="hidden" name="transData[<?=$i?>][id]" id="id_<?=$i?>" value="">
                                 <input type="hidden" name="transData[<?=$i?>][param_id]" id="param_id_<?=$i?>" value="">
@@ -92,7 +92,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>POWDER QTY. <span class="text-danger">*</span></td>
+                            <td>POWDER QTY. </td>
                             <td>
                                 <input type="hidden" name="transData[<?=$i?>][id]" id="id_<?=$i?>" value="">
                                 <input type="hidden" name="transData[<?=$i?>][param_id]" id="param_id_<?=$i?>" value="">
