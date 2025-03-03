@@ -108,9 +108,13 @@ class Assembly extends MY_Controller{
         $data = $this->input->post();
         $errorMessage = array();
 
+        //Get Only Required Parameters
+        $parameterList = $this->production->getParameterList(['param_type'=>1,'is_required'=>1]);
+        $paramIds = array_column($parameterList,'id');
+
         if($data['entry_type'] == 37)://Assembly Production
             foreach($data['transData'] as $key=>$row):
-                if(empty($row['param_value'])):
+                if(in_array($row['param_id'],$paramIds) && empty($row['param_value'])):
                     $errorMessage['param_value_'.$key] = ucwords(str_replace("_"," ",$row['param_key']))." is required.";
                 endif;
             endforeach;

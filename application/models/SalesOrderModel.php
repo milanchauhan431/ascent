@@ -76,10 +76,11 @@ class SalesOrderModel extends MasterModel{
         //$queryData['select'] = "MAX(job_char) as job_char";
         $queryData['select'] = "job_char";
         $queryData['where']['entry_type'] = 20;
+        $queryData['where']['job_char !='] = "";
         $queryData['order_by']['id'] = "DESC";
         $result =  $this->row($queryData)->job_char;
 
-        $nextChar = (!empty($result) && $result != 'Z')? ++$result : 'A';        
+        $nextChar = (!empty($result) && $result != 'Z')? ++$result : 'A';
         return $nextChar;
     }
 
@@ -94,7 +95,7 @@ class SalesOrderModel extends MasterModel{
         $result =  $this->row($queryData)->job_no;
 
         if(in_array($order_type,["F","S"]) && $result == 1):
-            $result = 1700;
+            $result = 2061;
         endif;
         
         return $result;

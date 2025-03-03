@@ -152,7 +152,7 @@ $(document).ready(function(){
 
 			/* initModalSelect(); */
 			$("#"+modalId+" .single-select").comboSelect();
-			$("#"+modalId+" .select2").select2({ with:null });
+			$("#"+modalId+" .select2").select2();
 			$("#processDiv").hide();
 			$("#"+modalId+" .scrollable").perfectScrollbar({suppressScrollX: true});
 			setTimeout(function(){ initMultiSelect();setPlaceHolder(); }, 5);
@@ -379,9 +379,18 @@ $(document).ready(function(){
 	$(document).on('focus', '.select2-selection.select2-selection--single', function (e) {
 		$(this).closest(".select2-container").siblings('select:enabled').select2('open');
 	});
+
+	$(document).on("select2:open","select.select2", function () {
+		$(".modal").css({'z-index':9999,'overflow':'hidden'});
+		let searchField = document.querySelector('.select2-search__field');
+		if (searchField) {
+			searchField.focus();
+		}
+	});
 	
 	// steal focus during close - only capture once and stop propogation
-	$('select.select2').on('select2:closing', function (e) {
+	$(document).on('select2:closing','select.select2', function (e) {
+		$(".modal").css({'z-index':9999,'overflow':'auto'});
 		$(e.target).data("select2").$selection.one('focus focusin', function (e) {
 			e.stopPropagation();
 		});
@@ -797,7 +806,7 @@ function edit(data){
 
 		/* initModalSelect(); */
 		$("#"+data.modal_id+" .single-select").comboSelect();
-		$("#"+data.modal_id+" .select2").select2({ with:null });
+		$("#"+data.modal_id+" .select2").select2();
 		$("#"+data.modal_id+" .scrollable").perfectScrollbar({suppressScrollX: true});
 		initMultiSelect();setPlaceHolder();
 	});

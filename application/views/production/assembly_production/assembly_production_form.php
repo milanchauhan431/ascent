@@ -52,7 +52,7 @@
                                 endif;
 
                                 echo '<tr>
-                                    <td>'.$row->param_name.' <span class="text-danger">*</span></td>
+                                    <td>'.$row->param_name.'</td>
                                     <td>
                                         <input type="hidden" name="transData['.$i.'][id]" id="id_'.$i.'" value="">
                                         <input type="hidden" name="transData['.$i.'][param_id]" id="param_id_'.$i.'" value="'.$row->id.'">

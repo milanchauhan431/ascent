@@ -16,7 +16,7 @@ $(document).ready(function(){
 					$('#modal-xl .modal-title').html("Carete Invoice");
 					$('#modal-xl .modal-body').html(response);
 					$('#modal-xl .modal-body form').attr('id',"createInvoiceForm");
-					$('#modal-xl .modal-footer .btn-save').html('<i class="fa fa-check"></i> Create Invoice');
+					$('#modal-xl .modal-footer .btn-save').html('<i class="fa fa-check"></i> Create');
 					$("#modal-xl .modal-footer .btn-save").attr('onclick',"createInvoice();");
 				}
 			});

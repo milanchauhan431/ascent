@@ -18,6 +18,9 @@ function getPurchaseDtHeader($page){
 	$data['poItemWise'][] = ["name"=>"Job No."];
 	$data['poItemWise'][] = ["name"=>"CAT No."];
 	$data['poItemWise'][] = ["name"=>"Item Name"];
+	$data['poItemWise'][] = ["name"=>"Make"];
+	$data['poItemWise'][] = ["name"=>"Price"];
+	$data['poItemWise'][] = ["name"=>"Disc. (%)"];
     $data['poItemWise'][] = ["name"=>"Order Qty"];
     $data['poItemWise'][] = ["name"=>"Received Qty"];
     $data['poItemWise'][] = ["name"=>"Pending Qty"];
@@ -64,7 +67,7 @@ function getPurchaseOrderData($data){
 
         $action = getActionButton($printBtn.$editButton.$completeButton.$cancelButton);
 
-        return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->job_number,$data->item_code,$data->item_name,$data->qty,$data->received_qty,$data->pending_qty,$data->item_remark];
+        return [$action,$data->sr_no,$data->trans_number,$data->trans_date,$data->party_name,$data->job_number,$data->item_code,$data->item_name,$data->make,$data->price,$data->disc_per,$data->qty,$data->received_qty,$data->pending_qty,$data->item_remark];
     else:
         $action = getActionButton($printBtn.$editButton);
 
