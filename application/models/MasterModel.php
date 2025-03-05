@@ -702,6 +702,7 @@ class MasterModel extends CI_Model{
         if(empty($id)):
             $data['created_by'] = (isset($data['created_by']))?$data['created_by']:$this->loginId;
             $data['created_at'] = date("Y-m-d H:i:s");
+            $data['updated_at'] = date("Y-m-d H:i:s");
 
             $this->db->insert($tableName,$data);
             $insert_id = $this->db->insert_id();
@@ -837,6 +838,9 @@ class MasterModel extends CI_Model{
                 endforeach;
             endif;            
         endif;
+
+        $this->db->set('updated_by',$this->loginId);
+        $this->db->set('updated_at',date("Y-m-d H:i:s"));
             
         if($condition == true):
             $this->db->update($data['tableName']);
