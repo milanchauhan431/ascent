@@ -398,7 +398,22 @@ class ProductionModel extends MasterModel{
     /* Production DTROWS Start [Fabrication,Powder Coating,Assembly Production(Vendor Allotment)]*/
     public function getProductionDTRows($data){
         $data['tableName'] = $this->productionMaster;
-        $data['select'] = "production_master.id,production_master.entry_type,production_master.ref_id,production_master.pm_id,production_master.trans_child_id,production_master.trans_main_id,trans_child.job_number,trans_child.item_name,trans_child.qty as order_qty,(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' ELSE '' END) as priority_status,production_master.ga_file,production_master.technical_specification_file,production_master.sld_file,production_master.priority,production_master.fab_dept_note,production_master.pc_dept_note,production_master.ass_dept_note,production_master.remark,production_master.accepted_by,em.emp_name as accepted_by_name,production_master.accepted_at,production_master.job_status, (CASE WHEN production_master.ref_id = 0 THEN SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), 1) ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), FIND_IN_SET('".$data['from_entry_type']."', production_master.department_ids) + 1), REPLACE(', ', ' ', ''), -1) END) as next_dept_id,production_master.vendor_id,vm.emp_name as party_name,production_master.vendor_qty,(trans_child.qty - production_master.vendor_qty) as pending_allotment_qty";
+        $data['select'] = "production_master.id,production_master.entry_type,production_master.ref_id,production_master.pm_id,production_master.trans_child_id,production_master.trans_main_id,trans_child.job_number,trans_child.item_name,trans_child.qty as order_qty,(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' ELSE '' END) as priority_status,production_master.ga_file,production_master.technical_specification_file,production_master.sld_file,production_master.priority,production_master.fab_dept_note,production_master.pc_dept_note,production_master.ass_dept_note,production_master.remark,production_master.accepted_by,em.emp_name as accepted_by_name,production_master.accepted_at,production_master.job_status, production_master.vendor_id,vm.emp_name as party_name,production_master.vendor_qty,(trans_child.qty - production_master.vendor_qty) as pending_allotment_qty";
+
+        //$data['select'] .= ",(CASE WHEN production_master.ref_id = 0 THEN SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), 1) ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), FIND_IN_SET('".$data['to_entry_type']."', production_master.department_ids) + 1), REPLACE(', ', ' ', ''), -1) END) as next_dept_id";
+
+        $data['select'] .= ", IFNULL(
+            NULLIF(
+                SUBSTRING_INDEX(
+                    SUBSTRING_INDEX( 
+                        production_master.department_ids, 
+                        REPLACE(', ', ' ', ''), 
+                        FIND_IN_SET('".$data['to_entry_type']."', production_master.department_ids) - 1
+                    ), REPLACE(', ', ' ', ''), -1
+                )
+            ,'')
+        , 27) AS pre_dept_id";
+        $data['select'] .= ", ".$data['to_entry_type']." as next_dept_id";
 
         $data['leftJoin']['trans_child'] = "production_master.trans_child_id = trans_child.id";
         $data['leftJoin']['employee_master as em'] = "em.id = production_master.accepted_by";
@@ -411,14 +426,16 @@ class ProductionModel extends MasterModel{
             $data['where']['production_master.entry_type'] = $data['from_entry_type'];
             $data['where_in']['production_master.job_status'] = 1;
         elseif($data['from_entry_type'] != $data['to_entry_type'] && $data['job_status'] == 2):
-            $data['where']["SUBSTRING_INDEX(SUBSTRING_INDEX(production_master.department_ids, ',', FIND_IN_SET(".$data['from_entry_type'].", production_master.department_ids) + 1),',', -1) = "] = $data['to_entry_type'];
-            $data['where']['production_master.entry_type'] = $data['from_entry_type'];
+            //$data['where']["SUBSTRING_INDEX(SUBSTRING_INDEX(production_master.department_ids, ',', FIND_IN_SET(".$data['from_entry_type'].", production_master.department_ids) + 1),',', -1) = "] = $data['to_entry_type'];
+            //$data['where']['production_master.entry_type'] = $data['from_entry_type'];            
             
             if($data['to_entry_type'] == 36):
                 $data['where']['(trans_child.qty - production_master.vendor_qty) >'] = 0;
-                $data['where_in']['production_master.job_status'] = [2,3];
+                $data['customWhere'][] = "((production_master.entry_type = SUBSTRING_INDEX( SUBSTRING_INDEX(production_master.department_ids, ',', FIND_IN_SET(".$data['to_entry_type'].", production_master.department_ids) - 1), ',', -1 ) AND production_master.job_status IN (2,3)) OR (SUBSTRING_INDEX(production_master.department_ids,',',1) = ".$data['to_entry_type']." AND production_master.entry_type = 27 AND production_master.job_status = 1)) AND FIND_IN_SET(".$data['to_entry_type'].", production_master.department_ids) > 0";
+                //$data['where_in']['production_master.job_status'] = [2,3];
             else:
-                $data['where_in']['production_master.job_status'] = 2;
+                $data['customWhere'][] = "((production_master.entry_type = SUBSTRING_INDEX( SUBSTRING_INDEX(production_master.department_ids, ',', FIND_IN_SET(".$data['to_entry_type'].", production_master.department_ids) - 1), ',', -1 ) AND production_master.job_status = 2) OR (SUBSTRING_INDEX(production_master.department_ids,',',1) = ".$data['to_entry_type']." AND production_master.entry_type = 27 AND production_master.job_status = 1)) AND FIND_IN_SET(".$data['to_entry_type'].", production_master.department_ids) > 0";
+                //$data['where_in']['production_master.job_status'] = 2;
             endif;
         else:
             $data['where']['production_master.entry_type'] = $data['to_entry_type'];
@@ -473,11 +490,12 @@ class ProductionModel extends MasterModel{
         endif;
         $data['searchCol'][] = "production_master.remark";
 
-        $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
+        $columns = []; foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
         if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}
         
-        
-        return $this->pagingRows($data); //$this->printQuery();
+        $result = $this->pagingRows($data);
+        //$this->printQuery();
+        return $result;
     }
     /* Production DTROWS End */
 
@@ -761,6 +779,18 @@ class ProductionModel extends MasterModel{
         $data['tableName'] = $this->productionMaster;
         $data['select'] = "production_master.id,production_master.entry_type,production_master.ref_id,production_master.pm_id,production_master.trans_child_id,production_master.trans_main_id,trans_child.job_number,trans_child.item_name,trans_child.qty as order_qty,(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' ELSE '' END) as priority_status,production_master.ga_file,production_master.technical_specification_file,production_master.sld_file,production_master.priority,production_master.fab_dept_note,production_master.pc_dept_note,production_master.ass_dept_note,production_master.remark,production_master.accepted_by,em.emp_name as accepted_by_name,production_master.accepted_at,production_master.job_status, (CASE WHEN production_master.ref_id = 0 THEN SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), 1) ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), FIND_IN_SET('".$data['from_entry_type']."', production_master.department_ids) + 1), REPLACE(', ', ' ', ''), -1) END) as next_dept_id,production_master.vendor_id,vm.emp_name as party_name,production_master.vendor_qty,(trans_child.qty - production_master.vendor_qty) as pending_allotment_qty";
 
+        $data['select'] .= ", IFNULL(
+            NULLIF(
+                SUBSTRING_INDEX(
+                    SUBSTRING_INDEX( 
+                        production_master.department_ids, 
+                        REPLACE(', ', ' ', ''), 
+                        FIND_IN_SET('".$data['to_entry_type']."', production_master.department_ids) - 1
+                    ), REPLACE(', ', ' ', ''), -1
+                )
+            ,'')
+        , 27) AS pre_dept_id";
+
         /* if($data['to_entry_type'] == 38):
             $data['select'] .= ",(production_master.vendor_qty - (SELECT IFNULL(SUM(rec_trans.vendor_qty),0) FROM production_master as rec_trans WHERE rec_trans.ref_id = production_master.id AND rec_trans.is_delete = 0) ) as pending_qty";
         endif; */       
@@ -887,6 +917,15 @@ class ProductionModel extends MasterModel{
             $setData['where']['id'] = $data['id'];
             $setData['update']['job_status'] = "2";
             $result = $this->setValue($setData);
+
+            //Assemply Production Status Update
+            if(!empty($data['ref_id'])):
+                $setData = Array();
+                $setData['tableName'] = $this->productionMaster;
+                $setData['where']['id'] = $data['ref_id'];
+                $setData['update']['job_status'] = "3";
+                $result = $this->setValue($setData);
+            endif;
 
             //Manage Main Job Record Status
             $setData = Array();
@@ -1074,7 +1113,22 @@ class ProductionModel extends MasterModel{
     /* Testing Department Start */
     public function getTestingDTRows($data){
         $data['tableName'] = $this->productionMaster;
-        $data['select'] = "production_master.id,production_master.entry_type,production_master.ref_id,production_master.pm_id,production_master.trans_child_id,production_master.trans_main_id,trans_child.job_number,trans_child.item_name,trans_child.qty as order_qty,(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' ELSE '' END) as priority_status,production_master.ga_file,production_master.technical_specification_file,production_master.sld_file,production_master.priority,production_master.fab_dept_note,production_master.pc_dept_note,production_master.ass_dept_note,production_master.remark,production_master.accepted_by,em.emp_name as accepted_by_name,production_master.accepted_at,production_master.job_status, (CASE WHEN production_master.ref_id = 0 THEN SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), 1) ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), FIND_IN_SET('".$data['from_entry_type']."', production_master.department_ids) + 1), REPLACE(', ', ' ', ''), -1) END) as next_dept_id,production_master.tested_qty,trans_main.party_name,(trans_child.qty - IFNULL(test_trans.tested_qty,0)) as pending_qty, IFNULL(test_trans.tested_qty,0) as total_tested_qty, production_master.customer_name, CONCAT(trans_child.job_number,'/',production_master.drgs_no) as drgs_number, CONCAT(production_master.tc_prefix,production_master.tc_sr_no) as tc_sr_number,production_master.switchgear_no";  
+        $data['select'] = "production_master.id,production_master.entry_type,production_master.ref_id,production_master.pm_id,production_master.trans_child_id,production_master.trans_main_id,trans_child.job_number,trans_child.item_name,trans_child.qty as order_qty,(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' ELSE '' END) as priority_status,production_master.ga_file,production_master.technical_specification_file,production_master.sld_file,production_master.priority,production_master.fab_dept_note,production_master.pc_dept_note,production_master.ass_dept_note,production_master.remark,production_master.accepted_by,em.emp_name as accepted_by_name,production_master.accepted_at,production_master.job_status, production_master.tested_qty,trans_main.party_name,(trans_child.qty - IFNULL(test_trans.tested_qty,0)) as pending_qty, IFNULL(test_trans.tested_qty,0) as total_tested_qty, production_master.customer_name, CONCAT(trans_child.job_number,'/',production_master.drgs_no) as drgs_number, CONCAT(production_master.tc_prefix,production_master.tc_sr_no) as tc_sr_number,production_master.switchgear_no"; 
+        
+        //(CASE WHEN production_master.ref_id = 0 THEN SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), 1) ELSE SUBSTRING_INDEX(SUBSTRING_INDEX(production_master.department_ids, REPLACE(', ', ' ', ''), FIND_IN_SET('".$data['from_entry_type']."', production_master.department_ids) + 1), REPLACE(', ', ' ', ''), -1) END) as next_dept_id,
+
+        $data['select'] .= ", IFNULL(
+            NULLIF(
+                SUBSTRING_INDEX(
+                    SUBSTRING_INDEX( 
+                        production_master.department_ids, 
+                        REPLACE(', ', ' ', ''), 
+                        FIND_IN_SET('".$data['to_entry_type']."', production_master.department_ids) - 1
+                    ), REPLACE(', ', ' ', ''), -1
+                )
+            ,'')
+        , 27) AS pre_dept_id";
+        $data['select'] .= ", ".$data['to_entry_type']." as next_dept_id";
 
         $data['leftJoin']['trans_main'] = "production_master.trans_main_id = trans_main.id";
         $data['leftJoin']['trans_child'] = "production_master.trans_child_id = trans_child.id";
@@ -1084,8 +1138,10 @@ class ProductionModel extends MasterModel{
         $data['where']['trans_child.trans_status !='] = 3;
         
         if($data['from_entry_type'] != $data['to_entry_type'] && $data['to_entry_type'] == 40):
-            $data['where']['production_master.entry_type'] = $data['from_entry_type'];
-            $data['where_in']['production_master.job_status'] = $data['job_status'];
+            /* $data['where']['production_master.entry_type'] = $data['from_entry_type'];
+            $data['where_in']['production_master.job_status'] = $data['job_status']; */
+            $data['customWhere'][] = "((production_master.entry_type = SUBSTRING_INDEX( SUBSTRING_INDEX(production_master.department_ids, ',', FIND_IN_SET(".$data['to_entry_type'].", production_master.department_ids) - 1), ',', -1 ) AND production_master.job_status IN (2,3)) OR (SUBSTRING_INDEX(production_master.department_ids,',',1) = ".$data['to_entry_type']." AND production_master.entry_type = 27 AND production_master.job_status = 1)) AND FIND_IN_SET(".$data['to_entry_type'].", production_master.department_ids) > 0";
+
             $data['where']['(trans_child.qty - IFNULL(test_trans.tested_qty,0)) > '] = 0;
         else:
             $data['where']['production_master.entry_type'] = $data['to_entry_type'];

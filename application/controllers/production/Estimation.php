@@ -232,8 +232,14 @@ class Estimation extends MY_Controller{
         if(empty($data['priority']))
             $errorMessage['priority'] = "Priority is required.";
 
-        if(empty($data['department_ids']))
+        if(empty($data['department_ids'])):
             $errorMessage['department_ids'] = "Departments is required.";
+        else:
+            $deptIds = explode(",",$data['department_ids']);
+            if ((in_array(36, $deptIds) && !in_array(37, $deptIds)) || (in_array(37, $deptIds) && !in_array(36, $deptIds))):
+                $errorMessage['department_ids'] = "Invalid Departments selection.";
+            endif;
+        endif;
 
         if(!empty($errorMessage)):
             $this->printJson(['status'=>0,'message'=>$errorMessage]);
@@ -251,7 +257,8 @@ class Estimation extends MY_Controller{
                 $ext = pathinfo($_FILES['ga_file']['name'], PATHINFO_EXTENSION);
 
                 $_FILES['ga_file']['name'] = preg_replace('/[^A-Za-z0-9.]+/', '_', strtolower($_FILES['ga_file']['name']));
-                $config = ['file_name' => time()."_".$_FILES['ga_file']['name'],'allowed_types' => '*','max_size' => 10240,'overwrite' => FALSE, 'upload_path' => $imagePath];
+                $gaFileName = (!empty($data['ga_file_name']))?$data['ga_file_name']:time()."_".$_FILES['ga_file']['name'];
+                $config = ['file_name' => $gaFileName,'allowed_types' => '*','max_size' => 10240,'overwrite' => TRUE, 'upload_path' => $imagePath];
 
                 if(file_exists($config['upload_path'].'/'.$config['file_name'])):
                     unlink($config['upload_path'].'/'.$config['file_name']);
@@ -277,7 +284,8 @@ class Estimation extends MY_Controller{
                 $ext = pathinfo($_FILES['technical_specification_file']['name'], PATHINFO_EXTENSION);
 
                 $_FILES['technical_specification_file']['name'] = preg_replace('/[^A-Za-z0-9.]+/', '_', strtolower($_FILES['technical_specification_file']['name']));
-                $config = ['file_name' => time()."_".$_FILES['technical_specification_file']['name'],'allowed_types' => '*','max_size' => 10240,'overwrite' => FALSE, 'upload_path' => $imagePath];
+                $tsFileName = (!empty($data['technical_specification_file_name']))?$data['technical_specification_file_name']:time()."_".$_FILES['technical_specification_file']['name'];
+                $config = ['file_name' => $tsFileName,'allowed_types' => '*','max_size' => 10240,'overwrite' => TRUE, 'upload_path' => $imagePath];
 
                 if(file_exists($config['upload_path'].'/'.$config['file_name'])): 
                     unlink($config['upload_path'].'/'.$config['file_name']);
@@ -303,7 +311,8 @@ class Estimation extends MY_Controller{
                 $ext = pathinfo($_FILES['sld_file']['name'], PATHINFO_EXTENSION);
 
                 $_FILES['sld_file']['name'] = preg_replace('/[^A-Za-z0-9.]+/', '_', strtolower($_FILES['sld_file']['name']));
-                $config = ['file_name' => time()."_".$_FILES['sld_file']['name'],'allowed_types' => '*','max_size' => 10240,'overwrite' => FALSE, 'upload_path' => $imagePath];
+                $sldFileName = (!empty($data['sld_file_name']))?$data['sld_file_name']:time()."_".$_FILES['sld_file']['name'];
+                $config = ['file_name' => $sldFileName,'allowed_types' => '*','max_size' => 10240,'overwrite' => TRUE, 'upload_path' => $imagePath];
 
                 if(file_exists($config['upload_path'].'/'.$config['file_name'])):
                     unlink($config['upload_path'].'/'.$config['file_name']);
@@ -318,7 +327,7 @@ class Estimation extends MY_Controller{
                 endif;
             endif;
 
-            unset($data['ga_file_name']);
+            unset($data['ga_file_name'],$data['technical_specification_file_name'],$data['sld_file_name']);
             $this->printJson($this->production->saveEstimation($data));
         endif;
     }

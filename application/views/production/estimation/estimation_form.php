@@ -7,13 +7,15 @@
             <input type="hidden" name="trans_main_id" id="trans_main_id" value="<?=(!empty($dataRow->trans_main_id))?$dataRow->trans_main_id:""?>">
             <input type="hidden" name="trans_child_id" id="trans_child_id" value="<?=(!empty($dataRow->trans_child_id))?$dataRow->trans_child_id:""?>">
             <input type="hidden" name="ga_file_name" id="ga_file_name" value="<?=(!empty($dataRow->ga_file))?$dataRow->ga_file:""?>">
+            <input type="hidden" name="technical_specification_file_name" id="technical_specification_file_name" value="<?=(!empty($dataRow->technical_specification_file))?$dataRow->technical_specification_file:""?>">
+            <input type="hidden" name="sld_file_name" id="sld_file_name" value="<?=(!empty($dataRow->sld_file))?$dataRow->sld_file:""?>">
 
-            <div class="col-md-4 form-group">
+            <div class="col-md-4 form-group <?=(!empty($dataRow->job_status) && $dataRow->job_status == 2)?"hidden":""?>">
                 <label for="entry_date">Date</label>
                 <input type="date" name="entry_date" id="entry_date" class="form-control" value="<?=(!empty($dataRow->entry_date))?$dataRow->entry_date:getFyDate()?>">
             </div>
 
-            <div class="col-md-4 form-group">
+            <div class="col-md-4 form-group <?=(!empty($dataRow->job_status) && $dataRow->job_status == 2)?"hidden":""?>"">
                 <label for="priority">Priority</label>
                 <select name="priority" id="priority" class="form-control single-select">
                     <option value="0">Select</option>
@@ -23,7 +25,7 @@
                 </select>
             </div>
 
-            <div class="col-md-4 form-group">
+            <div class="col-md-4 form-group <?=(!empty($dataRow->job_status) && $dataRow->job_status == 2)?"hidden":""?>"">
                 <label for="department_ids">Department</label>
                 <select id="department" data-input_id="department_ids" class="form-control jp_multiselect req" multiple="multiple">
                     <?php
@@ -42,7 +44,7 @@
                     ?>
                 </select>
                 <input type="hidden" name="department_ids" id="department_ids" value="<?= (!empty($dataRow->department_ids)) ? $dataRow->department_ids : implode(",",array_keys($departmentList)) ?>" />
-                <div class="error type"></div>
+                <div class="error department_ids"></div>
             </div>
 
             <div class="col-md-4 form-group">
@@ -90,27 +92,25 @@
                 <div class="error sld_file"></div>
             </div>
 
-            <div class="col-md-6 form-group">
+            <div class="col-md-6 form-group <?=(!empty($dataRow->job_status) && $dataRow->job_status == 2)?"hidden":""?>"">
                 <label for="fab_dept_note">FAB. PRODUCTION NOTE</label>
                 <input type="text" name="fab_dept_note" id="fab_dept_note" class="form-control" value="<?=(!empty($dataRow->fab_dept_note))?$dataRow->fab_dept_note:""?>">
             </div>
 
-            <div class="col-md-6 form-group">
+            <div class="col-md-6 form-group <?=(!empty($dataRow->job_status) && $dataRow->job_status == 2)?"hidden":""?>"">
                 <label for="pc_dept_note">POWER COATING NOTE</label>
                 <input type="text" name="pc_dept_note" id="pc_dept_note" class="form-control" value="<?=(!empty($dataRow->pc_dept_note))?$dataRow->pc_dept_note:""?>">
             </div>
 
-            <div class="col-md-6 form-group">
+            <div class="col-md-6 form-group <?=(!empty($dataRow->job_status) && $dataRow->job_status == 2)?"hidden":""?>"">
                 <label for="ass_dept_note">ASSEMBALY NOTE</label>
                 <input type="text" name="ass_dept_note" id="ass_dept_note" class="form-control" value="<?=(!empty($dataRow->ass_dept_note))?$dataRow->ass_dept_note:""?>">
             </div>
 
-            <div class="col-md-6 form-group">
+            <div class="col-md-6 form-group <?=(!empty($dataRow->job_status) && $dataRow->job_status == 2)?"hidden":""?>"">
                 <label for="remark">General NOTE</label>
                 <input type="text" name="remark" id="remark" class="form-control" value="<?=(!empty($dataRow->remark))?$dataRow->remark:""?>">
             </div>
-
-            
 
         </div>
     </div>

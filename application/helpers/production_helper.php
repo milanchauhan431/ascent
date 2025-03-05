@@ -261,13 +261,13 @@ function getEstimationData($data){
 
     $changePriority = $prodDetailPrintBtn = '';
     if(!empty($data->job_status)):
-        $startJob = $estimationButton = '';
+        $startJob = '';
         if($data->job_status == 1):
             $changePriorityParam = "{'postData':{'id' : ".$data->id."},'fnsave':'saveJobPriority','title':'Change Job Priority','form_id':'changeJobPriority','js_store_fn':'confirmStore','controller':'production/estimation','fnedit':'changeJobPriority','modal_id':'modal-md'}";
             $changePriority = '<a class="btn btn-success" href="javascript:void(0)" datatip="Change Job Priority" flow="down" onclick="edit('.$changePriorityParam.');"><i class="fa fa-sync"></i></a>';
         endif;
 
-        if($data->job_status == 3): $soBom = ''; endif;
+        if($data->job_status == 3): $soBom = $estimationButton =  ''; endif;
 
         $prodDetailPrintBtn = '<a class="btn btn-dark" href="'.base_url('production/estimation/printProductionDetails/'.$data->id).'" target="_blank" datatip="Print GA,T.S. & SLD Document" flow="down"><i class="fas fa-print" ></i></a>';
     endif;
@@ -299,8 +299,8 @@ function getFabricationData($data){
 
         $viewComplete = $completJob = $accptJob = '';
 
-        if($data->entry_type == $data->from_entry_type):
-            $acceptParam = "{'postData':{'job_status' : ".(($data->from_entry_type == 27)?2:3).", 'id' : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'controllerName' : 'production/fabrication','fnsave':'acceptJob','message':'Are you sure want to accept this Job?'}";
+        if($data->entry_type == $data->pre_dept_id):
+            $acceptParam = "{'postData':{'job_status' : ".(($data->pre_dept_id == 27)?2:3).", 'id' : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'controllerName' : 'production/fabrication','fnsave':'acceptJob','message':'Are you sure want to accept this Job?'}";
             $accptJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Accept Job" flow="down" onclick="confirmStore('.$acceptParam.');"><i class="fa fa-check"></i></a>';
         endif;
 
@@ -325,8 +325,8 @@ function getFabricationData($data){
 
         $viewComplete = $completJob = $accptJob = '';
 
-        if($data->entry_type == $data->from_entry_type):
-            $acceptParam = "{'postData':{'job_status' : ".(($data->from_entry_type == 27)?2:3).", 'id' : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'controllerName' : 'production/fabrication','fnsave':'acceptJob','message':'Are you sure want to accept this Job?'}";
+        if($data->entry_type == $data->pre_dept_id):
+            $acceptParam = "{'postData':{'job_status' : ".(($data->pre_dept_id == 27)?2:3).", 'id' : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'controllerName' : 'production/fabrication','fnsave':'acceptJob','message':'Are you sure want to accept this Job?'}";
             $accptJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Accept Job" flow="down" onclick="confirmStore('.$acceptParam.');"><i class="fa fa-check"></i></a>';
         endif;
 
@@ -340,9 +340,12 @@ function getFabricationData($data){
             $viewComplete = '<a class="btn btn-info" href="javascript:void(0)" datatip="View Complet Job" flow="down" onclick="edit('.$viewParam.');"><i class="fa fa-eye"></i></a>';
         endif;
 
-        $viewMacDesParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '30'},'controller' : 'production/fabrication','fnedit':'viewMechanicalDesign','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Mechanical Design [".$data->job_number."] <br> <small>Panel Name : ".$data->item_name."</small>','button':'close'}";
+        $viewMacDes = '';
+        if(!empty($data->pm_id)):
+            $viewMacDesParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '30'},'controller' : 'production/fabrication','fnedit':'viewMechanicalDesign','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Mechanical Design [".$data->job_number."] <br> <small>Panel Name : ".$data->item_name."</small>','button':'close'}";
 
-        $viewMacDes = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Mechanical Design" flow="down" onclick="edit('.$viewMacDesParam.');"><i class="fa fa-eye"></i></a>';
+            $viewMacDes = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Mechanical Design" flow="down" onclick="edit('.$viewMacDesParam.');"><i class="fa fa-eye"></i></a>';
+        endif;
 
         $action = getActionButton($accptJob.$viewMacDes.$completJob.$viewComplete);
 
@@ -353,8 +356,8 @@ function getFabricationData($data){
 
         $completJob = $accptJob = '';
 
-        if($data->entry_type == $data->from_entry_type):
-            $acceptParam = "{'postData':{'job_status' : 3, id : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'controllerName' : 'production/fabrication','fnsave':'acceptJob','message':'Are you sure want to accept this Job?'}";
+        if($data->entry_type == $data->pre_dept_id):
+            $acceptParam = "{'postData':{'job_status' : ".(($data->pre_dept_id == 27)?2:3).", id : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'controllerName' : 'production/fabrication','fnsave':'acceptJob','message':'Are you sure want to accept this Job?'}";
             $accptJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Accept Job" flow="down" onclick="confirmStore('.$acceptParam.');"><i class="fa fa-check"></i></a>';
         endif;
 
@@ -366,9 +369,12 @@ function getFabricationData($data){
             $completJob = $accptJob = '';
         endif;
 
-        $viewMacDesParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '30'},'controller' : 'production/fabrication','fnedit':'viewMechanicalDesign','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Mechanical Design [".$data->job_number."] <br> <small>Panel Name : ".$data->item_name."</small>','button':'close'}";
+        $viewMacDes = '';
+        if(!empty($data->pm_id)):
+            $viewMacDesParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '30'},'controller' : 'production/fabrication','fnedit':'viewMechanicalDesign','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Mechanical Design [".$data->job_number."] <br> <small>Panel Name : ".$data->item_name."</small>','button':'close'}";
 
-        $viewMacDes = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Mechanical Design" flow="down" onclick="edit('.$viewMacDesParam.');"><i class="fa fa-eye"></i></a>';
+            $viewMacDes = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Mechanical Design" flow="down" onclick="edit('.$viewMacDesParam.');"><i class="fa fa-eye"></i></a>';
+        endif;
 
         $action = getActionButton($accptJob.$viewMacDes.$completJob);
 
@@ -379,8 +385,8 @@ function getFabricationData($data){
 
         $viewComplete = $completJob = $accptJob = '';
 
-        if($data->entry_type == $data->from_entry_type):
-            $acceptParam = "{'postData':{'job_status' : 3, id : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'controllerName' : 'production/fabrication','fnsave':'acceptJob','message':'Are you sure want to accept this Job?'}";
+        if($data->entry_type == $data->pre_dept_id):
+            $acceptParam = "{'postData':{'job_status' : ".(($data->pre_dept_id == 27)?2:3).", id : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'controllerName' : 'production/fabrication','fnsave':'acceptJob','message':'Are you sure want to accept this Job?'}";
             $accptJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Accept Job" flow="down" onclick="confirmStore('.$acceptParam.');"><i class="fa fa-check"></i></a>';
         endif;
 
@@ -395,9 +401,12 @@ function getFabricationData($data){
             $viewComplete = '<a class="btn btn-info" href="javascript:void(0)" datatip="View Complet Job" flow="down" onclick="edit('.$viewParam.');"><i class="fa fa-eye"></i></a>';
         endif;
 
-        $viewMacDesParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '30'},'controller' : 'production/fabrication','fnedit':'viewMechanicalDesign','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Mechanical Design [".$data->job_number."] <br> <small>Panel Name : ".$data->item_name."</small>','button':'close'}";
+        $viewMacDes = '';
+        if(!empty($data->pm_id)):
+            $viewMacDesParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '30'},'controller' : 'production/fabrication','fnedit':'viewMechanicalDesign','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Mechanical Design [".$data->job_number."] <br> <small>Panel Name : ".$data->item_name."</small>','button':'close'}";
 
-        $viewMacDes = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Mechanical Design" flow="down" onclick="edit('.$viewMacDesParam.');"><i class="fa fa-eye"></i></a>';
+            $viewMacDes = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Mechanical Design" flow="down" onclick="edit('.$viewMacDesParam.');"><i class="fa fa-eye"></i></a>';
+        endif;
 
         $action = getActionButton($accptJob.$viewMacDes.$completJob.$viewComplete);
 
@@ -426,8 +435,8 @@ function getPowderCoatingData($data){
 
         $viewComplete = $completJob = $accptJob = '';
 
-        if($data->entry_type == $data->from_entry_type):
-            $acceptParam = "{'postData':{'job_status' : 3, id : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'controllerName' : 'production/powderCoating','fnsave':'acceptJob','message':'Are you sure want to accept this Job?'}";
+        if($data->entry_type == $data->pre_dept_id):
+            $acceptParam = "{'postData':{'job_status' : ".(($data->pre_dept_id == 27)?2:3).", id : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'controllerName' : 'production/powderCoating','fnsave':'acceptJob','message':'Are you sure want to accept this Job?'}";
             $accptJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Accept Job" flow="down" onclick="confirmStore('.$acceptParam.');"><i class="fa fa-check"></i></a>';
         endif;
 
@@ -442,9 +451,12 @@ function getPowderCoatingData($data){
             $viewComplete = '<a class="btn btn-info" href="javascript:void(0)" datatip="View Complet Job" flow="down" onclick="edit('.$viewParam.');"><i class="fa fa-eye"></i></a>';
         endif;
 
-        $viewFabAssParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '33'},'controller' : 'production/fabrication','fnedit':'viewFabAssembely','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Fab. Assembely [".$data->job_number."] <br> <small>Panel Name : ".$data->item_name."</small>','button':'close'}";
+        $viewFabAss = '';
+        if(!empty($data->pm_id)):
+            $viewFabAssParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '33'},'controller' : 'production/fabrication','fnedit':'viewFabAssembely','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Fab. Assembely [".$data->job_number."] <br> <small>Panel Name : ".$data->item_name."</small>','button':'close'}";
 
-        $viewFabAss = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Fab. Assembely" flow="down" onclick="edit('.$viewFabAssParam.');"><i class="fa fa-eye"></i></a>';
+            $viewFabAss = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Fab. Assembely" flow="down" onclick="edit('.$viewFabAssParam.');"><i class="fa fa-eye"></i></a>';
+        endif;
 
         $action = getActionButton($accptJob.$viewFabAss.$completJob.$viewComplete);
 
@@ -498,16 +510,19 @@ function getAssemblyAllotmentData($data){
     $viewBomParam = "{'postData':{'trans_child_id':".$data->trans_child_id."},'modal_id' : 'modal-xl','fnedit':'viewProductionBom','title' : 'View Bom [Item Name : ".$data->item_name."]','button':'close','controller':'production/estimation'}";
     $viewBom = '<a class="btn btn-outline-info waves-effect waves-light" href="javascript:void(0)" onclick="edit('.$viewBomParam.');" datatip="View Item Bom" flow="down"><i class="fa fa-eye"></i></a>';
 
-    $viewFabAssParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '33'},'controller' : 'production/fabrication','fnedit':'viewFabAssembely','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Fab. Assembely [".$data->job_number."] <br> <small>Panel Name : ".$data->item_name."</small>','button':'close'}";
+    $viewFabAss = "";
+    if(!empty($data->pm_id)):
+        $viewFabAssParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '33'},'controller' : 'production/fabrication','fnedit':'viewFabAssembely','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Fab. Assembely [".$data->job_number."] <br> <small>Panel Name : ".$data->item_name."</small>','button':'close'}";
 
-    $viewFabAss = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Fab. Assembely" flow="down" onclick="edit('.$viewFabAssParam.');"><i class="fa fa-eye"></i></a>';
+        //$viewFabAss = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Fab. Assembely" flow="down" onclick="edit('.$viewFabAssParam.');"><i class="fa fa-eye"></i></a>';
+    endif;
 
     if($data->from_entry_type == 34): // Powder Coating
 
         $accptJob = '';
 
-        if($data->entry_type == $data->from_entry_type):
-            $acceptParam = "{'postData':{'job_status' : 3, 'id' : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'form_id':'assignJob','modal_id':'modal-md','title':'Assign Job [".$data->job_number."] <br> <small>Panel Name : ".$data->item_name."</small>','controllerName' : 'production/assembly','fnedit':'assignJob','fnsave':'saveAssignJob','js_store_fn':'confirmStore'}";
+        if($data->entry_type == $data->pre_dept_id):
+            $acceptParam = "{'postData':{'job_status' : ".(($data->pre_dept_id == 27)?2:3).", 'id' : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'form_id':'assignJob','modal_id':'modal-md','title':'Assign Job [".$data->job_number."] <br> <small>Panel Name : ".$data->item_name."</small>','controllerName' : 'production/assembly','fnedit':'assignJob','fnsave':'saveAssignJob','js_store_fn':'confirmStore'}";
             $accptJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Assign Job" flow="down" onclick="edit('.$acceptParam.');"><i class="fa fa-check"></i></a>';
         endif;
 
@@ -539,9 +554,10 @@ function getAssemblyProductionData($data){
     $viewBomParam = "{'postData':{'trans_child_id':".$data->trans_child_id."},'modal_id' : 'modal-xl','fnedit':'viewProductionBom','title' : 'View Bom [Item Name : ".$data->item_name."]','button':'close','controller':'production/estimation'}";
     $viewBom = '<a class="btn btn-outline-info waves-effect waves-light" href="javascript:void(0)" onclick="edit('.$viewBomParam.');" datatip="View Item Bom" flow="down"><i class="fa fa-eye"></i></a>';
 
+    $viewFabAss = "";
     $viewFabAssParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '33'},'controller' : 'production/fabrication','fnedit':'viewFabAssembely','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Fab. Assembely [".$data->job_number."] <br> <small>Panel Name : ".$data->item_name."</small>','button':'close'}";
 
-    $viewFabAss = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Fab. Assembely" flow="down" onclick="edit('.$viewFabAssParam.');"><i class="fa fa-eye"></i></a>';
+    //$viewFabAss = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Fab. Assembely" flow="down" onclick="edit('.$viewFabAssParam.');"><i class="fa fa-eye"></i></a>';
 
     if($data->to_entry_type == 37): // Contactor Assembly
         $viewComplete = $completJob = $accptJob = '';
@@ -551,7 +567,7 @@ function getAssemblyProductionData($data){
             $accptJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Accept Job" flow="down" onclick="confirmStore('.$acceptParam.');"><i class="fa fa-check"></i></a>'; */
 
             $acceptParam = "{'postData':{'ref_id' : ".$data->id.", 'pm_id' : ".$data->pm_id.",'entry_type': ".$data->next_dept_id.",'fab_prod_entry_type':'33'},'controller' : 'production/assembly','fnedit':'assemblyProduction','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'assemblyProduction','title':'Assembly Production [".$data->job_number."] <br> <small>Panel Name : ".$data->item_name."</small>'}";
-            $accptJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Complet Job" flow="down" onclick="edit('.$acceptParam.');"><i class="fa fa-check"></i></a>';
+            $accptJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Accept Job" flow="down" onclick="edit('.$acceptParam.');"><i class="fa fa-check"></i></a>';
         endif;
 
         if($data->job_status == 1 && $data->entry_type == $data->to_entry_type):
@@ -559,7 +575,7 @@ function getAssemblyProductionData($data){
             /* $completParam = "{'postData':{'ref_id' : ".$data->id.", 'pm_id' : ".$data->pm_id.",'entry_type': ".$data->entry_type.",'fab_prod_entry_type':'33'},'controller' : 'production/assembly','fnedit':'assemblyProduction','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'assemblyProduction','title':'Assembly Production'}";
             $completJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Complet Job" flow="down" onclick="edit('.$completParam.');"><i class="fa fa-check"></i></a>'; */
 
-            $completParam = "{'postData':{'id' : ".$data->id.", 'pm_id' : ".$data->pm_id.", 'entry_type': ".$data->entry_type."},'controllerName' : 'production/assembly','fnsave':'completeJob','message':'Are you sure want to complete this Job?'}";
+            $completParam = "{'postData':{'id' : ".$data->id.", 'ref_id' : ".$data->ref_id.",'pm_id' : ".$data->pm_id.", 'entry_type' : ".$data->entry_type."},'controllerName' : 'production/assembly','fnsave':'completeJob','message':'Are you sure want to complete this Job?'}";
             $completJob = '<a class="btn btn-success" href="javascript:void(0)" datatip="Complet Job" flow="down" onclick="confirmStore('.$completParam.');"><i class="fa fa-check"></i></a>';
         elseif(in_array($data->job_status,[2,3]) && $data->entry_type == $data->to_entry_type):
             $completJob = $accptJob = '';
@@ -591,12 +607,15 @@ function getQualityData($data){
 
     if($data->to_entry_type == 38): //Quality Department
 
-        $viewMacDesParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '30'},'controller' : 'production/fabrication','fnedit':'viewMechanicalDesign','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Mechanical Design [".$data->job_number."] <br> <small>Panel Name : ".$data->item_name."</small>','button':'close'}";
-        $viewMacDes = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Mechanical Design" flow="down" onclick="edit('.$viewMacDesParam.');"><i class="fa fa-eye"></i></a>';
+        $viewMacDes = '';
+        if(!empty($data->pm_id)):
+            $viewMacDesParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '30'},'controller' : 'production/fabrication','fnedit':'viewMechanicalDesign','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Mechanical Design [".$data->job_number."] <br> <small>Panel Name : ".$data->item_name."</small>','button':'close'}";
+            $viewMacDes = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Mechanical Design" flow="down" onclick="edit('.$viewMacDesParam.');"><i class="fa fa-eye"></i></a>';
+        endif;
 
         $qcButton = "";
         if($data->from_entry_type == 37):
-            $qcParam = "{'postData':{'job_status' : 3, 'id' : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'form_id':'qualityChecking','modal_id':'modal-md','title':'Quality Checking [".$data->job_number."] <br> <small>Panel Name : ".$data->item_name."</small>','controllerName' : 'production/quality','fnedit':'qualityChecking','fnsave':'saveQualityChecking','js_store_fn':'confirmStore'}";
+            $qcParam = "{'postData':{'job_status' : ".(($data->pre_dept_id == 27)?2:3).", 'id' : ".$data->id.",'next_dept_id': ".$data->next_dept_id."},'form_id':'qualityChecking','modal_id':'modal-md','title':'Quality Checking [".$data->job_number."] <br> <small>Panel Name : ".$data->item_name."</small>','controllerName' : 'production/quality','fnedit':'qualityChecking','fnsave':'saveQualityChecking','js_store_fn':'confirmStore'}";
             $qcButton = '<a class="btn btn-success" href="javascript:void(0)" datatip="QC Check" flow="down" onclick="edit('.$qcParam.');"><i class="fa fa-check"></i></a>';
         endif;
 
@@ -634,11 +653,14 @@ function getTestingData($data){
     $viewBomParam = "{'postData':{'trans_child_id':".$data->trans_child_id."},'modal_id' : 'modal-xl','fnedit':'viewProductionBom','title' : 'View Bom [Item Name : ".$data->item_name."]','button':'close','controller':'production/estimation'}";
     $viewBom = '<a class="btn btn-outline-info waves-effect waves-light" href="javascript:void(0)" onclick="edit('.$viewBomParam.');" datatip="View Item Bom" flow="down"><i class="fa fa-eye"></i></a>';
 
-    $viewMacDesParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '30'},'controller' : 'production/fabrication','fnedit':'viewMechanicalDesign','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Mechanical Design [".$data->job_number."] <br> <small>Panel Name : ".$data->item_name."</small>','button':'close'}";
-    $viewMacDes = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Mechanical Design" flow="down" onclick="edit('.$viewMacDesParam.');"><i class="fa fa-eye"></i></a>';
+    $viewMacDes = '';
+    if(!empty($data->pm_id)):
+        $viewMacDesParam = "{'postData':{'pm_id' : ".$data->pm_id.",'entry_type': '30'},'controller' : 'production/fabrication','fnedit':'viewMechanicalDesign','js_store_fn':'confirmStore','modal_id':'modal-md','form_id':'viewMechanicalDesign','title':'Mechanical Design [".$data->job_number."] <br> <small>Panel Name : ".$data->item_name."</small>','button':'close'}";
+        $viewMacDes = '<a class="btn btn-warning" href="javascript:void(0)" datatip="View Mechanical Design" flow="down" onclick="edit('.$viewMacDesParam.');"><i class="fa fa-eye"></i></a>';
+    endif;
 
     if($data->from_entry_type != $data->to_entry_type):
-        $testingParam = "{'postData':{'job_status' : 3, 'id' : ".$data->id.",'next_dept_id': ".$data->next_dept_id.",'trans_child_id':".$data->trans_child_id.",'party_name':'".$data->party_name."','item_name':'".$data->item_name."','job_number':'".$data->job_number."'},'form_id':'testingForm','modal_id':'modal-md','title':'Testing','controllerName' : 'production/testing','fnedit':'addTestingDetail','fnsave':'save','js_store_fn':'confirmStore'}";
+        $testingParam = "{'postData':{'job_status' : ".(($data->pre_dept_id == 27)?2:3).", 'id' : ".$data->id.",'next_dept_id': ".$data->next_dept_id.",'trans_child_id':".$data->trans_child_id.",'party_name':'".$data->party_name."','item_name':'".$data->item_name."','job_number':'".$data->job_number."'},'form_id':'testingForm','modal_id':'modal-md','title':'Testing','controllerName' : 'production/testing','fnedit':'addTestingDetail','fnsave':'save','js_store_fn':'confirmStore'}";
         $testingButton = '<a class="btn btn-success" href="javascript:void(0)" datatip="Testing" flow="down" onclick="edit('.$testingParam.');"><i class="fa fa-check"></i></a>';
 
         $action = getActionButton($viewMacDes.$testingButton);

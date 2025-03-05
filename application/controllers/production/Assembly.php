@@ -12,7 +12,7 @@ class Assembly extends MY_Controller{
 
     public function list($department = ""){
         $this->data['headData']->pageUrl = "production/assembly/list/".$department;
-        $this->data['headData']->pageTitle = "Assembly Production";//ucwords(str_replace("_"," ",$department));
+        $this->data['headData']->pageTitle = ($department == "contactor_assembly")?"Contactor Assembly":"Assembly Production";//ucwords(str_replace("_"," ",$department));
         $this->data['tableHeader'] = getProductionDtHeader($department);
         $indexPage = "production/assembly_production/".$department."_index";
         $this->load->view($indexPage,$this->data);
