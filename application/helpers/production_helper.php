@@ -22,6 +22,7 @@ function getProductionDtHeader($page){
     $data['estimation'][] = ["name"=>"Order Qty"];
     $data['estimation'][] = ["name"=>"Bom Status","textAlign"=>"center"];
     $data['estimation'][] = ["name"=>"Priority","textAlign"=>"center"];
+    $data['estimation'][] = ["name"=>"Current Stage","textAlign"=>"center"];
     $data['estimation'][] = ["name"=>"FAB. PRODUCTION NOTE"];
     $data['estimation'][] = ["name"=>"POWER COATING NOTE"];
     $data['estimation'][] = ["name"=>"ASSEMBLY NOTE"];
@@ -287,7 +288,7 @@ function getEstimationData($data){
 
     $action = getActionButton($soBom.$viewBom.$reqButton.$miReqButton.$prodDetailPrintBtn.$estimationButton.$changePriority.$startJob);
 
-    return [$action,$data->sr_no,$data->job_number,$data->trans_date,$data->party_name,$data->item_name,$data->qty,$data->bom_status,$data->priority_status,$data->fab_dept_note,$data->pc_dept_note,$data->ass_dept_note,$data->remark,$data->updated_at];
+    return [$action,$data->sr_no,$data->job_number,$data->trans_date,$data->party_name,$data->item_name,$data->qty,$data->bom_status,$data->priority_status,$data->current_stage,$data->fab_dept_note,$data->pc_dept_note,$data->ass_dept_note,$data->remark,$data->updated_at];
 }
 
 /* Fabrication Table Data */
