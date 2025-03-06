@@ -122,6 +122,12 @@ class ProductionModel extends MasterModel{
         $data['tableName'] = $this->transChild;
         $data['select'] = "trans_child.id as trans_child_id,trans_child.trans_main_id,trans_child.item_name,trans_child.qty,trans_child.job_number,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_name,(CASE WHEN obc.order_bom_count > 0 THEN 'Generated' ELSE 'Pending' END) as bom_status,production_master.fab_dept_note,production_master.pc_dept_note,production_master.ass_dept_note,(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' ELSE '' END) as priority_status,production_master.priority,production_master.remark,production_master.id,production_master.job_status";
 
+        if($data['job_status'] == -1):
+            $data['select'] .= ",DATE_FORMAT(trans_child.updated_at,'%d-%m-%Y %h:%i:%s %p') as updated_at";
+        else:
+            $data['select'] .= ",DATE_FORMAT(production_master.updated_at,'%d-%m-%Y %h:%i:%s %p') as updated_at";
+        endif;
+
         $data['leftJoin']['trans_main'] = "trans_main.id = trans_child.trans_main_id";
         $data['leftJoin']['(SELECT `trans_child_id`, COUNT(`id`) as `order_bom_count` FROM `order_bom` WHERE is_delete = 0 GROUP BY `trans_child_id`) as obc'] = "obc.trans_child_id = trans_child.id";
         $data['leftJoin']['production_master'] = "production_master.trans_child_id = trans_child.id";
@@ -162,6 +168,11 @@ class ProductionModel extends MasterModel{
         $data['searchCol'][] = "production_master.pc_dept_note";
         $data['searchCol'][] = "production_master.ass_dept_note";
         $data['searchCol'][] = "production_master.remark";
+        if($data['job_status'] == -1):
+            $data['searchCol'][] = "DATE_FORMAT(trans_child.updated_at,'%d-%m-%Y %h:%i:%s %p')";
+        else:
+            $data['searchCol'][] = "DATE_FORMAT(production_master.updated_at,'%d-%m-%Y %h:%i:%s %p')";
+        endif;
 
         $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
         if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}
@@ -414,6 +425,7 @@ class ProductionModel extends MasterModel{
             ,'')
         , 27) AS pre_dept_id";
         $data['select'] .= ", ".$data['to_entry_type']." as next_dept_id";
+        $data['select'] .= ",DATE_FORMAT(production_master.updated_at,'%d-%m-%Y %h:%i:%s %p') as updated_at";
 
         $data['leftJoin']['trans_child'] = "production_master.trans_child_id = trans_child.id";
         $data['leftJoin']['employee_master as em'] = "em.id = production_master.accepted_by";
@@ -489,6 +501,7 @@ class ProductionModel extends MasterModel{
             $data['searchCol'][] = "production_master.ass_dept_note";
         endif;
         $data['searchCol'][] = "production_master.remark";
+        $data['searchCol'][] = "DATE_FORMAT(production_master.updated_at,'%d-%m-%Y %h:%i:%s %p')";
 
         $columns = []; foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
         if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}
@@ -630,7 +643,7 @@ class ProductionModel extends MasterModel{
     /* Electrical Design Start */
     public function getElectricalDesignDTRows($data){
         $data['tableName'] = $this->productionMaster;
-        $data['select'] = "trans_child.id as trans_child_id,trans_child.trans_main_id,trans_child.item_name,trans_child.qty as order_qty,trans_child.job_number,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_name,production_master.fab_dept_note,production_master.pc_dept_note,production_master.ass_dept_note,(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' ELSE '' END) as priority_status,production_master.ga_file,production_master.technical_specification_file,production_master.sld_file,production_master.priority,production_master.remark,production_master.id,production_master.job_status,production_master.entry_type";
+        $data['select'] = "trans_child.id as trans_child_id,trans_child.trans_main_id,trans_child.item_name,trans_child.qty as order_qty,trans_child.job_number,trans_main.trans_number,DATE_FORMAT(trans_main.trans_date,'%d-%m-%Y') as trans_date,trans_main.party_name,production_master.fab_dept_note,production_master.pc_dept_note,production_master.ass_dept_note,(CASE WHEN production_master.priority = 1 THEN 'HIGH' WHEN production_master.priority = 2 THEN 'MEDIUM' WHEN production_master.priority = 3 THEN 'LOW' ELSE '' END) as priority_status,production_master.ga_file,production_master.technical_specification_file,production_master.sld_file,production_master.priority,production_master.remark,production_master.id,production_master.job_status,production_master.entry_type,DATE_FORMAT(production_master.updated_at,'%d-%m-%Y %h:%i:%s %p') as updated_at";
 
         $data['leftJoin']['trans_child'] = "trans_child.id = production_master.trans_child_id";
         $data['leftJoin']['trans_main'] = "trans_main.id = trans_child.trans_main_id";
@@ -662,6 +675,7 @@ class ProductionModel extends MasterModel{
         $data['searchCol'][] = "production_master.fab_dept_note";
         $data['searchCol'][] = "production_master.pc_dept_note";
         $data['searchCol'][] = "production_master.remark";
+        $data['searchCol'][] = "DATE_FORMAT(production_master.updated_at,'%d-%m-%Y %h:%i:%s %p')";
 
         $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
         if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}
@@ -791,6 +805,8 @@ class ProductionModel extends MasterModel{
             ,'')
         , 27) AS pre_dept_id";
 
+        $data['select'] .= ",DATE_FORMAT(production_master.updated_at,'%d-%m-%Y %h:%i:%s %p') as updated_at";
+
         /* if($data['to_entry_type'] == 38):
             $data['select'] .= ",(production_master.vendor_qty - (SELECT IFNULL(SUM(rec_trans.vendor_qty),0) FROM production_master as rec_trans WHERE rec_trans.ref_id = production_master.id AND rec_trans.is_delete = 0) ) as pending_qty";
         endif; */       
@@ -841,6 +857,7 @@ class ProductionModel extends MasterModel{
         $data['searchCol'][] = "";
         $data['searchCol'][] = "production_master.ass_dept_note";
         $data['searchCol'][] = "production_master.remark";
+        $data['searchCol'][] = "DATE_FORMAT(production_master.updated_at,'%d-%m-%Y %h:%i:%s %p')";
 
         $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
         if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}        
@@ -1129,6 +1146,7 @@ class ProductionModel extends MasterModel{
             ,'')
         , 27) AS pre_dept_id";
         $data['select'] .= ", ".$data['to_entry_type']." as next_dept_id";
+        $data['select'] .= ",DATE_FORMAT(production_master.updated_at,'%d-%m-%Y %h:%i:%s %p') as updated_at";
 
         $data['leftJoin']['trans_main'] = "production_master.trans_main_id = trans_main.id";
         $data['leftJoin']['trans_child'] = "production_master.trans_child_id = trans_child.id";
@@ -1179,6 +1197,7 @@ class ProductionModel extends MasterModel{
         $data['searchCol'][] = "";
         $data['searchCol'][] = "production_master.fab_dept_note";
         $data['searchCol'][] = "production_master.remark";
+        $data['searchCol'][] = "DATE_FORMAT(production_master.updated_at,'%d-%m-%Y %h:%i:%s %p')";
 
         $columns =array(); foreach($data['searchCol'] as $row): $columns[] = $row; endforeach;
         if(isset($data['order'])){$data['order_by'][$columns[$data['order'][0]['column']]] = $data['order'][0]['dir'];}        

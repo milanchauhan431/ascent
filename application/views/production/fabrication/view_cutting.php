@@ -11,7 +11,7 @@
                         <?php
                             foreach($dataRow as $row):
                                 $param_name = ucwords(str_replace("_"," ",$row->param_key));
-                                if(in_array($row->param_key,["discription_of_sheet","discription_of_lazer_row_product"])):
+                                if(in_array($row->param_key,["discription_of_sheet","discription_of_sheet_2","discription_of_sheet_3","discription_of_sheet_4","discription_of_sheet_5","discription_of_lazer_row_product"])):
                                     echo '<tr>
                                         <td>'.$param_name.'</td>
                                         <td>'.((!empty($row->param_value))?$this->item->getItem(['id'=>$row->param_value])->item_name:"").'</td>

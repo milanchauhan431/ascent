@@ -57,6 +57,9 @@
                             </td>
                         </tr>
 
+                        <?php
+                            $options = getItemListOption($itemList);
+                        ?>
                         <tr>
                             <td style="width:50%;">DISCRIPTION OF SHEET <span class="text-danger">*</span></td>
                             <td style="width:50%;">
@@ -66,7 +69,7 @@
                                                                 
                                 <select name="transData[<?=$i?>][param_value]" id="param_value_<?=$i?>" class="form-control select2">
                                     <option value="">Select Item</option>
-                                    <?=getItemListOption($itemList)?>
+                                    <?=$options?>
                                 </select>
                                 <?php $i++; ?>
                             </td>
@@ -84,6 +87,110 @@
                         </tr>
 
                         <tr>
+                            <td style="width:50%;">DISCRIPTION OF SHEET 2</td>
+                            <td style="width:50%;">
+                                <input type="hidden" name="transData[<?=$i?>][id]" id="id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_id]" id="param_id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_key]" id="param_key_<?=$i?>" value="discription_of_sheet_2">
+                                                                
+                                <select name="transData[<?=$i?>][param_value]" id="param_value_<?=$i?>" class="form-control select2">
+                                    <option value="">Select Item</option>
+                                    <?=$options?>
+                                </select>
+                                <?php $i++; ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width:50%;">SHEET QTY. 2</td>
+                            <td style="width:50%;">
+                                <input type="hidden" name="transData[<?=$i?>][id]" id="id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_id]" id="param_id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_key]" id="param_key_<?=$i?>" value="sheet_qty_2">
+                                <input type="text" name="transData[<?=$i?>][param_value]" id="param_value_<?=$i?>" class="form-control floatOnly" value="">
+                                <?php $i++; ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width:50%;">DISCRIPTION OF SHEET 3</td>
+                            <td style="width:50%;">
+                                <input type="hidden" name="transData[<?=$i?>][id]" id="id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_id]" id="param_id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_key]" id="param_key_<?=$i?>" value="discription_of_sheet_3">
+                                                                
+                                <select name="transData[<?=$i?>][param_value]" id="param_value_<?=$i?>" class="form-control select2">
+                                    <option value="">Select Item</option>
+                                    <?=$options?>
+                                </select>
+                                <?php $i++; ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width:50%;">SHEET QTY. 3</td>
+                            <td style="width:50%;">
+                                <input type="hidden" name="transData[<?=$i?>][id]" id="id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_id]" id="param_id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_key]" id="param_key_<?=$i?>" value="sheet_qty_3">
+                                <input type="text" name="transData[<?=$i?>][param_value]" id="param_value_<?=$i?>" class="form-control floatOnly" value="">
+                                <?php $i++; ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width:50%;">DISCRIPTION OF SHEET 4</td>
+                            <td style="width:50%;">
+                                <input type="hidden" name="transData[<?=$i?>][id]" id="id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_id]" id="param_id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_key]" id="param_key_<?=$i?>" value="discription_of_sheet_4">
+                                                                
+                                <select name="transData[<?=$i?>][param_value]" id="param_value_<?=$i?>" class="form-control select2">
+                                    <option value="">Select Item</option>
+                                    <?=$options?>
+                                </select>
+                                <?php $i++; ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width:50%;">SHEET QTY. 4</td>
+                            <td style="width:50%;">
+                                <input type="hidden" name="transData[<?=$i?>][id]" id="id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_id]" id="param_id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_key]" id="param_key_<?=$i?>" value="sheet_qty_4">
+                                <input type="text" name="transData[<?=$i?>][param_value]" id="param_value_<?=$i?>" class="form-control floatOnly" value="">
+                                <?php $i++; ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width:50%;">DISCRIPTION OF SHEET 5</td>
+                            <td style="width:50%;">
+                                <input type="hidden" name="transData[<?=$i?>][id]" id="id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_id]" id="param_id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_key]" id="param_key_<?=$i?>" value="discription_of_sheet_5">
+                                                                
+                                <select name="transData[<?=$i?>][param_value]" id="param_value_<?=$i?>" class="form-control select2">
+                                    <option value="">Select Item</option>
+                                    <?=$options?>
+                                </select>
+                                <?php $i++; ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width:50%;">SHEET QTY. 5</td>
+                            <td style="width:50%;">
+                                <input type="hidden" name="transData[<?=$i?>][id]" id="id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_id]" id="param_id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_key]" id="param_key_<?=$i?>" value="sheet_qty_5">
+                                <input type="text" name="transData[<?=$i?>][param_value]" id="param_value_<?=$i?>" class="form-control floatOnly" value="">
+                                <?php $i++; ?>
+                            </td>
+                        </tr>
+
+                        <tr>
                             <td style="width:50%;">DISCRIPTION OF LAZER ROW PRODUCT</td>
                             <td style="width:50%;">
                                 <input type="hidden" name="transData[<?=$i?>][id]" id="id_<?=$i?>" value="">
@@ -92,7 +199,7 @@
                                                                 
                                 <select name="transData[<?=$i?>][param_value]" id="param_value_<?=$i?>" class="form-control select2">
                                     <option value="">Select Item</option>
-                                    <?=getItemListOption($itemList)?>
+                                    <?=$options?>
                                 </select>
                                 <?php $i++; ?>
                             </td>

@@ -26,6 +26,7 @@ function getProductionDtHeader($page){
     $data['estimation'][] = ["name"=>"POWER COATING NOTE"];
     $data['estimation'][] = ["name"=>"ASSEMBLY NOTE"];
     $data['estimation'][] = ["name"=>"GENERAL NOTE"];
+    $data['estimation'][] = ["name"=>"Last Updated At"];
 
     /* Mechanical Design Header */
     $data['mechanical_design'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
@@ -40,6 +41,7 @@ function getProductionDtHeader($page){
     $data['mechanical_design'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
     $data['mechanical_design'][] = ["name"=>"FAB. PRODUCTION NOTE"];
     $data['mechanical_design'][] = ["name"=>"GENERAL NOTE"];
+    $data['mechanical_design'][] = ["name"=>"Last Updated At"];
     //$data['mechanical_design'][] = ["name"=>"Accepted BY","sortable"=>"FALSE","textAlign"=>"center"];
 
     /* Cutting Header */
@@ -55,6 +57,7 @@ function getProductionDtHeader($page){
     $data['cutting'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
     $data['cutting'][] = ["name"=>"FAB. PRODUCTION NOTE"];
     $data['cutting'][] = ["name"=>"GENERAL NOTE"];
+    $data['cutting'][] = ["name"=>"Last Updated At"];
 
     /* Bending Header */
     $data['bending'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
@@ -69,6 +72,7 @@ function getProductionDtHeader($page){
     $data['bending'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
     $data['bending'][] = ["name"=>"FAB. PRODUCTION NOTE"];
     $data['bending'][] = ["name"=>"GENERAL NOTE"];
+    $data['bending'][] = ["name"=>"Last Updated At"];
 
     /* Fab. Assembely Header */
     $data['fab_assembely'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
@@ -83,6 +87,7 @@ function getProductionDtHeader($page){
     $data['fab_assembely'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
     $data['fab_assembely'][] = ["name"=>"FAB. PRODUCTION NOTE"];
     $data['fab_assembely'][] = ["name"=>"GENERAL NOTE"];
+    $data['fab_assembely'][] = ["name"=>"Last Updated At"];
 
     /* Powder Coating Header */
     $data['powder_coating'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
@@ -97,6 +102,7 @@ function getProductionDtHeader($page){
     $data['powder_coating'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
     $data['powder_coating'][] = ["name"=>"POWDER COATING NOTE"];
     $data['powder_coating'][] = ["name"=>"GENERAL NOTE"];
+    $data['powder_coating'][] = ["name"=>"Last Updated At"];
 
     /* Electrical Design Header */
     $data['electrical_design'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
@@ -112,6 +118,7 @@ function getProductionDtHeader($page){
     $data['electrical_design'][] = ["name"=>"FAB. PRODUCTION NOTE"];
     $data['electrical_design'][] = ["name"=>"POWDER COATING NOTE"];
     $data['electrical_design'][] = ["name"=>"GENERAL NOTE"];
+    $data['electrical_design'][] = ["name"=>"Last Updated At"];
 
     /* Pending Assembly Allotment Header */
     $data['vendor_allotment'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
@@ -128,6 +135,7 @@ function getProductionDtHeader($page){
     $data['vendor_allotment'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
     $data['vendor_allotment'][] = ["name"=>"ASSEMBLY NOTE"];
     $data['vendor_allotment'][] = ["name"=>"GENERAL NOTE"];
+    $data['vendor_allotment'][] = ["name"=>"Last Updated At"];
 
     /* Alloted Assembly Header */
     $data['assembly_allotment'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
@@ -143,6 +151,7 @@ function getProductionDtHeader($page){
     $data['assembly_allotment'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
     $data['assembly_allotment'][] = ["name"=>"ASSEMBLY NOTE"];
     $data['assembly_allotment'][] = ["name"=>"GENERAL NOTE"];
+    $data['assembly_allotment'][] = ["name"=>"Last Updated At"];
 
     /* Assembly Production Part-1 Header */
     $data['contactor_assembly'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
@@ -158,6 +167,7 @@ function getProductionDtHeader($page){
     $data['contactor_assembly'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
     $data['contactor_assembly'][] = ["name"=>"ASSEMBLY NOTE"];
     $data['contactor_assembly'][] = ["name"=>"GENERAL NOTE"];
+    $data['contactor_assembly'][] = ["name"=>"Last Updated At"];
 
     /* Quality Department Header */
     $data['quality'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
@@ -170,6 +180,7 @@ function getProductionDtHeader($page){
     $data['quality'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
     $data['quality'][] = ["name"=>"FAB. PRODUCTION NOTE"];
     $data['quality'][] = ["name"=>"GENERAL NOTE"];
+    $data['quality'][] = ["name"=>"Last Updated At"];
 
     /* Testing Parameters Header */
     $data['testingParameters'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
@@ -191,6 +202,7 @@ function getProductionDtHeader($page){
     $data['pending_testing'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
     $data['pending_testing'][] = ["name"=>"FAB. PRODUCTION NOTE"];
     $data['pending_testing'][] = ["name"=>"GENERAL NOTE"];
+    $data['pending_testing'][] = ["name"=>"Last Updated At"];
 
     $data['complete_testing'][] = ["name"=>"Action","sortable"=>"FALSE","textAlign"=>"center"];
 	$data['complete_testing'][] = ["name"=>"#","sortable"=>"FALSE","textAlign"=>"center"]; 
@@ -208,6 +220,7 @@ function getProductionDtHeader($page){
     $data['complete_testing'][] = ["name"=>"Bom","sortable"=>"FALSE","textAlign"=>"center"];
     $data['complete_testing'][] = ["name"=>"FAB. PRODUCTION NOTE"];
     $data['complete_testing'][] = ["name"=>"GENERAL NOTE"];
+    $data['complete_testing'][] = ["name"=>"Last Updated At"];
 
     return tableHeader($data[$page]);
 }
@@ -274,7 +287,7 @@ function getEstimationData($data){
 
     $action = getActionButton($soBom.$viewBom.$reqButton.$miReqButton.$prodDetailPrintBtn.$estimationButton.$changePriority.$startJob);
 
-    return [$action,$data->sr_no,$data->job_number,$data->trans_date,$data->party_name,$data->item_name,$data->qty,$data->bom_status,$data->priority_status,$data->fab_dept_note,$data->pc_dept_note,$data->ass_dept_note,$data->remark];
+    return [$action,$data->sr_no,$data->job_number,$data->trans_date,$data->party_name,$data->item_name,$data->qty,$data->bom_status,$data->priority_status,$data->fab_dept_note,$data->pc_dept_note,$data->ass_dept_note,$data->remark,$data->updated_at];
 }
 
 /* Fabrication Table Data */
@@ -318,7 +331,7 @@ function getFabricationData($data){
 
         $action = getActionButton($accptJob.$completJob.$viewComplete);
 
-        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->fab_dept_note,$data->remark/* ,$accepted_by */];
+        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->fab_dept_note,$data->remark,$data->updated_at];
     endif;
 
     if($data->to_entry_type == 31): // Cutting Table Data
@@ -349,7 +362,7 @@ function getFabricationData($data){
 
         $action = getActionButton($accptJob.$viewMacDes.$completJob.$viewComplete);
 
-        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->fab_dept_note,$data->remark];
+        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->fab_dept_note,$data->remark,$data->updated_at];
     endif;
 
     if($data->to_entry_type == 32): // Bending Table Data
@@ -378,7 +391,7 @@ function getFabricationData($data){
 
         $action = getActionButton($accptJob.$viewMacDes.$completJob);
 
-        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->fab_dept_note,$data->remark];
+        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->fab_dept_note,$data->remark,$data->updated_at];
     endif;
 
     if($data->to_entry_type == 33): // Fab. Assembly
@@ -410,7 +423,7 @@ function getFabricationData($data){
 
         $action = getActionButton($accptJob.$viewMacDes.$completJob.$viewComplete);
 
-        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->fab_dept_note,$data->remark];
+        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->fab_dept_note,$data->remark,$data->updated_at];
     endif;
 }
 
@@ -460,7 +473,7 @@ function getPowderCoatingData($data){
 
         $action = getActionButton($accptJob.$viewFabAss.$completJob.$viewComplete);
 
-        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->pc_dept_note,$data->remark];
+        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->pc_dept_note,$data->remark,$data->updated_at];
     endif;
 }
 
@@ -490,7 +503,7 @@ function getElectricalDesignData($data){
 
     $action = getActionButton($documentPrintBtn.$addAttachment);
 
-    return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->fab_dept_note,$data->pc_dept_note,$data->remark];
+    return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->fab_dept_note,$data->pc_dept_note,$data->remark,$data->updated_at];
 }
 
 /* Assembly Allotment Table Data */
@@ -530,11 +543,11 @@ function getAssemblyAllotmentData($data){
 
         $action = getActionButton($viewFabAss.$accptJob);
 
-        return [$action,$data->sr_no,$data->job_number,$data->item_name,floatval($data->order_qty),floatval($data->vendor_qty),floatval($data->pending_allotment_qty),$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->ass_dept_note,$data->remark];
+        return [$action,$data->sr_no,$data->job_number,$data->item_name,floatval($data->order_qty),floatval($data->vendor_qty),floatval($data->pending_allotment_qty),$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->ass_dept_note,$data->remark,$data->updated_at];
     endif;
 
     $action = getActionButton($viewFabAss);
-    return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->party_name,floatval($data->vendor_qty),$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->pc_dept_note,$data->remark];
+    return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->party_name,floatval($data->vendor_qty),$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->pc_dept_note,$data->remark,$data->updated_at];
 }
 
 /* Assembly Production Table data */
@@ -586,7 +599,7 @@ function getAssemblyProductionData($data){
 
         $action = getActionButton($viewFabAss.$accptJob.$completJob.$viewComplete);
         
-        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->party_name,floatval($data->vendor_qty),$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->pc_dept_note,$data->remark];
+        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->party_name,floatval($data->vendor_qty),$data->priority_status,$data->ga_file,$data->technical_specification_file,$data->sld_file,$viewBom,$data->pc_dept_note,$data->remark,$data->updated_at];
     endif;
 }
 
@@ -621,7 +634,7 @@ function getQualityData($data){
 
         $action = getActionButton($viewMacDes.$qcButton);
 
-        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark];
+        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark,$data->updated_at];
     endif;
 }
 
@@ -664,7 +677,7 @@ function getTestingData($data){
         $testingButton = '<a class="btn btn-success" href="javascript:void(0)" datatip="Testing" flow="down" onclick="edit('.$testingParam.');"><i class="fa fa-check"></i></a>';
 
         $action = getActionButton($viewMacDes.$testingButton);
-        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->total_tested_qty,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark];
+        return [$action,$data->sr_no,$data->job_number,$data->item_name,$data->order_qty,$data->total_tested_qty,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark,$data->updated_at];
     else:
         $editParam = "{'postData':{'id' : ".$data->id."},'form_id':'testingForm','modal_id':'modal-md','title':'Testing','controllerName' : 'production/testing','fnedit':'editTestingDetail','fnsave':'save','js_store_fn':'confirmStore'}";
         $editButton = '<a class="btn btn-success" href="javascript:void(0)" datatip="Testing" flow="down" onclick="edit('.$editParam.');"><i class="ti-pencil-alt"></i></a>';
@@ -679,7 +692,7 @@ function getTestingData($data){
         $documentPrintBtn = '<a class="btn btn-dark" href="'.base_url('production/testing/printDocumentationFiles/'.$data->id.'/'.$data->pm_id).'" target="_blank" datatip="Print Documentation" flow="down"><i class="fas fa-print" ></i></a>';
 
         $action = getActionButton($viewMacDes.$prodDetailPrintBtn.$documentationButton.$documentPrintBtn.$editButton.$printBtn);
-        return [$action,$data->sr_no,$data->job_number,$data->customer_name,$data->item_name,$data->order_qty,$data->tested_qty,$data->tc_sr_number,$data->drgs_number,$data->switchgear_no,$data->accepted_by_name,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark];
+        return [$action,$data->sr_no,$data->job_number,$data->customer_name,$data->item_name,$data->order_qty,$data->tested_qty,$data->tc_sr_number,$data->drgs_number,$data->switchgear_no,$data->accepted_by_name,$data->priority_status,$data->ga_file,$viewBom,$data->fab_dept_note,$data->remark,$data->updated_at];
     endif;
 }
 ?>

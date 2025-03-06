@@ -17,7 +17,7 @@
                                         <th>'.$row->param_value.'</th>
                                     </tr>';
                                 else:
-                                    if(in_array($row->param_key,["discription_of_powder"])):
+                                    if(in_array($row->param_key,["discription_of_powder","discription_of_powder_2","discription_of_powder_3","discription_of_powder_4","discription_of_powder_5"])):
                                         echo '<tr>
                                             <td>'.$param_name.'</td>
                                             <td>'.((!empty($row->param_value))?$this->item->getItem(['id'=>$row->param_value])->item_name:"").'</td>

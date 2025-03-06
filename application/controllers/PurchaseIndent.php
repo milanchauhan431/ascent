@@ -43,5 +43,17 @@ class PurchaseIndent extends MY_Controller{
         $data = $this->input->post();
         $this->printJson($this->purchaseIndent->changeRequestStatus($data));
     }
+
+    public function cancelBulkPO(){
+        $data = $this->input->post();
+
+        $ids = explode("~",$data['ids']);
+        foreach($ids as $id):
+            $postData = ['id'=>$id,'order_status'=>3];
+            $result = $this->purchaseIndent->changeRequestStatus($postData);
+        endforeach;
+
+        $this->printJson($result);
+    }
 }
 ?>

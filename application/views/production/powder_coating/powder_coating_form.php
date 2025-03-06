@@ -77,6 +77,9 @@
                 </table>
                 <table class="table table-borderless">
                     <tbody>
+                        <?php
+                            $options = getItemListOption($itemList);
+                        ?>
                         <tr>
                             <td style="width:50%;">DISCRIPTION OF POWDER </td>
                             <td style="width:50%;">
@@ -86,7 +89,7 @@
 
                                 <select name="transData[<?=$i?>][param_value]" id="param_value_<?=$i?>" class="form-control select2">
                                     <option value="">Select Item</option>
-                                    <?=getItemListOption($itemList)?>
+                                    <?=$options?>
                                 </select>
                                 <?php $i++; ?>
                             </td>
@@ -100,7 +103,107 @@
                                 <input type="text" name="transData[<?=$i?>][param_value]" id="param_value_<?=$i?>" class="form-control floatOnly" value="">
                                 <?php $i++; ?>
                             </td>
-                        </tr>                        
+                        </tr>
+
+                        <tr>
+                            <td style="width:50%;">DISCRIPTION OF POWDER 2</td>
+                            <td style="width:50%;">
+                                <input type="hidden" name="transData[<?=$i?>][id]" id="id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_id]" id="param_id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_key]" id="param_key_<?=$i?>" value="discription_of_powder_2">
+
+                                <select name="transData[<?=$i?>][param_value]" id="param_value_<?=$i?>" class="form-control select2">
+                                    <option value="">Select Item</option>
+                                    <?=$options?>
+                                </select>
+                                <?php $i++; ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>POWDER QTY. 2</td>
+                            <td>
+                                <input type="hidden" name="transData[<?=$i?>][id]" id="id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_id]" id="param_id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_key]" id="param_key_<?=$i?>" value="powder_qty_2">
+                                <input type="text" name="transData[<?=$i?>][param_value]" id="param_value_<?=$i?>" class="form-control floatOnly" value="">
+                                <?php $i++; ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width:50%;">DISCRIPTION OF POWDER 3</td>
+                            <td style="width:50%;">
+                                <input type="hidden" name="transData[<?=$i?>][id]" id="id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_id]" id="param_id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_key]" id="param_key_<?=$i?>" value="discription_of_powder_3">
+
+                                <select name="transData[<?=$i?>][param_value]" id="param_value_<?=$i?>" class="form-control select2">
+                                    <option value="">Select Item</option>
+                                    <?=$options?>
+                                </select>
+                                <?php $i++; ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>POWDER QTY. 3</td>
+                            <td>
+                                <input type="hidden" name="transData[<?=$i?>][id]" id="id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_id]" id="param_id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_key]" id="param_key_<?=$i?>" value="powder_qty_3">
+                                <input type="text" name="transData[<?=$i?>][param_value]" id="param_value_<?=$i?>" class="form-control floatOnly" value="">
+                                <?php $i++; ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width:50%;">DISCRIPTION OF POWDER 4</td>
+                            <td style="width:50%;">
+                                <input type="hidden" name="transData[<?=$i?>][id]" id="id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_id]" id="param_id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_key]" id="param_key_<?=$i?>" value="discription_of_powder_4">
+
+                                <select name="transData[<?=$i?>][param_value]" id="param_value_<?=$i?>" class="form-control select2">
+                                    <option value="">Select Item</option>
+                                    <?=$options?>
+                                </select>
+                                <?php $i++; ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>POWDER QTY. 4</td>
+                            <td>
+                                <input type="hidden" name="transData[<?=$i?>][id]" id="id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_id]" id="param_id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_key]" id="param_key_<?=$i?>" value="powder_qty_4">
+                                <input type="text" name="transData[<?=$i?>][param_value]" id="param_value_<?=$i?>" class="form-control floatOnly" value="">
+                                <?php $i++; ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width:50%;">DISCRIPTION OF POWDER 5</td>
+                            <td style="width:50%;">
+                                <input type="hidden" name="transData[<?=$i?>][id]" id="id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_id]" id="param_id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_key]" id="param_key_<?=$i?>" value="discription_of_powder_5">
+
+                                <select name="transData[<?=$i?>][param_value]" id="param_value_<?=$i?>" class="form-control select2">
+                                    <option value="">Select Item</option>
+                                    <?=$options?>
+                                </select>
+                                <?php $i++; ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>POWDER QTY. 5</td>
+                            <td>
+                                <input type="hidden" name="transData[<?=$i?>][id]" id="id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_id]" id="param_id_<?=$i?>" value="">
+                                <input type="hidden" name="transData[<?=$i?>][param_key]" id="param_key_<?=$i?>" value="powder_qty_5">
+                                <input type="text" name="transData[<?=$i?>][param_value]" id="param_value_<?=$i?>" class="form-control floatOnly" value="">
+                                <?php $i++; ?>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
